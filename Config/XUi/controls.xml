@@ -1,0 +1,261 @@
+<CATUI>
+	<!-- CATUI control -->
+	<append xpath="/controls">
+		<!-- CATUI 生命/体力条 -->
+		<CATUI_stat_bar>
+			<rect pos="${inner_pos_x}, ${inner_pos_y}" width="${width}" height="${height}" controller="${controller}" stat_type="${stat_type}" tooltip_key="${tooltip_key}" visible="{statvisible}" >
+				<sprite type="filled" width="${inner_width}" color="25,25,25,255" fill="{#Round(statmodifiedmax, 2)}" style="CATUI.sprite.filled.prue" globalopacity="false" fillInvert="${has_invert}" />
+				<sprite type="filled" width="${inner_width}" fill="{#1 - Round(statmodifiedmax, 2)}" sprite="catui_stat_background_disabled" foregroundlayer="true" fillInvert="${!has_invert}" />
+				<sprite type="filled" width="${inner_width}" color="${stat_bar_color}" fill="{statfill}" style="CATUI.sprite.filled.prue" foregroundlayer="true" fillInvert="${has_invert}" />
+				<sprite type="filled" width="${inner_width}" color="255,255,255,50" fill="{statfill}" sprite="catui_background_gradient" fillInvert="${has_invert}" />
+				<sprite height="1" pos="0, -${height - 2}" width="${inner_width}" color="255,255,255,75" type="sliced" />
+				<label pos="${has_invert ? '-6' : '6'},-${height / 2 - 13}" width="${inner_width}" font_size="28" color="[white]" text="{statcurrentwithmax}" style="CATUI.text.shadow.black.1px" justify="${has_invert ? 'right' : 'left'}" />
+			</rect>
+		</CATUI_stat_bar>
+
+		<!-- CATUI buff列表 -->
+		<CATUI_active_buff_item>
+			<!-- <rect height="${height}" controller="ActiveBuffEntry" style="scroll"> -->
+			<rect height="${height}" controller="ActiveBuffEntry">
+				<sprite name="Background" pos="-5, 0" width="200" height="33"  sprite="ui_game_popup" color="0,0,0,255" flip="horizontally" visible="{# bufficon != '' }" />
+				<sprite name="Line" pos="-5, -1" width="3" height="${Floor(height) - 3}" color="{buffcolor}" visible="{# bufficon != '' }" />
+				<sprite name="Icon" pos="3,-5" sprite="{bufficon|once}" color="{buffcolor}" size="24,24" foregroundlayer="true" />
+				<label name="Name" pos="34,-8" width="{#buffdisplayinfo == '' ? '300' : '180'}" text="{buffname|once}" font_size="20" pivot="topleft" style="CATUI.text.shadow.black.1px" />
+				<label name="Info" pos="210,-6" width="200" color="222, 206, 163, 255" text="{buffdisplayinfo}" font_size="24" pivot="topleft" style="CATUI.text.shadow.black.1px" />
+			</rect>
+		</CATUI_active_buff_item>
+
+		<!-- CATUI 左下角状态项 -->
+		<CATUI_state_item>
+			<rect name="${name}" width="50" height="50" controller="${controller}" tooltip_key="${tooltip_key}" visible="${visible}">
+				<sprite color="[darkestGrey]" style="CATUI.sprite.filled.prue" />
+				<rect pos="25, -20" pivot="center">
+					<sprite size="28,28" sprite="${icon}" pivot="center" color="[white]" />
+				</rect>
+				<label pos="0,-36" width="100%" height="14" font_size="14" color="[gold]" text="${text}" style="CATUI.text.outline.black.1px" justify="center" />
+			</rect>
+		</CATUI_state_item>
+
+		<!-- CATUI 物品品质icon 带数字 -->
+		<CATUI_quality_item>
+			<rect depth="${depth}" pos="${pos}" width="${width}" height="${height}" visible="${visible}" tooltip_key="${tooltip_key}">
+				<sprite size="32,32" sprite="catui_icon_hexagon_round" color="${color}" type="sliced" justify="center" pivot="center" globalopacity="false" />
+				<sprite size="28,28" sprite="catui_icon_hexagon_round" color="[black]" type="sliced" justify="center" pivot="center" />
+				<label pos="0,-1" crispness="always" text="${durabilitytext}" font_size="20" justify="center" pivot="center" />
+			</rect>
+		</CATUI_quality_item>
+
+		<!-- 敌人buff - buff_color要用RGB  -->
+		<CATUI_entity_buff_item>
+			<rect width="${width}" height="${height}" visible="${visible}" buff_icon_text="" buff_timer="" buff_corner_text="">
+				<sprite depth="1" pos="-2,2" width="${Floor(width) + 4}" height="${Floor(height) + 4}" color="${buff_color},75" style="CATUI.sprite.filled.prue" type="sliced" />
+				<sprite depth="2" color="[black]" type="sliced" />
+				<sprite depth="3" pos="13,-13" pivot="center" size="22,22" color="${buff_color}" sprite="${buff_icon}" globalopacity="false" />
+				<label depth="4" pos="${width-5}, -5" font_size="13" justify="right" pivot="center" text="${buff_corner_text}" overflow="resizefreely" parse_actions="true" color="[gold]" style="CATUI.text.outline.black.1px" visible="${buff_corner_text != ''}" />
+				<label depth="4" pos="13, -15" font_size="13" justify="center" pivot="center" text="${buff_icon_text}" style="CATUI.text.outline.black.1px" visible="${buff_icon_text != ''}" />
+				<label depth="4" pos="13, -30" font_size="14" justify="center" pivot="center" text="${buff_timer}" style="CATUI.text.shadow.black.1px" visible="${buff_timer != '' or buff_timer != '0'}" />
+			</rect>
+		</CATUI_entity_buff_item>
+
+	</append>
+
+	<!-- 物品制作 -->
+	<remove xpath="/controls/recipe_entry" />
+	<append xpath="/controls">
+		<recipe_entry>
+			<rect width="96" height="110" style="press, hover, scroll" controller="RecipeEntry" disabled_font_color="[disabledLabelColor]" enabled_font_color="[labelColor]" sound="[recipe_click]" sound_play_on_hover="[default_hover]"  visible="{# recipename != ''}">
+				<!-- 背景 XUiC_RecipeEntry 硬编码了-->
+				<sprite depth="1" name="background" pos="0,0" color="25,25,25,255" type="sliced" />
+				<!-- 图标 物品-->
+				<sprite depth="2" name="Icon" atlas="ItemIconAtlas" sprite="{recipeicon}" color="{recipeicontint}" size="80,80" pos="49,-40" pivot="center" foregroundlayer="true"/>
+				<!-- 图标 物品类型-->
+				<sprite depth="3" name="itemtypeicon" width="24" height="24" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
+				<!-- 角标 收藏-->
+				<sprite depth="6" name="Favorite" sprite="catui_icon_star_gradient" size="24,24" pos="70,-56" visible="{isfavorite}" color="255, 203, 61,255" foregroundlayer="true" />
+				<!-- 角标 不可制作 -->
+				<sprite depth="4" color="0,0,0,225" visible="{# unlockicon == 'ui_game_symbol_lock' ? isunlockable : false}" />				
+				<sprite depth="4" sprite="catui_stat_background_disabled_item" size="96,82" color="255,255,255,190" visible="{# hasingredientsstatecolor == '160,160,160,255' || unlockicon == 'ui_game_symbol_lock' ? true : false}" globalopacity="false" />
+				<sprite depth="6" name="Unlocked" sprite="{unlockicon}" size="24,24" pos="70,-2" visible="{isunlockable}" color="{# unlockicon == 'ui_game_symbol_lock' ? '187,45,59,255' : unlockstatecolor}" foregroundlayer="true" />
+				<!-- 物品名称 -->
+				<rect depth="5" pos="0,-81" width="100%" height="30">
+					<sprite color="25,25,25,255" type="sliced" />
+					<label pos="48,-15" name="Name" width="100%" height="30" text="{recipename}" font_size="16" color="{hasingredientsstatecolor}" justify="center" pivot="center" />
+				</rect>
+			</rect>
+		</recipe_entry>
+	</append>
+
+	<!-- 背包栏 -->
+	<remove xpath="/controls/backpack_item_stack" />
+	<append xpath="/controls">
+		<backpack_item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false">
+			<rect controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}" >
+				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
+				<sprite depth="3" name="background" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,90' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
+				<!-- 背景 - 底色 -->
+				<sprite depth="2" name="highlightOverlay" width="68" height="68" color="25,25,25,255" pos="-2,2" type="sliced" globalopacitymod="1.15" />
+				<!-- ???? -->
+				<texture depth="3" name="backgroundTexture" material="Materials/Transparent Colored" size="65,65" globalopacity="true" />
+				<!-- 图标 - 物品图标 -->
+				<sprite depth="6" name="itemIcon" width="64" height="64" atlas="ItemIconAtlas" sprite="{itemicon}" pos="32,-32" pivot="center" foregroundlayer="true" color="{iconcolor}" />
+				<!-- 角标 - 物品状态 -->
+				<sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true" />
+				<!-- <sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true" visible="{# locktypeicon != 'ui_game_symbol_modded' }" /> -->
+				<!-- 角标 - 小方块 模组插槽 -->
+				<!-- <label depth="7" pos="5,-4" text="{CATUI_itemStackModifications}" font_size="4" /> -->
+				<!-- 角标 - 物品类型 -->
+				<sprite depth="8" name="itemtypeicon" width="24" height="24" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
+				<!-- 背景 - 物品品质 -->
+				<sprite depth="1" width="63" height="63" color="25,25,25,255" pos="1,-1" type="sliced" globalopacity="false" visible="{hasdurability}" />
+				<sprite depth="2" width="63" height="63" color="{durabilitycolor}" pos="1,-1" type="sliced" sprite="Row Outline" globalopacity="true" visible="{hasdurability}" />
+				<!-- 物品耐久 -->
+				<sprite depth="7" name="durabilityBackground" width="59" height="4" color="[darkGrey]" type="sliced" pos="3, -58" foregroundlayer="true" visible="{hasdurability}" />
+				<filledsprite depth="7" name="durability" width="59" height="4" color="255, 255, 255, 255" fill="{durabilityfill}" type="filled" pos="3, -58" foregroundlayer="true" visible="{hasdurability}" />
+				<!-- 物品不可用 -->
+				<sprite depth="15" name="disabledOverlay" color="255,96,0,255" type="sliced" sprite="catui_stat_background_disabled" visible="false" />
+				<!-- 物品数量 -->
+				<label depth="7" name="stackValue" pos="-12,-44" text="{itemcount}" font_size="20" style="CATUI.text.outline.black.1px" justify="Right" visible="{#hasdurability ? 'false' : 'true'}" />
+				<!-- 定时器??? -->
+				<label depth="7" name="timer" pos="31,-32" height="24" font_size="24" justify="center" pivot="center" color="[beige]" style="CATUI.text.outline.black.1px" />
+				<!-- 前景 - 物品不可用 -->
+				<sprite depth="9" name="cancel" sprite="ui_game_symbol_x" width="62" height="62" color="255,0,0,255" type="sliced" visible="false" foregroundlayer="true"/>
+				<!-- 前景 - 物品锁定 -->
+				<sprite depth="13" name="assembleIcon" size="35,35" sprite="{stacklockicon}" color="255,255,255,150" visible="{isassemblelocked}" pos="14,-14" foregroundlayer="true" />
+				<!-- 栏位锁，b328新增  -->
+				<button name="rectSlotLock" depth="15" style="press, hover" width="65" height="65" visible="{userlockmode}" sprite="" hoverscale="1" use_selection_box="true">
+					<sprite depth="16" name="button" width="24" height="24" sprite="{# userlockedslot ? 'ui_game_symbol_lock' : 'ui_game_symbol_unlock' }" pos="50, -14" style="icon32px" pivot="center" color="{# userlockedslot ? '222,206,163' : '255,255,255' }" />
+				</button>
+				<sprite depth="3" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="255, 195, 0,150" type="sliced" fillcenter="false" globalopacity="true" visible="{userlockedslot}" />
+			</rect>
+		</backpack_item_stack>
+	</append>
+
+	<!-- 工具栏 -->
+	<remove xpath="/controls/item_stack" />
+	<append xpath="/controls">
+		<item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false" show_favorites="false" show_slotnum="false">
+			<rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="72" height="72" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" show_slotnum="${show_slotnum}">
+				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
+				<rect>
+					<!-- 选中状态 -->
+					<sprite depth="3" name="background" pos="-1,1" width="74" height="74" sprite="menu_empty3px" color="{selectionbordercolor}" type="sliced" globalopacity="true" fillcenter="false" visible="{#selectionbordercolor == '255,255,255,255'}" />
+					<!-- 非选中状态 -->
+					<sprite depth="3" name="background" sprite="menu_empty2px" color="{selectionbordercolor}" type="sliced" globalopacity="true" fillcenter="false" visible="{#selectionbordercolor != '255,255,255,255'}" />
+				</rect>
+				<!-- 背景 - 底色 -->
+				<sprite depth="2" name="highlightOverlay" color="25,25,25,255" type="sliced" globalopacitymod="1.15" />
+				<!-- 角标 - 收藏 -->
+				<sprite depth="8" name="favoriteIcon" width="24" height="24" sprite="server_favorite" pos="2,-2" foregroundlayer="true" visible="{isfavorite}" />
+				<!-- 图标 - 物品图标 -->
+				<sprite depth="6" name="itemIcon" width="66" height="66" atlas="ItemIconAtlas" sprite="{itemicon}" pos="35,-37" pivot="center" foregroundlayer="true" color="{iconcolor}" />
+				<!-- 角标 - 物品状态 -->
+				<sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true" />
+				<!-- 角标 - 小方块 模组插槽 -->
+				<!-- <label depth="7" pos="6,-5" text="{CATUI_itemStackModifications}" font_size="4" /> -->
+				<!-- 角标 - 物品类型 -->
+				<sprite depth="8" name="itemtypeicon" width="24" height="24" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
+				<!-- 背景 - 物品品质 -->
+				<sprite depth="2" width="66" height="66" color="{durabilitycolor}" pos="3,-3" type="sliced" sprite="Row Outline" globalopacity="true" visible="{hasdurability}" />
+				<!-- 物品耐久 -->
+				<sprite depth="7" name="durabilityBackground" width="66" height="4" sprite="menu_empty3px" color="[darkGrey]" type="sliced" pos="3, -65" foregroundlayer="true" visible="{hasdurability}" />
+				<filledsprite depth="7" name="durability" width="66" height="4" sprite="menu_empty2px" color="255, 255, 255, 255" fill="{durabilityfill}" type="filled" pos="3, -65" foregroundlayer="true" visible="{hasdurability}" />
+				<!-- 物品不可用 -->
+				<sprite depth="15" name="disabledOverlay" color="255,96,0,255" type="sliced" sprite="catui_stat_background_disabled" visible="false" />
+				<!-- 物品数量 -->
+				<label depth="7" name="stackValue" pos="-5,-50" text="{itemcount}" font_size="20" style="CATUI.text.outline.black.1px" justify="Right" visible="{#hasdurability ? 'false' : 'true'}" />
+				<!-- 定时器??? -->
+				<label depth="7" name="timer" pos="35,-38" height="24" font_size="24" justify="center" pivot="center" color="[beige]" style="CATUI.text.outline.black.1px" />
+				<!-- 前景 - 物品不可用 -->
+				<sprite depth="9" name="cancel" sprite="ui_game_symbol_x" color="255,0,0,255" type="sliced" visible="false" foregroundlayer="true" />
+				<!-- 前景 - 物品锁定 -->
+				<sprite depth="13" name="assembleIcon" size="40,40" sprite="{stacklockicon}" color="{stacklockcolor}" visible="{isassemblelocked}" pos="14,-14" foregroundlayer="true" />
+				<!-- 角标 - 快速切换 -->
+				<sprite depth="14" name="quickswapIcon" size="30,30" sprite="server_refresh" pos="3,-36" foregroundlayer="true" />
+				<!-- 工具栏 - 数字编号 -->
+				<rect style="CATUI.toolbelt.slots.num.bg" visible="${show_slotnum}">
+					<label text="{# int(CATUI_itemStackSlotIndex) + 1 }" style="CATUI.toolbelt.slots.num, CATUI.text.shadow.black.1px" />
+				</rect>
+			</rect>
+		</item_stack>
+	</append>
+
+	<!-- 追踪器 - 任务/挑战 -->
+	<remove xpath="/controls/quest_objective_tracker_entry" />
+	<append xpath="/controls">	
+		<quest_objective_tracker_entry>
+			<rect width="${width}" height="${height}" controller="QuestTrackerObjectiveEntry" visible="{hasobjective}" >
+				<sprite pos="-10,3" color="[darkestGrey]" type="sliced" style="CATUI.sprite.filled.prue" visible="{hasobjective}" />
+				<sprite pos="-10,3" color="[darkGrey]" type="sliced" sprite="catui_background_gradient" flip="Vertically" visible="{hasobjective}" />
+				<sprite pos="-10,3" width="3" color="{objectivecompletecolor}" type="sliced" style="CATUI.sprite.filled.prue" visible="{hasobjective}" />
+				<sprite depth="2" name="iconTrack" size="24,24" pos="0,0" color="{objectivecompletecolor}" sprite="{objectivecompletesprite}" visible="{objectiveshowicon}" />
+				<label depth="1" pos="{# objectiveshowicon ? '139' : '109' },-15" text="{objectiveoptional}[{objectivephasehexcolor}]{objectivedescription}[-] [{objectivecompletehexcolor}]{objectivestate}[-]" font_size="20" justify="left" visible="{hasobjective}" width="210" pivot="center" />
+			</rect>
+		</quest_objective_tracker_entry>
+	</append>
+
+	<!-- 追踪器 - 设计图 -->
+	<remove xpath="/controls/recipe_ingredient_tracker_entry" />
+	<append xpath="/controls">
+		<recipe_ingredient_tracker_entry>
+			<rect width="${width}" height="${height}" controller="RecipeTrackerIngredientEntry" visible="{hasingredient}" >
+				<sprite pos="-10,3" color="[darkestGrey]" type="sliced" style="CATUI.sprite.filled.prue" visible="{hasingredient}" />
+				<sprite pos="-10,3" color="[darkGrey]" type="sliced" sprite="catui_background_gradient" flip="Vertically" visible="{hasingredient}" />
+				<sprite pos="-12,3" width="3" color="{CATUI_IngredientCompleteColor}" type="sliced" style="CATUI.sprite.filled.prue" visible="{hasingredient}" />
+				<sprite depth="2" atlas="ItemIconAtlas" name="iconTrack" size="26,26" pos="0,0" color="{itemicontint}" sprite="{itemicon}" visible="{hasingredient}" />
+				<label depth="1" pos="139,-15" text="{itemname} [{ingredientcompletehexcolor}]{itemcount}[-]" font_size="20" justify="left" visible="{hasingredient}" width="210" pivot="center" />
+			</rect>
+		</recipe_ingredient_tracker_entry>
+	</append>
+
+	<!-- 装备栏 -->
+	<remove xpath="/controls/equipment_stack_sdcs" />
+	<append xpath="/controls">
+		<equipment_stack_sdcs>
+			<rect depth="1" controller="EquipmentStack" width="72" height="72" style="itemStack, hover" tooltip="test" >
+				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
+				<sprite depth="3" name="background" sprite="menu_empty2px" color="{selectionbordercolor}" type="sliced" globalopacity="true" fillcenter="false"/>
+				<!-- 背景 - 底色 -->
+				<sprite depth="2" name="highlightOverlay" color="25,25,25,255" pos="0,0" type="sliced" globalopacity="false" />
+				<!-- 背景 - 装备类型icon：0=头，1=身，0=手，0=脚 -->
+				<sprite depth="4" sprite="catui_icon_equipment_helmet" color="[mediumGrey]" size="42,42" pos="36,-36" justify="center" pivot="center" visible="{# !CATUI_hasQuality and CATUI_itemType == 0 }" />
+				<sprite depth="4" sprite="catui_icon_equipment_armor" color="[mediumGrey]" size="42,42" pos="36,-36" justify="center" pivot="center" visible="{# !CATUI_hasQuality and CATUI_itemType == 1 }" />
+				<sprite depth="4" sprite="catui_icon_equipment_glove" color="[mediumGrey]" size="42,42" pos="36,-36" justify="center" pivot="center" visible="{# !CATUI_hasQuality and CATUI_itemType == 2 }" />
+				<sprite depth="4" sprite="catui_icon_equipment_shoes" color="[mediumGrey]" size="42,42" pos="36,-36" justify="center" pivot="center" visible="{# !CATUI_hasQuality and CATUI_itemType == 3 }" />
+				<!-- 图标 - 物品图标 -->
+				<sprite depth="6" name="itemIcon" width="66" height="66" atlas="ItemIconAtlas" sprite="{itemicon}" pos="35,-37" pivot="center" foregroundlayer="true" color="{iconcolor}" />
+				<!-- 角标 - 已安装模组 -->
+				<sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true"/>
+				<rect visible="{CATUI_hasQuality}">
+					<!-- 背景 - 物品品质 -->
+					<sprite depth="2" width="66" height="66" color="{CATUI_durabilityColor}" pos="3,-3" type="sliced" sprite="Row Outline" globalopacity="true" />
+					<!-- 物品耐久 -->
+					<sprite depth="7" name="durabilityBackground" width="66" height="4" sprite="menu_empty3px" color="[darkGrey]" type="sliced" pos="3, -65" foregroundlayer="true" />
+					<filledsprite depth="7" name="durabilityFill" width="66" height="4" sprite="menu_empty2px" color="255, 255, 255, 255" fill="{CATUI_durabilityFill}" type="filled" pos="3, -65" foregroundlayer="true" />
+				</rect>
+				<!-- 物品数量 -->
+				<label name="stackValue" pos="0,0" text="" visible="false" />
+			</rect>
+		</equipment_stack_sdcs>
+	</append>
+
+	<!-- 物品拖拽 -->
+	<remove xpath="/controls/drag_item_stack" />
+	<append xpath="/controls">
+		<drag_item_stack>
+			<rect controller="ItemStack" width="72" height="72" pos="-35,35">
+				<sprite depth="3" name="background" width="1" height="1" color="{selectionbordercolor}" type="sliced" globalopacity="true"/>
+				<sprite depth="6" name="itemIcon" width="66" height="66" atlas="ItemIconAtlas" sprite="{itemicon}" pos="35,-37" pivot="center" foregroundlayer="true" color="{iconcolor}" />
+				<!-- 背景 - 物品品质 -->
+				<sprite depth="5" width="66" height="66" color="{durabilitycolor}" pos="3,-3" type="sliced" sprite="Row Outline" globalopacity="true" visible="{hasdurability}" />
+				<!-- 物品耐久 -->
+				<sprite depth="7" name="durabilityBackground" width="66" height="4" sprite="menu_empty3px" color="[darkGrey]" type="sliced" pos="3, -65" foregroundlayer="true" visible="{hasdurability}" />
+				<filledsprite depth="7" name="durability" width="66" height="4" sprite="menu_empty2px" color="255, 255, 255, 255" fill="{durabilityfill}" type="filled" pos="3, -65" foregroundlayer="true" visible="{hasdurability}" />
+				<!-- 物品数量 -->
+				<label depth="7" name="stackValue" pos="-5,-50" text="{itemcount}" font_size="20" effect="outline" effect_distance="1,1" effect_color="0,0,0,255" justify="Right" visible="{#hasdurability ? 'false' : 'true'}" />
+			</rect>
+		</drag_item_stack>
+	</append>
+	
+	<!-- // 美化 字体高清 -->
+	<setattribute xpath="//label[@text]" name="crispness">OnDesktop</setattribute>
+</CATUI>
