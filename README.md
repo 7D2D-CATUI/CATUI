@@ -27,6 +27,9 @@ N网下载地址：https://www.nexusmods.com/7daystodie/mods/5248/
 - Nexus Mods：https://www.nexusmods.com/7daystodie/mods/5248?tab=posts&BH=0
 - QQ群：17258469
 
+## Source Code
+https://github.com/7D2D-CATUI/CATUI
+
 
 ## Change Log
 ### 2024/08/13 1.0.15 Update
