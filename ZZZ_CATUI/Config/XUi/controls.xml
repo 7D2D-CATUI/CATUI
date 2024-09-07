@@ -74,7 +74,7 @@
 				<sprite depth="6" name="Favorite" sprite="catui_icon_star_gradient" size="24,24" pos="70,-56" visible="{isfavorite}" color="255, 203, 61,255" foregroundlayer="true" />
 				<!-- 角标 不可制作 -->
 				<sprite depth="4" color="0,0,0,225" visible="{# unlockicon == 'ui_game_symbol_lock' ? isunlockable : false}" />				
-				<sprite depth="4" sprite="catui_stat_background_disabled_item" size="96,82" color="255,255,255,190" visible="{# hasingredientsstatecolor == '160,160,160,255' || unlockicon == 'ui_game_symbol_lock' ? true : false}" globalopacity="false" />
+				<sprite depth="4" sprite="catui_background_disabled_recipe" size="96,82" color="255,255,255,190" visible="{# hasingredientsstatecolor == '160,160,160,255' || unlockicon == 'ui_game_symbol_lock' ? true : false}" globalopacity="false" />
 				<sprite depth="6" name="Unlocked" sprite="{unlockicon}" size="24,24" pos="70,-2" visible="{isunlockable}" color="{# unlockicon == 'ui_game_symbol_lock' ? '187,45,59,255' : unlockstatecolor}" foregroundlayer="true" />
 				<!-- 物品名称 -->
 				<rect depth="5" pos="0,-81" width="100%" height="30">
@@ -211,7 +211,7 @@
 	<remove xpath="/controls/equipment_stack_sdcs" />
 	<append xpath="/controls">
 		<equipment_stack_sdcs>
-			<rect depth="1" controller="EquipmentStack" width="72" height="72" style="itemStack, hover" tooltip="test" >
+			<rect depth="1" controller="EquipmentStack" width="72" height="72" style="itemStack, hover" >
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
 				<sprite depth="3" name="background" sprite="menu_empty2px" color="{selectionbordercolor}" type="sliced" globalopacity="true" fillcenter="false"/>
 				<!-- 背景 - 底色 -->
@@ -256,6 +256,71 @@
 		</drag_item_stack>
 	</append>
 	
+	<!-- 组队 -->
+	<remove xpath="/controls/party_entry" />
+	<remove xpath="/controls/companion_entry" />
+	<append xpath="/controls">
+		<party_entry>
+			<rect width="${width}" height="${height}" controller="PartyEntry" visible="{partyvisible}" default_health_color="255,255,255,255" twitch_health_color="100,65,165,255">				
+				<sprite pos="-3, 3" width="${Floor(width) + 6}" height="${Floor(height) + 6}"  color="[darkestGrey]" style="CATUI.sprite.filled.prue" />
+				<!-- 队友 名称 -->
+				<label name="TextContent" pos="75, -11" font_size="20" color="{arrowcolor}" justify="left" pivot="center" text="{name}" height="26" width="150" style="CATUI.text.shadow.black.1px" />
+				<!-- 队友 血条 -->
+				<rect width="${Floor(width) - 50}" height="16" pos="0, -24">
+					<sprite name="BarHealthModifiedMax" sprite="catui_stat_background_bar" type="filled" color="[black]" fill="{healthmodifiedmax}" globalopacity="false" />
+					<sprite name="PlayerBarHealth" sprite="catui_stat_background_bar" type="filled" color="{# healthfill &lt; 0.4 ? '255,0,0' : (healthfill &lt; 0.6 ? '255, 195, 0' : '255,255,255') }" fill="{# Round(healthfill, 3) }" style="CATUI.sprite.filled.prue" globalopacity="false" />
+				</rect>
+				<!-- 队友 颜色 -->
+				<sprite pos="${Floor(width) - 48}, 0" width="4"  color="{arrowcolor}" style="CATUI.sprite.filled.prue" />
+				<!-- 队友 方位 -->
+				<rect width="50" height="${height}" pos="${Floor(width) - 44}, 0">
+					<!-- 队友方向 -->
+					<rect pos="23, -14" pivot="center">
+						<sprite name="arrowContent" size="22,22" sprite="ui_game_symbol_map_player_arrow" pivot="center" color="{arrowcolor}" visible="{showarrow}" />
+					</rect>
+					<!-- 队友距离 -->
+					<label name="TextContent" pos="-2,-30" width="100%" font_size="14" color="{distancecolor}" text="{distance}" style="CATUI.text.outline.black.1px" justify="center" />
+				</rect>
+
+				<!-- 服务器组队 - 状态1 -->
+				<rect width="26" height="26" pos="230,3" visible="{# icon2 != '' }">
+					<sprite depth="2" color="[black]" type="sliced" />
+					<sprite depth="3" name="icon2" pos="13,-13" pivot="center" size="22,22" sprite="{icon2}" globalopacity="false" />
+				</rect>
+				<!-- 服务器组队 - 状态2 -->
+				<rect width="26" height="26" pos="260,3" visible="{# icon1 != '' }">
+					<sprite depth="2" color="[black]" type="sliced" />
+					<sprite depth="3" name="icon1" pos="13,-13" pivot="center" size="22,22" sprite="{icon1}" globalopacity="false" />
+				</rect>
+				<!-- 服务器组队 - 麦克风 -->
+				<sprite name="voiceStatus" style="icon22px" pos="150,0" sprite="ui_game_symbol_talk" color="255,255,255,255" />
+			</rect>
+		</party_entry>
+		<companion_entry>
+			<rect width="${width}" height="${height}" controller="CompanionEntry" visible="{partyvisible}">
+				<sprite pos="-3, 3" width="${Floor(width) + 6}" height="${Floor(height) + 6}"  color="[darkestGrey]" style="CATUI.sprite.filled.prue" />
+				<!-- 队友 名称 -->
+				<label name="TextContent" pos="75, -11" font_size="20" color="{arrowcolor}" justify="left" pivot="center" text="{name}" height="26" width="150" style="CATUI.text.shadow.black.1px" />
+				<!-- 队友 血条 -->
+				<rect width="${Floor(width) - 50}" height="16" pos="0, -24">
+					<sprite name="BarHealthModifiedMax" sprite="catui_stat_background_bar" type="filled" color="[black]" fill="{healthmodifiedmax}" globalopacity="false" />
+					<sprite name="PlayerBarHealth" sprite="catui_stat_background_bar" type="filled" color="{# healthfill &lt; 0.4 ? '255,0,0' : (healthfill &lt; 0.6 ? '255, 195, 0' : '255,255,255') }" fill="{# Round(healthfill, 3) }" style="CATUI.sprite.filled.prue" globalopacity="false" />
+				</rect>
+				<!-- 队友 颜色 -->
+				<sprite pos="${Floor(width) - 48}, 0" width="4"  color="{arrowcolor}" style="CATUI.sprite.filled.prue" />
+				<!-- 队友 方位 -->
+				<rect width="50" height="${height}" pos="${Floor(width) - 44}, 0">
+					<!-- 队友方向 -->
+					<rect pos="23, -14" pivot="center">
+						<sprite name="arrowContent" size="22,22" sprite="ui_game_symbol_map_player_arrow" pivot="center" color="{arrowcolor}" visible="{showarrow}" />
+					</rect>
+					<!-- 队友距离 -->
+					<label name="TextContent" pos="-2,-30" width="100%" font_size="14" color="{distancecolor}" text="{distance}" style="CATUI.text.outline.black.1px" justify="center" />
+				</rect>
+			</rect>
+		</companion_entry>
+	</append>
+
 	<!-- // 美化 字体高清 -->
 	<setattribute xpath="//label[@text]" name="crispness">OnDesktop</setattribute>
 </CATUI>
