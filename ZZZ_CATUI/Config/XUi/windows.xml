@@ -162,7 +162,8 @@
 	</append>
 
 	<!-- bugfix: 组队区域和HUD位置冲突 -->
-	<setattribute xpath="//window[@name='windowGroupBars']" name="pos">0, -600</setattribute>
+	<setattribute xpath="//window[@name='chatoutput']" name="pos">20, -400</setattribute>
+	<setattribute xpath="//window[@name='chat']" name="pos">20, -400</setattribute>
 
 	<!-- 进入区域屏幕中间的大字提示，右上角已常驻，没鸟用 -->
 	<remove xpath="/windows/window[@name='windowEntering']"/>
@@ -378,7 +379,7 @@
 	<remove xpath="/windows/window[@name='HUDRightStatBars']/rect/rect[@stat_type='VehicleHealth']" />
 	<remove xpath="/windows/window[@name='HUDRightStatBars']/grid/rect[@stat_type='ActiveItem']" />
 	<append xpath="/windows/window[@name='HUDRightStatBars']">
-		<rect depth="-20" name="HUD_Ammo" pos="-220,110" width="300" height="200" controller="HUDStatBar" stat_type="ActiveItem" visible="{# CATUI_playerActiveItemName != '' }">
+		<rect depth="-20" name="HUD_Ammo" pos="-220,110" width="300" height="200" controller="HUDStatBar" stat_type="ActiveItem" visible="{# CATUI_playerActiveItemName != 'meleeHandPlayer' and CATUI_playerActiveItemName != '' }">		
 			<sprite pos="-108,34" height="60" color="[black]" type="sliced" size="300,60" sprite="ui_game_text_body_back" flip="Both"/>
 			<!-- 武器名称 -->
 			<rect depth="1" pos="-108,-26" width="300" height="32">
@@ -442,9 +443,10 @@
 					<label pos="0,0" font_size="18" text="kmh" color="200,200,200" justify="center" pivot="center" />
 				</rect>
 				<!-- 载具耐久 -->
-				<rect pos="-320,0" width="220">
+				<rect pos="-216,72" width="220">
+					<sprite width="94" height="179" pos="0, 0" color="[black_threequarters_alpha]" style="CATUI.sprite.filled.prue" />
 					<!-- 载具状态 -->
-					<table pos="-5,0" depth="2" columns="4" padding="5,5" hide_inactive="true" always_reposition="true">
+					<table pos="0,0" depth="2" columns="1" padding="5,5" hide_inactive="true" always_reposition="true">
 						<!-- 库存 -->
 						<rect width="50" height="50" tooltip_key="xuiVehicleStorage">
 							<sprite color="[darkestGrey]" style="CATUI.sprite.filled.prue" />
@@ -473,13 +475,12 @@
 						</rect>
 					</table>
 					<!-- 载具耐久 -->
-					<rect pos="0,-65" width="220" height="34" tooltip_key="">
-						<sprite color="25,25,25,255" style="CATUI.sprite.filled.prue" globalopacity="false" />
-						<sprite type="filled"  color="187,45,59,255" fill="{statfill}" style="CATUI.sprite.filled.prue" foregroundlayer="true"  />
-						<sprite type="filled"  color="255,255,255,50" fill="{statfill}" sprite="catui_background_gradient" fillInvert="${has_invert}" />
-						<sprite height="1" pos="0, -32" color="255,255,255,75" type="sliced" />
-						<sprite pos="5,-5" atlas="{staticonatlas|once}" sprite="{staticon|once}" size="24,24" foregroundlayer="true" />
-						<label pos="34,-5" font_size="28" color="[white]" text="{statcurrentwithmax}" style="CATUI.text.shadow.black.1px" />
+					<rect pos="65, -5">
+						<rect pos="0, -169" width="169" height="24" rotation="90">
+							<sprite color="[black]" style="CATUI.sprite.filled.prue" />
+							<sprite type="filled" color="{# statfill &lt; 0.4 ? '255,0,0' : (statfill &lt; 0.6 ? '255, 195, 0' : '255,255,255') }" fill="{statfill}" style="CATUI.sprite.filled.prue" foregroundlayer="true" globalopacity="false" />							
+						</rect>
+						<sprite pos="2,-147" sprite="catui_icon_repair" size="20,20" color="[black]" foregroundlayer="true" />
 					</rect>
 				</rect>
 			</rect>	
@@ -493,7 +494,7 @@
 				<sprite sprite="catui_bg_fuel_fill" type="filled" fill="{statfill}" color="[white]" globalopacity="false" pivot="center" />
 				<!-- 边框 -->
 				<sprite sprite="catui_bg_fuel" color="[lightestGrey]" pivot="center" />
-				<label pos="0,-14" font_size="14" color="[white]" justify="center" pivot="center" text="{statcurrentwithmax}" height="20" />
+				<label pos="0,-14" font_size="14" color="{# statfill &lt; 0.4 ? '255,0,0' : (statfill &lt; 0.6 ? '255, 195, 0' : '255,255,255') }" justify="center" pivot="center" text="{statcurrentwithmax}" height="20" />
 			</rect>
 		</rect>
 	</append>
@@ -626,20 +627,16 @@
 	<!-- 组队界面 -->
 	<remove xpath="/windows/window[@name='windowGroupBars']"/>
 	<append xpath="/windows">
-		<window name="windowGroupBars" controller="PartyWindow" depth="-20" pos="25,130">
+		<window name="windowGroupBars" controller="PartyWindow" depth="-20" pos="25, {CATUI_PartyWindowPositionY}">
+			<sprite pos="0, 40" name="voiceStatus" style="icon32px" sprite="catui_icon_mic" visible="{# partyvisible and voicevisible}" color="{# voiceactive ? '255,255,255,255' : '128,128,128,255' }" />
 			<!-- 玩家组队 -->
-			<rect pos="0, {# Floor(CATUI_ListCount) * 56 }" controller="CompanionEntryList">
-				<sprite pos="0, 40" name="voiceStatus" style="icon32px" sprite="catui_icon_mic" visible="{# partyvisible and voicevisible}" color="{# voiceactive ? '255,255,255,255' : '128,128,128,255' }" />
-				<grid name="hud" pos="0, 0" rows="7" cols="1" cell_width="224" cell_height="56" side="left" repeat_content="true" controller="PartyEntryList">
-					<party_entry width="224" height="40" />
-				</grid>
-			</rect>
+			<grid name="hud" rows="7" cols="1" cell_width="224" cell_height="56" side="left" repeat_content="true" controller="PartyEntryList">
+				<party_entry width="224" height="40" />
+			</grid>
 			<!-- NPC伙伴 -->
-			<rect pos="0, {# Floor(CATUI_ListCount) * 56 }" controller="CompanionEntryList">
-				<grid name="hud" rows="7" cols="1" cell_width="224" cell_height="56" side="left" repeat_content="true" >
-					<companion_entry width="224" height="40" />
-				</grid>
-			</rect>
+			<grid name="hud" rows="7" cols="1" cell_width="224" cell_height="56" side="left" repeat_content="true" controller="CompanionEntryList">
+				<companion_entry width="224" height="40" />
+			</grid>
 		</window>
 	</append>
 

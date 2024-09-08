@@ -279,21 +279,33 @@
 						<sprite name="arrowContent" size="22,22" sprite="ui_game_symbol_map_player_arrow" pivot="center" color="{arrowcolor}" visible="{showarrow}" />
 					</rect>
 					<!-- 队友距离 -->
-					<label name="TextContent" pos="-2,-30" width="100%" font_size="14" color="{distancecolor}" text="{distance}" style="CATUI.text.outline.black.1px" justify="center" />
+					<label name="TextContent" pos="-1,-30" width="48" height="20" font_size="14" color="{distancecolor}" text="{distance}" style="CATUI.text.outline.black.1px" justify="center" />
 				</rect>
 
-				<!-- 服务器组队 - 状态1 -->
-				<rect width="26" height="26" pos="230,3" visible="{# icon2 != '' }">
-					<sprite depth="2" color="[black]" type="sliced" />
-					<sprite depth="3" name="icon2" pos="13,-13" pivot="center" size="22,22" sprite="{icon2}" globalopacity="false" />
-				</rect>
-				<!-- 服务器组队 - 状态2 -->
-				<rect width="26" height="26" pos="260,3" visible="{# icon1 != '' }">
-					<sprite depth="2" color="[black]" type="sliced" />
-					<sprite depth="3" name="icon1" pos="13,-13" pivot="center" size="22,22" sprite="{icon1}" globalopacity="false" />
-				</rect>
-				<!-- 服务器组队 - 麦克风 -->
-				<sprite name="voiceStatus" style="icon22px" pos="150,0" sprite="ui_game_symbol_talk" color="255,255,255,255" />
+				<!-- 队友 状态 -->
+				<table columns="5" pos="228,4" padding="1,1" hide_inactive="true" always_reposition="true">
+					<!-- 状态2 -->
+					<rect width="26" height="26" visible="{# CATUI_Ping != '-1' }">
+						<sprite depth="2" color="[black]" type="sliced" />
+						<sprite depth="3" name="signal" pos="13,-13" color="{CATUI_PingColor}" pivot="center" size="22,22" sprite="catui_icon_signal" globalopacity="false" />
+						<!-- <label depth="4" pos="0,-13" width="100%" height="14" font_size="14" color="[gold]" text="{CATUI_Ping}" style="CATUI.text.outline.black.1px" justify="center" /> -->
+					</rect>
+					<!-- 服务器组队 - 麦克风 -->
+					<rect width="26" height="26" visible="{voicevisible}">
+						<sprite depth="2" color="[black]" type="sliced" />
+						<sprite depth="3" name="voiceStatus" pos="13,-13" color="{# voicemuted ? '200,0,0,255' : (voiceactive ? '255,255,255,255' : '128,128,128,255') }" pivot="center" size="22,22" sprite="ui_game_symbol_talk" globalopacity="false" />
+					</rect>
+					<!-- 状态1 -->
+					<rect width="26" height="26" visible="{# icon1 != '' }">
+						<sprite depth="2" color="[black]" type="sliced" />
+						<sprite depth="3" name="icon1" pos="13,-13" pivot="center" size="22,22" sprite="{icon1}" globalopacity="false" />
+					</rect>
+					<!-- 状态2 -->
+					<rect width="26" height="26" visible="{# icon2 != '' }">
+						<sprite depth="2" color="[black]" type="sliced" />
+						<sprite depth="3" name="icon2" pos="13,-13" pivot="center" size="22,22" sprite="{icon2}" globalopacity="false" />
+					</rect>
+				</table>
 			</rect>
 		</party_entry>
 		<companion_entry>
@@ -315,8 +327,8 @@
 						<sprite name="arrowContent" size="22,22" sprite="ui_game_symbol_map_player_arrow" pivot="center" color="{arrowcolor}" visible="{showarrow}" />
 					</rect>
 					<!-- 队友距离 -->
-					<label name="TextContent" pos="-2,-30" width="100%" font_size="14" color="{distancecolor}" text="{distance}" style="CATUI.text.outline.black.1px" justify="center" />
-				</rect>
+					<label name="TextContent" pos="-2,-30" width="100%" font_size="14" height="20" color="{distancecolor}" text="{distance}" style="CATUI.text.outline.black.1px" justify="center" />
+				</rect>s
 			</rect>
 		</companion_entry>
 	</append>
