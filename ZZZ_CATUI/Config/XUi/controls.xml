@@ -64,22 +64,23 @@
 	<append xpath="/controls">
 		<recipe_entry>
 			<rect width="96" height="110" style="press, hover, scroll" controller="RecipeEntry" disabled_font_color="[disabledLabelColor]" enabled_font_color="[labelColor]" sound="[recipe_click]" sound_play_on_hover="[default_hover]"  visible="{# recipename != ''}">
+				<sprite depth="8" name="border" color="255,255,255,68" type="sliced" fillcenter="false"/>
 				<!-- 背景 XUiC_RecipeEntry 硬编码了-->
-				<sprite depth="1" name="background" pos="0,0" color="25,25,25,255" type="sliced" />
+				<sprite depth="1" name="background" pos="0,0" color="[darkGrey]" type="sliced" />
 				<!-- 图标 物品-->
-				<sprite depth="2" name="Icon" atlas="ItemIconAtlas" sprite="{recipeicon}" color="{recipeicontint}" size="80,80" pos="49,-40" pivot="center" foregroundlayer="true"/>
+				<sprite depth="2" name="Icon" atlas="ItemIconAtlas" sprite="{recipeicon}" color="{recipeicontint}" size="68,68" pos="49,-40" pivot="center" foregroundlayer="true"/>
 				<!-- 图标 物品类型-->
-				<sprite depth="3" name="itemtypeicon" width="24" height="24" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
+				<sprite depth="3" name="itemtypeicon" size="20,20" sprite="ui_game_symbol_{itemtypeicon}" pos="3,-3" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 				<!-- 角标 收藏-->
-				<sprite depth="6" name="Favorite" sprite="catui_icon_star_gradient" size="24,24" pos="70,-56" visible="{isfavorite}" color="255, 203, 61,255" foregroundlayer="true" />
+				<sprite depth="6" name="Favorite" sprite="server_favorite" size="20,20" pos="72,-59" visible="{isfavorite}" color="255, 203, 61,255" foregroundlayer="true" />
 				<!-- 角标 不可制作 -->
 				<sprite depth="4" color="0,0,0,225" visible="{# unlockicon == 'ui_game_symbol_lock' ? isunlockable : false}" />				
-				<sprite depth="4" sprite="catui_background_disabled_recipe" size="96,82" color="255,255,255,190" visible="{# hasingredientsstatecolor == '160,160,160,255' || unlockicon == 'ui_game_symbol_lock' ? true : false}" globalopacity="false" />
-				<sprite depth="6" name="Unlocked" sprite="{unlockicon}" size="24,24" pos="70,-2" visible="{isunlockable}" color="{# unlockicon == 'ui_game_symbol_lock' ? '187,45,59,255' : unlockstatecolor}" foregroundlayer="true" />
+				<sprite depth="4" sprite="catui_background_disabled_recipe" size="96,81" color="255,255,255,190" visible="{# hasingredientsstatecolor == '160,160,160,255' || unlockicon == 'ui_game_symbol_lock' ? true : false}" globalopacity="false" />
+				<sprite depth="6" name="Unlocked" sprite="{unlockicon}" size="20,20" pos="72,-3" visible="{isunlockable}" color="{# unlockicon == 'ui_game_symbol_lock' ? '187,45,59,255' : unlockstatecolor}" foregroundlayer="true" />
 				<!-- 物品名称 -->
 				<rect depth="5" pos="0,-81" width="100%" height="30">
-					<sprite color="25,25,25,255" type="sliced" />
-					<label pos="48,-15" name="Name" width="100%" height="30" text="{recipename}" font_size="16" color="{hasingredientsstatecolor}" justify="center" pivot="center" />
+					<sprite color="0,0,0,200" type="sliced" />
+					<label pos="48,-15" name="Name" width="100%" height="30" text="{recipename}" font_size="14" color="{hasingredientsstatecolor}" justify="center" pivot="center" />
 				</rect>
 			</rect>
 		</recipe_entry>
@@ -331,6 +332,39 @@
 				</rect>s
 			</rect>
 		</companion_entry>
+	</append>
+
+	<!-- 商人库存 -->
+	<remove xpath="/controls/trader_item" />
+	<append xpath="/controls">
+		<trader_item>
+			<rect width="124" height="124" style="press, hover, scroll" controller="TraderItemEntry" disabled_font_color="[disabledLabelColor]" enabled_font_color="[labelColor]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" visible="{# itemprice != '' }">
+				<sprite depth="8" name="border" color="255,255,255,68" type="sliced" fillcenter="false"/>
+				<sprite depth="1" name="background" pos="0,0" width="124" height="124" color="[darkGrey]" type="sliced" />
+				<sprite depth="2" height="124" color="{durabilitycolor}" pos="0,0" type="sliced" sprite="Row Outline" globalopacity="true" visible="{hasdurability}" />
+
+				<!-- 物品名称 -->
+				<rect depth="3" pos="0,0" height="24">
+					<sprite color="255,255,255,64" type="sliced" height="24" />
+					<label name="Name" pos="66,-13" width="120" height="24" text="{CATUI_ItemName}" font_size="14" color="{statecolor}" pivot="center" justify="left" style="CATUI.text.shadow.black.1px" />
+				</rect>
+
+				<!-- 物品图标 -->
+				<rect depth="3" pos="0, 0" height="24">
+					<sprite depth="2" name="Icon" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" size="68,68" pos="64,-60" pivot="center" foregroundlayer="true"/>
+					<sprite depth="8" name="itemtypeicon" pos="2,-26" atlas="UIAtlas" size="20,20" sprite="ui_game_symbol_{itemtypeicon}" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
+					<CATUI_quality_item depth="3" pos="106, -82" width="30" height="30" visible="{hasdurability}" color="{durabilitycolor}" durabilitytext="{durabilityvalue}" tooltip_key="xuiQuality" />
+				</rect>
+
+				<!-- 物品价格 -->
+				<rect depth="3" pos="0,-100" height="24">
+					<sprite color="0,0,0,200" type="sliced" />
+					<sprite pos="2,-2" atlas="UIAtlas" size="20,20" sprite="ui_game_symbol_coin" foregroundlayer="true" color="[gold]" />
+					<label pos="66,-13" depth="4" name="price" height="26" text="{itemprice}" font_size="20" width="80" color="[gold]" style="CATUI.text.shadow.black.1px" pivot="center" justify="left" />
+					<label pos="60,9" depth="4" name="price" height="26" text="x{CATUI_ItemCount}" font_size="20" width="120" color="[white]" style="CATUI.text.outline.black.1px" pivot="center" justify="right" visible="{# CATUI_ItemCount != '1' }" />
+				</rect>
+			</rect>
+		</trader_item>
 	</append>
 
 	<!-- // 美化 字体高清 -->
