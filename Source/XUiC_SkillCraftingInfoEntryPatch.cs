@@ -77,16 +77,6 @@ public class XUiC_SkillCraftingInfoEntryPatch
                 __result = true;
                 return false;
 
-            // ŒÔ∆∑TIP
-            case "CATUI_ItemTextTip":
-                _value = "";
-                if (flag)
-                {
-                    _value = data.GetUnlockItemName(0).ToString();
-                }
-                __result = true;
-                return false;
-
             default:
 				return true;
 		}

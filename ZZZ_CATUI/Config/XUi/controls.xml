@@ -338,21 +338,22 @@
 	<remove xpath="/controls/trader_item" />
 	<append xpath="/controls">
 		<trader_item>
-			<rect width="124" height="124" style="press, hover, scroll" controller="TraderItemEntry" disabled_font_color="[disabledLabelColor]" enabled_font_color="[labelColor]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" visible="{# itemprice != '' }">
+			<rect width="124" height="124" style="press, hover, scroll" controller="TraderItemEntry" disabled_font_color="[disabledLabelColor]" enabled_font_color="[labelColor]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" tooltip="{CATUI_ItemName}" visible="{# itemprice != '' }">
 				<sprite depth="8" name="border" color="255,255,255,68" type="sliced" fillcenter="false"/>
 				<sprite depth="1" name="background" pos="0,0" width="124" height="124" color="[darkGrey]" type="sliced" />
-				<sprite depth="2" height="124" color="{durabilitycolor}" pos="0,0" type="sliced" sprite="Row Outline" globalopacity="true" visible="{hasdurability}" />
+				<!-- 物品品质 -->
+				<!-- <sprite depth="2" height="124" color="{durabilitycolor}" pos="0,0" type="sliced" sprite="Row Outline" globalopacity="true" visible="{hasdurability}" /> -->
 
 				<!-- 物品名称 -->
-				<rect depth="3" pos="0,0" height="24">
+				<!-- <rect depth="3" pos="0,0" height="24">
 					<sprite color="255,255,255,64" type="sliced" height="24" />
 					<label name="Name" pos="66,-13" width="120" height="24" text="{CATUI_ItemName}" font_size="14" color="{statecolor}" pivot="center" justify="left" style="CATUI.text.shadow.black.1px" />
-				</rect>
+				</rect> -->
 
 				<!-- 物品图标 -->
 				<rect depth="3" pos="0, 0" height="24">
-					<sprite depth="2" name="Icon" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" size="68,68" pos="64,-60" pivot="center" foregroundlayer="true"/>
-					<sprite depth="8" name="itemtypeicon" pos="2,-26" atlas="UIAtlas" size="20,20" sprite="ui_game_symbol_{itemtypeicon}" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
+					<sprite depth="2" name="Icon" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" size="82,82" pos="64,-50" pivot="center" foregroundlayer="true"/>
+					<sprite depth="8" name="itemtypeicon" pos="2,-2" atlas="UIAtlas" size="24,24" sprite="ui_game_symbol_{itemtypeicon}" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 					<CATUI_quality_item depth="3" pos="106, -82" width="30" height="30" visible="{hasdurability}" color="{durabilitycolor}" durabilitytext="{durabilityvalue}" tooltip_key="xuiQuality" />
 				</rect>
 
@@ -371,7 +372,7 @@
 	<remove xpath="/controls/skill_entry" />
 	<append xpath="/controls">
 		<skill_entry>
-			<panel disableautobackground="true" depth="2" width="123" height="123" controller="SkillEntry" style="press, hover, scroll" enabled_color="[iconColor]" disabled_color="[disabledLabelColor]" row_color="[darkGrey]" hover_color="[mediumGrey]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" visible="{# groupname != ''}" >
+			<panel disableautobackground="true" depth="2" width="123" height="123" controller="SkillEntry" style="press, hover, scroll" enabled_color="[iconColor]" disabled_color="[disabledLabelColor]" row_color="[darkGrey]" hover_color="[mediumGrey]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" tooltip="{groupname}" visible="{# groupname != ''}">
 				<!-- 不能删，controller对groupIcon和groupName做了处理，删除后会找不到元素报错 -->
 				<sprite name="groupIcon" sprite="{groupicon}" style="icon32px" pos="6, -3" color="{statuscolor}" foregroundlayer="true" visible="{#'false'}"/>
 				<label width="386" name="groupName" pos="44,-20" pivot="left" text="{groupname}" color="{statuscolor}" visible="{#'false'}" />
@@ -482,8 +483,8 @@
 	<remove xpath="/controls/skill_crafting_entry" />
 	<append xpath="/controls">
 		<skill_crafting_entry>
-			<panel disableautobackground="true" pos="6,-3"  width="${width}" height="${Floor(height) - 6}" controller="SkillCraftingInfoEntry" color_bg_bought="[darkGrey]" color_bg_available="[darkestGrey]" color_bg_locked="[darkestGrey]" color_lbl_available="[white]" color_lbl_locked="[lightestGrey]" visible="{hasentry}">
-				<rect pos="6,0" width="${Floor(width) - 6}" height="${Floor(height) - 6}" tooltip="{text}">
+			<panel disableautobackground="true" pos="6,-3"  width="${width}" height="${Floor(height) - 6}" style="hover,scroll" controller="SkillCraftingInfoEntry" color_bg_bought="[darkGrey]" color_bg_available="[darkestGrey]" color_bg_locked="[darkestGrey]" color_lbl_available="[white]" color_lbl_locked="[lightestGrey]" visible="{hasentry}" tooltip="{text}">
+				<rect pos="6,0" width="${Floor(width) - 6}" height="${Floor(height) - 6}">
 					<!-- 背景色 -->
 					<sprite depth="8" name="border" color="255,255,255,48" type="sliced" fillcenter="false"/>
 					<sprite depth="1" sprite="menu_empty" type="sliced" fillcenter="true" color="{color_bg}" />
