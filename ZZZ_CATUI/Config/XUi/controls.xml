@@ -367,6 +367,159 @@
 		</trader_item>
 	</append>
 
+	<!-- 技能列表 -->
+	<remove xpath="/controls/skill_entry" />
+	<append xpath="/controls">
+		<skill_entry>
+			<panel disableautobackground="true" depth="2" width="123" height="123" controller="SkillEntry" style="press, hover, scroll" enabled_color="[iconColor]" disabled_color="[disabledLabelColor]" row_color="[darkGrey]" hover_color="[mediumGrey]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" visible="{# groupname != ''}" >
+				<!-- 不能删，controller对groupIcon和groupName做了处理，删除后会找不到元素报错 -->
+				<sprite name="groupIcon" sprite="{groupicon}" style="icon32px" pos="6, -3" color="{statuscolor}" foregroundlayer="true" visible="{#'false'}"/>
+				<label width="386" name="groupName" pos="44,-20" pivot="left" text="{groupname}" color="{statuscolor}" visible="{#'false'}" />
+
+				<!-- 边框 -->
+				<sprite depth="8" name="border" color="255,255,255,48" type="sliced" fillcenter="false"/>
+				<!-- 选中状态，hover状态 -->
+				<sprite depth="1" color="{rowstatecolor}" sprite="{rowstatesprite}" type="sliced" />
+				<!-- 技能不可升级 Disabled -->
+				<sprite depth="2" color="255,255,255,140" sprite="catui_background_disabled_recipe" type="sliced" visible="{CATUI_SkillEntryDisabled}" />
+				<!-- 锁定技能 -->
+				<!-- <sprite pos="30,-19" sprite="ui_game_symbol_lock" visible="{islocked}" style="icon32px" pivot="center" color="{statuscolor}" foregroundlayer="true" /> -->
+				<rect depth="2" pos="62,-62" width="120" height="120">
+					<!-- 技能进度条 - 背景 -->
+					<sprite sprite="catui_bg_skill" color="0,0,0,220" type="sliced" pivot="center" rotation="144" globalopacity="false" />
+					<!-- 技能进度条 - 速度 72=底部缺失的扇形角度，刻度=(360-72)/16=18；填充80%：0.8=(360-72)/360；-->
+					<sprite depth="2" sprite="catui_bg_skill_current" type="filled" fill="{# CATUI_GroupEntryLevelFill * 0.8 }" filldirection="Radial360" color="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? '67, 207, 124' : '255, 195, 0' }" fillinvert="true" globalopacity="false" pivot="center" rotation="144" visible="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax}" />
+					<!-- 技能进度条 - 学满 -->
+					<sprite sprite="catui_bg_skill_current" color="255, 195, 0" type="sliced" pivot="center" rotation="144" visible="{# CATUI_GroupEntryLevel == CATUI_GroupEntryLevelMax}" />
+					<!-- 技能进度条 - ICON背景 -->
+					<sprite sprite="catui_bg_skill_icon" color="0,0,0,150" type="sliced" pivot="center" globalopacity="false" />
+					<!-- 技能图标 技能 -->
+					<sprite depth="2" sprite="{groupicon}" size="42,42" pos="0, 0" pivot="center" color="{statuscolor}" foregroundlayer="true" visible="{# CATUI_GroupType != 'book' }" />
+					<!-- 技能图标 技能书 -->
+					<sprite depth="2" atlas="ItemIconAtlas" sprite="{groupicon}" size="64,64" pos="0, 2" pivot="center" color="{statuscolor}" foregroundlayer="true" visible="{# CATUI_GroupType == 'book' }" />
+				</rect>
+
+				<label depth="2" width="50" height="24" pos="62,-103" text="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? CATUI_GroupEntryLevel + '/' + CATUI_GroupEntryLevelMax : 'MAX' }" font_size="20" pivot="center" justify="center" color="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? statuscolor : '255, 195, 0'}" style="CATUI.text.shadow.black.1px" />
+
+				<rect depth="2" pos="100,-4">
+					<!-- Buffed -->
+					<sprite depth="2" sprite="catui_icon_level_up" size="20,20" color="67, 207, 124" foregroundlayer="true" visible="{# CATUI_SkillEntryIsBuffed == 'true' }" />
+					<!-- Nerfed -->
+					<sprite depth="2" pos="20,-20" sprite="catui_icon_level_up" size="20,20" color="255,96,96" foregroundlayer="true" visible="{# CATUI_SkillEntryIsNerfed == 'true' }" rotation="180" />
+				</rect>
+				<!-- 技能名称 -->
+				<!-- <label depth="2" width="124" height="24" pos="60,-114" pivot="center" text="{groupname}" font_size="16" color="{statuscolor}" justify="center" /> -->
+			</panel>
+		</skill_entry>
+	</append>
+
+	<!-- 技能 - 属性详情&技能详情 -->
+	<remove xpath="/controls/skill_perk_level" />
+	<append xpath="/controls">
+		<skill_perk_level>
+			<panel disableautobackground="true" pos="6,-3" width="${width}" height="${Floor(height) - 6}" style="hover,scroll" controller="${controller}" color_bg_bought="[darkGrey]" color_bg_available="[darkGrey]" color_bg_locked="[darkestGrey]" color_lbl_available="[white]" color_lbl_locked="[lightestGrey]" color_lbl_nerfed="204,17,17" color_lbl_buffed="17,204,17" visible="{hasentry}">
+				<rect pos="6,0" width="${Floor(width) - 6}" height="${Floor(height) - 6}">
+					<!-- 背景色 -->
+					<sprite depth="8" name="border" color="255,255,255,48" type="sliced" fillcenter="false"/>
+					<sprite depth="1" sprite="menu_empty" type="sliced" fillcenter="true" color="{color_bg}" />
+					<!-- 技能 Disabled -->
+					<sprite depth="2" sprite="catui_stat_background_disabled" type="sliced" fillcenter="true" color="255,255,255,128" visible="{# CATUI_SkillStat == 'notbuy' or CATUI_IsNerfed == 'true' }" />
+					<!-- 技能 Buffed -->
+					<sprite depth="8" sprite="menu_empty2px" type="sliced" fillcenter="false" color="67, 207, 124" visible="{# CATUI_IsBuffed == 'true' }" />
+					<!-- 技能 Nerfed -->
+					<sprite depth="8" sprite="menu_empty2px" type="sliced" fillcenter="false" color="255, 96, 96" visible="{# CATUI_IsNerfed == 'true' }" />
+					<rect depth="8" pos="${Floor(height) - 26},-4">
+						<!-- Buffed -->
+						<sprite depth="8" sprite="catui_icon_level_up" size="20,20" color="67, 207, 124" foregroundlayer="true" visible="{# CATUI_IsBuffed == 'true' }" />
+						<!-- Nerfed -->
+						<sprite depth="8" pos="20,-20" sprite="catui_icon_level_up" size="20,20" color="255,96,96" foregroundlayer="true" visible="{# CATUI_IsNerfed == 'true' }" rotation="180" />
+					</rect>
+					<!-- 技能等级 -->
+					<rect depth="3" width="${Floor(height) - 6}" height="${Floor(height) - 6}" pivot="center" >
+						<sprite depth="1" type="sliced" color="0,0,0,255" />
+						<sprite depth="2" pos="40, -40" sprite="{# CATUI_SkillStat == 'bought' ? 'catui_bg_skill_level_upped' : 'catui_bg_skill_level'}" size="60,60" pivot="center" color="{color_fg}" />
+						<label depth="3" pos="40, -43" text="{level}" color="{color_fg}" font_size="24" justify="center" pivot="center" />
+					</rect>				
+					<!-- 技能等级名称 -->
+					<label depth="3" pos="${width/2 + 30}, -${height/2}" width="${width - height - height/2}" height="${height - 20}" text="{text}" pivot="center" justify="left"  font_size="26" max_line_count="3" spacing_y="5" color="{color_fg}" />
+					<!-- 技能学习按钮 -->
+					<button depth="3" name="btnBuy" pos="${width-36},-${Round(height/2,0)-2}" style="press, hover" sprite="{buyicon}" size="36,36" pivot="center" tooltip="{buytooltip}" sound="[paging_click]" sound_play_on_hover="[default_hover]" defaultcolor="{# CATUI_SkillStat == 'bought' ? (CATUI_IsNerfed == 'true' ? '255,96,96' : '67, 207, 124') : ( CATUI_SkillStat == 'notbuy' ? '160,160,160' : '255, 255, 255') }" manualcolors="true" visible="{buyvisible}" />
+				</rect>
+			</panel>
+		</skill_perk_level>
+	</append>
+
+
+	<!-- 技能 - 技能书详情 -->
+	<remove xpath="/controls/skill_book_level" />
+	<append xpath="/controls">
+		<skill_book_level>
+			<panel disableautobackground="true" pos="6,-3" width="${width}" height="${Floor(height) - 6}" controller="${controller}" color_bg_bought="[darkGrey]" color_bg_available="[darkGrey]" color_bg_locked="[darkestGrey]" color_lbl_available="[white]" color_lbl_locked="[lightestGrey]" visible="{hasentry}">
+				<rect pos="6,0" width="${Floor(width) - 6}" height="${Floor(height) - 6}">
+					<!-- 背景色 -->
+					<sprite depth="8" name="border" color="255,255,255,48" type="sliced" fillcenter="false"/>
+					<sprite depth="1" sprite="menu_empty" type="sliced" fillcenter="true" color="{color_bg}" />
+					<!-- 技能等级 -->
+					<rect depth="3" width="${Floor(height) - 6}" height="${Floor(height) - 6}" pivot="center" >
+						<sprite depth="1" type="sliced" color="0,0,0,255" />
+						<sprite depth="2" pos="25, -25" sprite="{# CATUI_SkillStat == 'bought' ? 'catui_bg_skill_level_upped' : 'catui_bg_skill_level'}" size="40,40" pivot="center" color="{color_fg}" />
+						<label depth="3" pos="25, -28" text="{level}" color="{color_fg}" font_size="20" justify="center" pivot="center" />
+						<!-- 全收集 -->
+						<label depth="3" pos="25, -26" text="MAX" color="{# CATUI_SkillStat == 'bought' ? '255, 195, 0' : color_fg }" font_size="12" justify="center" pivot="center" visible="{iscomplete}" />
+
+						<!-- <sprite depth="3" pos="25,-25" style="icon30px" sprite="ui_game_symbol_perk" pivot="center" color="{# CATUI_SkillStat == 'bought' ? '255, 195, 0' : color_fg }" visible="{iscomplete}" /> -->
+					</rect>				
+					<!-- 技能等级名称 -->
+					<label depth="3" pos="${width/2 + 20}, -${height/2}" width="${width - height - height/2}" height="${height - 20}" text="{text}" pivot="center" justify="left" font_size="22" max_line_count="3" spacing_y="5" color="{color_fg}" />
+					<!-- 技能状态 -->
+					<sprite depth="3" name="btnBuy" pos="${width-30},-${Round(height/2,0)-2}" size="22,22" sprite="{buyicon}" pivot="center" color="{# CATUI_SkillStat == 'bought' ? '67, 207, 124' : '128,128,128' }" visible="{buyvisible}" gamepad_selectable="false"/>
+				</rect>
+			</panel>
+		</skill_book_level>
+	</append>
+
+	<!-- 技能 - 制作技能 -->
+	<remove xpath="/controls/skill_crafting_entry" />
+	<append xpath="/controls">
+		<skill_crafting_entry>
+			<panel disableautobackground="true" pos="6,-3"  width="${width}" height="${Floor(height) - 6}" controller="SkillCraftingInfoEntry" color_bg_bought="[darkGrey]" color_bg_available="[darkestGrey]" color_bg_locked="[darkestGrey]" color_lbl_available="[white]" color_lbl_locked="[lightestGrey]" visible="{hasentry}">
+				<rect pos="6,0" width="${Floor(width) - 6}" height="${Floor(height) - 6}" tooltip="{text}">
+					<!-- 背景色 -->
+					<sprite depth="8" name="border" color="255,255,255,48" type="sliced" fillcenter="false"/>
+					<sprite depth="1" sprite="menu_empty" type="sliced" fillcenter="true" color="{color_bg}" />
+					<!-- 未解锁图标 -->
+					<sprite depth="12" pos="${Round(height-20,0)}, -${Round(height-20,0)}" size="20,20" sprite="ui_game_symbol_lock" pivot="center" color="{color_fg}" visible="{# showlock}" />
+					<!-- 图标 -->
+					<rect depth="3" width="${Floor(height) - 6}" height="${Floor(height) - 6}" pivot="center">
+						<!-- 未解锁背景 -->
+						<sprite depth="2" sprite="catui_background_disabled_recipe" type="sliced" fillcenter="true" color="255,255,255,128" visible="{# showlock}" />
+						<!-- 物品等阶 - 背景 -->
+						<!-- <sprite depth="2" color="{currentqualitycolor}" pos="1,-1" type="sliced" sprite="Row Outline" globalopacity="true" visible="{showquality}" /> -->
+
+						<!-- 物品图标 -->
+						<sprite depth="3" pos="${Round(height/2,0)}, -${Round(height/2-4,0)}" name="itemIcon" atlas="{iconatlas}" sprite="{itemicon}" size="${Round(height-30,0)},${Round(height-30,0)}" pivot="center" foregroundlayer="true" color="{itemcolor}" />
+					</rect>
+
+					<!-- 物品等阶 - 数字 -->
+					<CATUI_quality_item depth="7" pos="${Round(height-29,0)}, -${Round(height-29,0)}" width="30" height="30" visible="{showquality}" color="{currentqualitycolor}" durabilitytext="{currentqualitytext}" tooltip_key="xuiQuality" />
+
+					<!-- 物品等阶 - 下一级进度条 -->
+					<sprite depth="7" name="durabilityBackground" width="${Round(width-10,0)}" height="4" sprite="menu_empty3px" color="[darkGrey]" type="sliced" pos="2, -${Round(height-12,0)}" foregroundlayer="true" visible="{# showquality and notcomplete}" />
+					<filledsprite depth="8" name="durability" width="${Round(width-10,0)}" height="4" sprite="menu_empty2px" color="{nextqualitycolor}" fill="{CATUI_QualityNextLevelFill}" type="filled" pos="2, -${Round(height-12,0)}" foregroundlayer="true" visible="{# showquality and notcomplete}" />
+					<!-- 物品等阶 - 下一级进度数字 -->
+					<label depth="9" pos="4, -${Round(height-26,0)}" text="{nextpoints}" width="65" font_size="18" color="{color_fg}" style="CATUI.text.shadow.black.1px" visible="{# showquality and notcomplete}" />
+
+					<!-- 物品解锁进度 -->
+					<label depth="9" pos="4, -${Round(height-26,0)}" text="{CATUI_SkillLevel}/{CATUI_ItemUnlockLevel}" width="65" font_size="18" color="{color_fg}" style="CATUI.text.shadow.black.1px" visible="{# showlock}" />
+
+					<!-- 物品名称 -->
+					<!-- <label depth="9" pos="6, -6" width="${Round(height-12,0)}" height="32" text="{text}" justify="left" font_size="16" max_line_count="2" color="{color_fg}" /> -->
+				</rect>				
+			</panel>
+		</skill_crafting_entry>
+	</append>
+
+
 	<!-- // 美化 字体高清 -->
 	<setattribute xpath="//label[@text]" name="crispness">OnDesktop</setattribute>
 </CATUI>

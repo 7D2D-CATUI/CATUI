@@ -57,7 +57,7 @@ public class XUiC_TargetBarPatch
 				value = "0";
 				if (Target != null)
 				{
-					value = EffectManager.GetValue(PassiveEffects.PhysicalDamageResist, null, 0f, Target).ToString();
+					value = EffectManager.GetValue(PassiveEffects.PhysicalDamageResist, null, 0f, Target).ToString("F0");
 				}
 				__result = true;
 				return false;

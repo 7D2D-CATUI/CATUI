@@ -11,9 +11,11 @@ public class XUiC_PartyWindowPatch
 		switch (bindingName)
 		{
 			// 根据团队数量设置PartyWindow Pos Y
-			// 已知bug：Companions变化后不会触发此bind
+			// 已知bug：Companions（非玩家组队）变化后不会触发此bind
 			case "CATUI_PartyWindowPositionY":
+				// 默认间距
 				int defaultHeight = 130;
+				// 单项高度
 				int entryHeight = 56;
 				value = defaultHeight.ToString();
 				// 组队

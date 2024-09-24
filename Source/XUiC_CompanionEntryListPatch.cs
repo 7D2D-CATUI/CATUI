@@ -35,6 +35,7 @@ public class XUiC_CompanionEntryListPatch
 				__instance.entryList[k].SetCompanion(null);
 			}
 		}
+
 		return false;
 	}
 }
