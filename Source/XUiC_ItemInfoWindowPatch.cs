@@ -1,4 +1,5 @@
 using HarmonyLib;
+using System;
 using UnityEngine;
 
 [HarmonyPatch(typeof(XUiC_ItemInfoWindow))]
@@ -25,7 +26,7 @@ public class XUiC_ItemInfoWindowPatch
 					}
 					else
 					{
-						value = (itemStack.itemValue.MaxUseTimes - itemStack.itemValue.UseTimes).ToString("F0");
+						value = (itemStack.itemValue.MaxUseTimes - Convert.ToInt32(itemStack.itemValue.UseTimes)).ToString("F0");
 					}
 				}
 				__result = true;

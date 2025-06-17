@@ -1,4 +1,5 @@
 // 引入所需的命名空间
+using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using UnityEngine;
@@ -9,17 +10,13 @@ public class ModStartup : IModApi
     // 初始化方法
     public void InitMod(Mod modInstance)
     {
-        // 加载Assembly-CSharp.dll
-        Assembly executeAssembly = Assembly.GetExecutingAssembly();
-
-        // 创建Harmony实例
-        Harmony harmony = new Harmony(executeAssembly.GetName().Name);
-
-        // 打补丁
-        harmony.PatchAll(executeAssembly);
+        // Debug.Log("<color=#00FF00>Loading CATUI:</color> " + GetType().ToString());
+        Harmony val = new Harmony(GetType().ToString());
+        val.PatchAll(Assembly.GetExecutingAssembly());
+        Debug.Log($"<color=#00FF00>CATUI Has Applied {val.GetPatchedMethods().Count()} patches</color>");
 
         // 常量补丁
-        ModEvents.GameAwake.RegisterHandler(() =>
+       /* ModEvents.GameAwake.RegisterHandler(() =>
         {
             Constants.TrackedFriendColors = new Color[8]
             {
@@ -32,6 +29,6 @@ public class ModStartup : IModApi
                 new Color32(255, 235, 59, byte.MaxValue),
                 new Color32(153, 110, 255, byte.MaxValue)
             };
-        });
+        });*/
     }
 }

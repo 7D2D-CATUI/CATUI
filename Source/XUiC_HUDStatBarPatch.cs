@@ -277,33 +277,33 @@ public class XUiC_HUDStatBarPatch
 			// 人物属性 - 移动速度
 			case "CATUI_playerMoveSpeed":
 				value = "100";
-				if (__instance.LocalPlayer != null)
-				{
-					float num = EffectManager.GetValue(PassiveEffects.Mobility, null, 0f, __instance.LocalPlayer, null, XUiM_Player.playerFastTags, calcEquipment: true, calcHoldingItem: true, calcProgression: true, calcBuffs: true, calcChallenges: true, 1, useMods: true, _useDurability: true) * 100f;
-					value = ((int)num).ToString();
-				}
-				__result = true;
+                if (__instance.LocalPlayer != null)
+                {
+                    float num = EffectManager.GetValue(PassiveEffects.Mobility, null, 0f, __instance.LocalPlayer, null, XUiM_Player.GetPlayer().generalTags, calcEquipment: true, calcHoldingItem: true, calcProgression: true, calcBuffs: true, calcChallenges: true, 1, useMods: true, _useDurability: true) * 100f;
+                    value = ((int)num).ToString();
+                }
+                __result = true;
 				return false;
 			// 人物属性 - 移动速度等级
 			case "CATUI_playerMoveSpeedLevel":
 				value = "4";
-				if (__instance.LocalPlayer != null)
-				{
-					float num = EffectManager.GetValue(PassiveEffects.Mobility, null, 0f, __instance.LocalPlayer, null, XUiM_Player.playerFastTags, calcEquipment: true, calcHoldingItem: true, calcProgression: true, calcBuffs: true, calcChallenges: true, 1, useMods: true, _useDurability: true) * 100f;
-					value = ((int)num).ToString();
-					int speed = (int)num;
-					value = speed switch
-					{
-						>= 0 and < 50 => "0",
-						>= 50 and < 70 => "1",
-						>= 70 and < 80 => "2",
-						>= 80 and < 90 => "3",
-						>= 100 and < 110 => "4",
-						>= 110 and < 120 => "5",
-						_ => "6"
-					};
-				}
-				__result = true;
+                if (__instance.LocalPlayer != null)
+                {
+                    float num = EffectManager.GetValue(PassiveEffects.Mobility, null, 0f, __instance.LocalPlayer, null, XUiM_Player.GetPlayer().generalTags, calcEquipment: true, calcHoldingItem: true, calcProgression: true, calcBuffs: true, calcChallenges: true, 1, useMods: true, _useDurability: true) * 100f;
+                    value = ((int)num).ToString();
+                    int speed = (int)num;
+                    value = speed switch
+                    {
+                        >= 0 and < 50 => "0",
+                        >= 50 and < 70 => "1",
+                        >= 70 and < 80 => "2",
+                        >= 80 and < 90 => "3",
+                        >= 100 and < 110 => "4",
+                        >= 110 and < 120 => "5",
+                        _ => "6"
+                    };
+                }
+                __result = true;
 				return false;
 
 			// 人物属性 - 奔跑速度
@@ -616,7 +616,8 @@ public class XUiC_HUDStatBarPatch
 				value = "false";
 				if (__instance.Vehicle != null)
 				{
-					value = (__instance.Vehicle.GetVehicle().FindPart("headlight") as VPHeadlight)?.IsOn().ToString();
+					//value = (__instance.Vehicle.GetVehicle().FindPart("headlight") as VPHeadlight)?.IsOn().ToString();
+					value = (__instance.Vehicle.IsHeadlightOn).ToString();
 				}
 				__result = true;
 				return false;

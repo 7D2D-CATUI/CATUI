@@ -16,7 +16,7 @@ public class XUiC_ItemStackPatch
 				__result = true;
 				return false;
 			// 有品质的道具 插槽状态 创造模式有bug
-			case "CATUI_itemStackModifications":
+			/*case "CATUI_itemStackModifications":
 				_value = "";
 				ItemValue itemValue = __instance.itemStack.itemValue;
 				ItemValue[] mods = itemValue.Modifications;
@@ -36,7 +36,7 @@ public class XUiC_ItemStackPatch
 					_value = text;
 				}
 				__result = true;
-				return false;
+				return false;*/
 			default:
 				return true;
 		}
