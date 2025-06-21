@@ -18,4 +18,5 @@
 	<setattribute xpath="//skills/book_group[@name='skillUrbanCombat']" name="icon">bookUrbanCombatLanding</setattribute>
 	<setattribute xpath="//skills/book_group[@name='skillTechJunkie']" name="icon">bookTechJunkie1Damage</setattribute>
 	<setattribute xpath="//skills/book_group[@name='skillWasteTreasures']" name="icon">bookWasteTreasuresHoney</setattribute>
+	<setattribute xpath="//skills/book_group[@name='skillSledgeSaga']" name="icon">bookSledgeSagaKnockdown</setattribute>
 </CATUI>

@@ -33,7 +33,7 @@
 
 			<rect name="Stat" pos="18, -76" width="500">
 				<table columns="10" padding="5,0" hide_inactive="true" always_reposition="true">
-					<rect name="Food" pos="0,0" width="50" height="50"  controller="HUDStatBar" stat_type="Food" tooltip_key="xuiFood" visible="{statvisible}">
+					<!-- <rect name="Food" pos="0,0" width="50" height="50"  controller="HUDStatBar" stat_type="Food" tooltip_key="xuiFood" visible="{statvisible}">
 						<sprite type="filled" color="[darkestGrey]" fill="{statmodifiedmax}" style="CATUI.sprite.filled.prue" />
 						<sprite type="filled" color="255, 193, 7,255" fill="{statfill}" filldirection="vertical" style="CATUI.sprite.filled.prue" foregroundlayer="true" />
 						<sprite type="filled" color="255,255,255,100" fill="{statfill}" filldirection="vertical" sprite="catui_background_gradient" />
@@ -47,7 +47,7 @@
 						<sprite type="filled" color="255,255,255,100" fill="{statfill}" filldirection="vertical" sprite="catui_background_gradient" />
 						<sprite atlas="{staticonatlas|once}" sprite="catui_icon_water" globalopacity="false" size="36,36" pos="6,-2" />
 						<label pos="0,-38" width="100%" font_size="14" color="[white]" text="{CATUI_statCurrentWithMax}" style="CATUI.text.outline.black.1px" justify="center" />
-					</rect>
+					</rect> -->
 
 					<!-- 护甲等级 -->
 					<rect name="ArmorRating" width="50" height="50" controller="HUDStatBar" tooltip_key="statPhysicalDamageResist"  visible="{statvisible}">
@@ -250,7 +250,7 @@
 	<append xpath="/windows">
 		<window name="windowCompass" anchor="CenterTop" pos="-240,-9" width="480" height="43" controller="CompassWindow">
 			<sprite depth="0" pos="-120,15" width="721" height="140" sprite="catui_compass_bg"  type="sliced" color="255, 255, 255, 255" />
-			<texture depth="8" texture="Textures/UI/Compass/overlay-{compass_language}" pos="50, -8" width="380" height="27" color="[iconColor]" name="compassTexture3" rect_size="0.25,1" rect_offset="{#compass_rotation / 360 + 0.0625 - 0.125},0" />
+			<texture depth="8" texture="@:Textures/UI/Compass/overlay-{compass_language}.png" pos="50, -8" width="380" height="27" color="[iconColor]" name="compassTexture3" rect_size="0.25,1" rect_offset="{#compass_rotation / 360 + 0.0625 - 0.125},0" />
 			<rect name="hud_day" pos="-106,0" rows="1" cols="1" width="141">
 				<label depth="2" name="TextContent" pos="-14,-11" width="133" height="30" text="{daytitle}: [{daycolor}]{day}[-]" font_size="24" color="[white]" justify="right" style="CATUI.text.shadow.black.1px" />
 			</rect>
@@ -326,6 +326,10 @@
 					<sprite type="sliced" style="CATUI.level.color.1" visible="{# CATUI_EntityType == 'feral' }" />
 					<!-- 辐射 -->
 					<sprite type="sliced" style="CATUI.level.color.2" visible="{# CATUI_EntityType == 'radiated' }" />
+					<!-- 带电 -->
+					<sprite type="sliced" style="CATUI.level.color.4" visible="{# CATUI_EntityType == 'charged' }" />
+					<!-- 炼狱 -->
+					<sprite type="sliced" style="CATUI.level.color.0" visible="{# CATUI_EntityType == 'infernal' }" />
 					<!-- BOSS - 猪王，大熊，丧尸熊，恐狼 -->
 					<sprite type="sliced" style="CATUI.level.color.5" visible="{# CATUI_EntityType == 'boss' }" />
 				</rect>
@@ -513,26 +517,45 @@
 		<!-- 血条，体力条 -->
 		<window name="HUDCenterBottomStat" depth="-20" pos="0, 60">
 			<!-- 装饰图 -->
-			<sprite pos="-360,158" width="721" height="140" sprite="catui_compass_bg" color="255, 255, 255, 255" flip="Vertically" />
+			<sprite pos="-360,110" width="721" height="140" sprite="catui_compass_bg" color="255, 255, 255, 255" />
 
 			<!-- 角色HUD -->
 			<rect name="hud" pos="-500, 80" width="1000" height="70">
 				<!-- <sprite depth="-20" color="255,25,25,100" type="sliced" /> -->
 				<!-- 长度计算：最大值 + 120；最大值大于280时，写死极限宽度400 -->
 				<rect name="CATUI_health_bar" pos="250, 0">
-					<CATUI_stat_bar controller="HUDStatBar" width="220" height="34" stat_type="Health" stat_bar_color="187,45,59,255" inner_pos_x="{# Int(CATUI_playerHealthMax) &lt; 280 ? (Int(CATUI_playerHealthMax) - 100) * -1 : -180 }" inner_pos_y="0" inner_width="{# Int(CATUI_playerHealthMax) &lt; 280 ? Int(CATUI_playerHealthMax) + 120 : 400 }" tooltip_key="lblHealth" has_invert="true" />
+					<CATUI_stat_bar controller="HUDStatBar" width="293" height="34" stat_type="Health" stat_bar_color="187,45,59,255" inner_pos_x="-120" inner_pos_y="0" inner_width="293" tooltip_key="lblHealth" has_invert="true" />
 				</rect>
-				<rect name="CATUI_stamina_bar" pos="530, 0">
-					<CATUI_stat_bar controller="HUDStatBar" width="220" height="34" stat_type="Stamina" stat_bar_color="25,135,84,255" inner_pos_x="0" inner_pos_y="0" inner_width="{# Int(CATUI_playerStaminaMax) &lt; 280 ? Int(CATUI_playerStaminaMax) + 120 : 400 }" tooltip_key="lblStamina" has_invert="false" />
+				<rect name="CATUI_stamina_bar" pos="520, 0">
+					<CATUI_stat_bar controller="HUDStatBar" width="293" height="34" stat_type="Stamina" stat_bar_color="25,135,84,255" inner_pos_x="60" inner_pos_y="0" inner_width="293" tooltip_key="lblStamina" has_invert="false" />
+				</rect>
+				
+				<!-- 中线位置 504 -->
+				<rect name="Food" pos="440, 24" width="50" height="50"  controller="HUDStatBar" stat_type="Food" tooltip_key="xuiFood" visible="{statvisible}">
+					<sprite pos="-3,3" sprite="catui_bg_satiety" flip="horizontally" size="62,62" color="0,0,0,220" type="sliced" />
+					<sprite type="filled" pos="0,-112" size="112,112" color="[darkestGrey]" sprite="catui_bg_satiety_current" fill="{# statmodifiedmax * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" rotation="90" fillInvert="true" />
+					<sprite type="filled" pos="0,-112" size="112,112" color="255, 193, 7,255" sprite="catui_bg_satiety_current" fill="{# statfill * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" foregroundlayer="true" rotation="90" fillInvert="true" />
+					<sprite pos="0,0" sprite="catui_bg_satiety_border" flip="horizontally" size="56,56" color="255,255,255,150" type="sliced" />
+					<sprite atlas="{staticonatlas|once}" sprite="catui_icon_food" color="255,255,255,180" globalopacity="false" size="24,24" pos="30,-23" />
+					<label pos="-7,-50" width="62" font_size="14" color="[white]" text="{CATUI_statCurrentWithMax}" style="CATUI.text.outline.black.1px" justify="right" />
+				</rect>
+				<rect name="Water" pos="508, 24" width="50" height="50" controller="HUDStatBar" stat_type="Water" tooltip_key="xuiWater" visible="{statvisible}">
+					<sprite pos="-3,3" sprite="catui_bg_satiety" size="62,62" color="0,0,0,220" type="sliced" />
+					<sprite type="filled" pos="56,0" size="112,112" color="[darkestGrey]" sprite="catui_bg_satiety_current" fill="{# statmodifiedmax * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" rotation="270" />
+					<sprite type="filled" pos="56,0" size="112,112" color="13,110,253,255" sprite="catui_bg_satiety_current" fill="{# statfill * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" foregroundlayer="true" rotation="270" />
+					<sprite pos="0,0" sprite="catui_bg_satiety_border" size="56,56" color="255,255,255,150" type="sliced" />
+					<sprite atlas="{staticonatlas|once}" sprite="catui_icon_water" color="255,255,255,180" globalopacity="false" size="24,24" pos="1,-23" />
+					<label pos="0,-50" width="62" font_size="14" color="[white]" text="{CATUI_statCurrentWithMax}" style="CATUI.text.outline.black.1px" justify="left" />
 				</rect>
 			</rect>
 
 			<!-- 潜行条 -->
-			<rect pos="-125,150" width="250" height="34" controller="HUDStatBar" stat_type="Stealth" tooltip_key="statSneakSprint" visible="{cvar(_crouching:true;false;false)}">
-				<sprite name="background" width="258" height="42" pos="-4,4" color="0,0,0,175" type="sliced" />
+			<rect pos="-100,150" width="200" height="16" controller="HUDStatBar" stat_type="Stealth" tooltip_key="statSneakSprint" visible="{cvar(_crouching:true;false;false)}">
+				<sprite name="background" width="206" height="22" pos="-3,3" color="0,0,0,175" type="sliced" />
 				<sprite name="background" color="25,25,25,255" type="sliced" />
-				<filledsprite width="251" name="BarContent" color="{stealthcolor}" type="filled" fill="0" />
-				<sprite name="Icon" atlas="{staticonatlas|once}" sprite="{staticon|once}" size="32,28" pos="110,-3" />
+				<filledsprite width="200" name="BarContent" color="{stealthcolor}" type="filled" fill="0" />
+				<sprite name="Icon" atlas="{staticonatlas|once}" sprite="{staticon|once}" size="16,14" pos="98,-1" color="255,255,255,200" />
+				<!-- <label depth="6" name="TextContent" pos="44,-23" font_size="16" color="[white]" justify="center" pivot="left" text="{statcurrent}" width="125" height="35"/> -->
 			</rect>
 		</window>
 	</append>
@@ -597,7 +620,8 @@
 	</append>
 
 	<!-- 制作队列 -->
-	<setattribute xpath="//window[@name='windowCraftingQueue']/rect[@controller='CraftingQueue']" name="pos">0,0</setattribute>
+	<setattribute xpath="//window[@name='windowCraftingQueue']/rect[@controller='CraftingQueue']" name="pos">88,-14</setattribute>
+	<setattribute xpath="//window[@name='windowCraftingQueue']/rect[@controller='CraftingQueue']/grid[@name='queue']" name="pos">-85,0</setattribute>
 	<setattribute xpath="//window[@name='windowCraftingQueue']/rect[@controller='CraftingQueue']/grid[@name='queue']" name="cols">5</setattribute>
 	<setattribute xpath="//window[@name='windowCraftingQueue']/rect[@controller='CraftingQueue']/grid[@name='queue']" name="cell_width">80</setattribute>
 	<setattribute xpath="//window[@name='windowCraftingQueue']/rect[@controller='CraftingQueue']/grid[@name='queue']" name="cell_height">80</setattribute>

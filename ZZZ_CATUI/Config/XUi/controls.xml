@@ -173,8 +173,9 @@
 				<!-- 角标 - 快速切换 -->
 				<sprite depth="14" name="quickswapIcon" size="30,30" sprite="server_refresh" pos="3,-36" foregroundlayer="true" />
 				<!-- 工具栏 - 数字编号 -->
-				<rect style="CATUI.toolbelt.slots.num.bg" visible="${show_slotnum}">
-					<label text="{# int(CATUI_itemStackSlotIndex) + 1 }" style="CATUI.toolbelt.slots.num, CATUI.text.shadow.black.1px" />
+				<rect depth="15" pos="0, -99" width="15" height="15" visible="${show_slotnum}">
+					<sprite size="20,16" type="sliced" justify="center" pivot="center" sprite="catui_bg_toolbelt_slot_num" pos="36,16" color="255, 255, 255, 255" />
+					<label pos="36,15" text="{# int(CATUI_itemStackSlotIndex) + 1 }" justify="center" pivot="center" font_size="15" color="[black]" />
 				</rect>
 			</rect>
 		</item_stack>
@@ -338,22 +339,21 @@
 	<remove xpath="/controls/trader_item" />
 	<append xpath="/controls">
 		<trader_item>
-			<rect width="124" height="124" style="press, hover, scroll" controller="TraderItemEntry" disabled_font_color="[disabledLabelColor]" enabled_font_color="[labelColor]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" tooltip="{CATUI_ItemName}" visible="{# itemprice != '' }">
+			<rect width="124" height="124" style="press, hover, scroll" controller="TraderItemEntry" disabled_font_color="[disabledLabelColor]" enabled_font_color="[labelColor]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" visible="{# itemprice != '' }">
 				<sprite depth="8" name="border" color="255,255,255,68" type="sliced" fillcenter="false"/>
 				<sprite depth="1" name="background" pos="0,0" width="124" height="124" color="[darkGrey]" type="sliced" />
-				<!-- 物品品质 -->
-				<!-- <sprite depth="2" height="124" color="{durabilitycolor}" pos="0,0" type="sliced" sprite="Row Outline" globalopacity="true" visible="{hasdurability}" /> -->
+				<sprite depth="2" height="124" color="{durabilitycolor}" pos="0,0" type="sliced" sprite="Row Outline" globalopacity="true" visible="{hasdurability}" />
 
 				<!-- 物品名称 -->
-				<!-- <rect depth="3" pos="0,0" height="24">
+				<rect depth="3" pos="0,0" height="24">
 					<sprite color="255,255,255,64" type="sliced" height="24" />
 					<label name="Name" pos="66,-13" width="120" height="24" text="{CATUI_ItemName}" font_size="14" color="{statecolor}" pivot="center" justify="left" style="CATUI.text.shadow.black.1px" />
-				</rect> -->
+				</rect>
 
 				<!-- 物品图标 -->
 				<rect depth="3" pos="0, 0" height="24">
-					<sprite depth="2" name="Icon" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" size="82,82" pos="64,-50" pivot="center" foregroundlayer="true"/>
-					<sprite depth="8" name="itemtypeicon" pos="2,-2" atlas="UIAtlas" size="24,24" sprite="ui_game_symbol_{itemtypeicon}" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
+					<sprite depth="2" name="Icon" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" size="68,68" pos="64,-60" pivot="center" foregroundlayer="true"/>
+					<sprite depth="8" name="itemtypeicon" pos="2,-26" atlas="UIAtlas" size="20,20" sprite="ui_game_symbol_{itemtypeicon}" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 					<CATUI_quality_item depth="3" pos="106, -82" width="30" height="30" visible="{hasdurability}" color="{durabilitycolor}" durabilitytext="{durabilityvalue}" tooltip_key="xuiQuality" />
 				</rect>
 
@@ -372,7 +372,7 @@
 	<remove xpath="/controls/skill_entry" />
 	<append xpath="/controls">
 		<skill_entry>
-			<panel disableautobackground="true" depth="2" width="123" height="123" controller="SkillEntry" style="press, hover, scroll" enabled_color="[iconColor]" disabled_color="[disabledLabelColor]" row_color="[darkGrey]" hover_color="[mediumGrey]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" tooltip="{groupname}" visible="{# groupname != ''}">
+			<panel disableautobackground="true" depth="2" width="123" height="123" controller="SkillEntry" style="press, hover, scroll" enabled_color="[iconColor]" disabled_color="[disabledLabelColor]" row_color="[darkGrey]" hover_color="[mediumGrey]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" visible="{# groupname != ''}" >
 				<!-- 不能删，controller对groupIcon和groupName做了处理，删除后会找不到元素报错 -->
 				<sprite name="groupIcon" sprite="{groupicon}" style="icon32px" pos="6, -3" color="{statuscolor}" foregroundlayer="true" visible="{#'false'}"/>
 				<label width="386" name="groupName" pos="44,-20" pivot="left" text="{groupname}" color="{statuscolor}" visible="{#'false'}" />
@@ -385,7 +385,7 @@
 				<sprite depth="2" color="255,255,255,140" sprite="catui_background_disabled_recipe" type="sliced" visible="{CATUI_SkillEntryDisabled}" />
 				<!-- 锁定技能 -->
 				<!-- <sprite pos="30,-19" sprite="ui_game_symbol_lock" visible="{islocked}" style="icon32px" pivot="center" color="{statuscolor}" foregroundlayer="true" /> -->
-				<rect depth="2" pos="62,-62" width="120" height="120">
+				<rect depth="2" pos="62,-52" width="100" height="100">
 					<!-- 技能进度条 - 背景 -->
 					<sprite sprite="catui_bg_skill" color="0,0,0,220" type="sliced" pivot="center" rotation="144" globalopacity="false" />
 					<!-- 技能进度条 - 速度 72=底部缺失的扇形角度，刻度=(360-72)/16=18；填充80%：0.8=(360-72)/360；-->
@@ -400,7 +400,7 @@
 					<sprite depth="2" atlas="ItemIconAtlas" sprite="{groupicon}" size="64,64" pos="0, 2" pivot="center" color="{statuscolor}" foregroundlayer="true" visible="{# CATUI_GroupType == 'book' }" />
 				</rect>
 
-				<label depth="2" width="50" height="24" pos="62,-103" text="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? CATUI_GroupEntryLevel + '/' + CATUI_GroupEntryLevelMax : 'MAX' }" font_size="20" pivot="center" justify="center" color="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? statuscolor : '255, 195, 0'}" style="CATUI.text.shadow.black.1px" />
+				<label depth="2" width="50" height="24" pos="62,-88" text="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? CATUI_GroupEntryLevel + '/' + CATUI_GroupEntryLevelMax : 'MAX' }" font_size="20" pivot="center" justify="center" color="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? statuscolor : '255, 195, 0'}" style="CATUI.text.shadow.black.1px" />
 
 				<rect depth="2" pos="100,-4">
 					<!-- Buffed -->
@@ -409,7 +409,12 @@
 					<sprite depth="2" pos="20,-20" sprite="catui_icon_level_up" size="20,20" color="255,96,96" foregroundlayer="true" visible="{# CATUI_SkillEntryIsNerfed == 'true' }" rotation="180" />
 				</rect>
 				<!-- 技能名称 -->
-				<!-- <label depth="2" width="124" height="24" pos="60,-114" pivot="center" text="{groupname}" font_size="16" color="{statuscolor}" justify="center" /> -->
+
+				<!-- 物品价格 -->
+				<rect depth="3" pos="60,-112" height="24">
+					<sprite pos="-60,13" color="0,0,0,200" type="sliced" />
+					<label depth="2" width="100%" height="24"  pivot="center" text="{groupname}" font_size="14" color="{statuscolor}" justify="center" />
+				</rect>
 			</panel>
 		</skill_entry>
 	</append>
@@ -483,8 +488,8 @@
 	<remove xpath="/controls/skill_crafting_entry" />
 	<append xpath="/controls">
 		<skill_crafting_entry>
-			<panel disableautobackground="true" pos="6,-3"  width="${width}" height="${Floor(height) - 6}" style="hover,scroll" controller="SkillCraftingInfoEntry" color_bg_bought="[darkGrey]" color_bg_available="[darkestGrey]" color_bg_locked="[darkestGrey]" color_lbl_available="[white]" color_lbl_locked="[lightestGrey]" visible="{hasentry}" tooltip="{text}">
-				<rect pos="6,0" width="${Floor(width) - 6}" height="${Floor(height) - 6}">
+			<panel disableautobackground="true" pos="6,-3"  width="${width}" height="${Floor(height) - 6}" style="hover, scroll" controller="SkillCraftingInfoEntry" color_bg_bought="[darkGrey]" color_bg_available="[darkestGrey]" color_bg_locked="[darkestGrey]" color_lbl_available="[white]" color_lbl_locked="[lightestGrey]" visible="{hasentry}">
+				<rect pos="6,0" width="${Floor(width) - 6}" height="${Floor(height) - 6}" tooltip="{text}">
 					<!-- 背景色 -->
 					<sprite depth="8" name="border" color="255,255,255,48" type="sliced" fillcenter="false"/>
 					<sprite depth="1" sprite="menu_empty" type="sliced" fillcenter="true" color="{color_bg}" />

@@ -21,12 +21,24 @@ public class XUiC_TargetBarPatch
 					bool IsBoss = entityClass.Tags.Test_Bit(FastTags<TagGroup.Global>.GetBit("boss"));
 					bool IsFeral = entityClass.Tags.Test_Bit(FastTags<TagGroup.Global>.GetBit("feral"));
 					bool IsRadiated = entityClass.Tags.Test_Bit(FastTags<TagGroup.Global>.GetBit("radiated"));
+					bool IsCharged = entityClass.Tags.Test_Bit(FastTags<TagGroup.Global>.GetBit("charged"));
+					bool IsInfernal = entityClass.Tags.Test_Bit(FastTags<TagGroup.Global>.GetBit("infernal"));
 					bool IsBear = entityClass.entityClassName == "animalBear";
 					bool IsZombieBear = entityClass.entityClassName == "animalZombieBear";
 					bool IsDireWolf = entityClass.entityClassName == "animalDireWolf";
 					// ·øÉä
 					if (IsRadiated) {
 						value = "radiated";
+					}
+					// ´øµç
+					else if(IsCharged)
+					{
+						value = "charged";
+					}
+					// Á¶Óü
+					else if(IsInfernal)
+					{
+						value = "infernal";
 					}
 					// Ð×²Ð
 					else if (IsFeral)

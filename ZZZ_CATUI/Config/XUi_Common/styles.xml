@@ -59,7 +59,7 @@
 			<style_entry name="justify" value="center" />
 			<style_entry name="pivot" value="center" />
 			<style_entry name="font_size" value="15" />
-			<style_entry name="color" value="[white]" />
+			<style_entry name="color" value="[black]" />
 		</style>
 
 		<!-- 护甲等级 icon 等级颜色：0（0），1（1-19），2（20-39），3（40-59），4（60-79），5（80-99），6（100） -->
