@@ -3,6 +3,8 @@ using System.Reflection;
 using HarmonyLib;
 using UnityEngine;
 
+
+
 // 定义一个名为ModStartup的公共类，继承自IModApi接口
 public class ModStartup : IModApi
 {
@@ -20,8 +22,8 @@ public class ModStartup : IModApi
 
         Debug.Log("<color=#00FF00>CATUI Applied.</color>");
 
-        // 常量补丁
-        /*ModEvents.GameAwake.RegisterHandler(() =>
+        // 常量补丁(组队队友的颜色)
+        ModEvents.GameAwake.RegisterHandler((ref ModEvents.SGameAwakeData _data) =>
         {
             Constants.TrackedFriendColors = new Color[8]
             {
@@ -34,6 +36,6 @@ public class ModStartup : IModApi
                 new Color32(255, 235, 59, byte.MaxValue),
                 new Color32(153, 110, 255, byte.MaxValue)
             };
-        });*/
+        });
     }
 }

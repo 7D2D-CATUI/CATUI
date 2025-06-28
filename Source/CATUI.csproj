@@ -10,13 +10,13 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
-    <Compile Remove="ConstantsPatch.cs" />
     <Compile Remove="ShowSleepersCount3.cs" />
     <Compile Remove="XUiC_ActiveItem.cs" />
     <Compile Remove="XUiC_ActiveItemPartEntry.cs" />
     <Compile Remove="XUiC_ActiveItemPartGrid.cs" />
     <Compile Remove="XUiC_CompanionEntryPatch.cs" />
     <Compile Remove="XUiC_QuestTrackerObjectiveEntryPatch.cs" />
+    <Compile Remove="XUiC_SkillCraftingInfoEntryPatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">

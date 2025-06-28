@@ -28,11 +28,12 @@
 		<!-- CATUI 左下角状态项 -->
 		<CATUI_state_item>
 			<rect name="${name}" width="50" height="50" controller="${controller}" tooltip_key="${tooltip_key}" visible="${visible}">
-				<sprite color="[darkestGrey]" style="CATUI.sprite.filled.prue" />
+				<!-- <sprite pos="-1, 1" size="52,52" sprite="catui_bg_state" gradient_start="[mediumGrey]" gradient_end="[lightGrey]" style="CATUI.sprite.filled.prue" /> -->
+				<sprite sprite="catui_bg_state" gradient_start="[darkestGrey]" gradient_end="[black]" style="CATUI.sprite.filled.prue" />
 				<rect pos="25, -20" pivot="center">
-					<sprite size="28,28" sprite="${icon}" pivot="center" color="[white]" />
+					<sprite size="28,28" sprite="${icon}" pivot="center" gradient_start="[white]" gradient_end="[hoverColor]" />
 				</rect>
-				<label pos="0,-36" width="100%" height="14" font_size="14" color="[gold]" text="${text}" style="CATUI.text.outline.black.1px" justify="center" />
+				<label pos="0,-36" width="100%" height="14" font_size="14" color="[white]" text="${text}" style="CATUI.text.outline.black.1px" justify="center" />
 			</rect>
 		</CATUI_state_item>
 
@@ -79,7 +80,7 @@
 				<sprite depth="6" name="Unlocked" sprite="{unlockicon}" size="20,20" pos="72,-3" visible="{isunlockable}" color="{# unlockicon == 'ui_game_symbol_lock' ? '187,45,59,255' : unlockstatecolor}" foregroundlayer="true" />
 				<!-- 物品名称 -->
 				<rect depth="5" pos="0,-81" width="100%" height="30">
-					<sprite color="0,0,0,200" type="sliced" />
+					<sprite gradient_start="[black_threequarters_alpha]" gradient_end="[black]" type="sliced" />
 					<label pos="48,-15" name="Name" width="100%" height="30" text="{recipename}" font_size="14" color="{hasingredientsstatecolor}" justify="center" pivot="center" />
 				</rect>
 			</rect>
@@ -96,7 +97,7 @@
 				<!-- 背景 - 底色 -->
 				<sprite depth="2" name="highlightOverlay" width="68" height="68" color="25,25,25,255" pos="-2,2" type="sliced" globalopacitymod="1.15" />
 				<!-- ???? -->
-				<texture depth="3" name="backgroundTexture" material="Materials/Transparent Colored" size="65,65" globalopacity="true" />
+				<texture depth="3" name="backgroundTexture" material="Materials/Transparent Colored" size="66,66" globalopacity="true" />
 				<!-- 图标 - 物品图标 -->
 				<sprite depth="6" name="itemIcon" width="64" height="64" atlas="ItemIconAtlas" sprite="{itemicon}" pos="32,-32" pivot="center" foregroundlayer="true" color="{iconcolor}" />
 				<!-- 角标 - 物品状态 -->
@@ -145,6 +146,8 @@
 				</rect>
 				<!-- 背景 - 底色 -->
 				<sprite depth="2" name="highlightOverlay" color="25,25,25,255" type="sliced" globalopacitymod="1.15" />
+				<!-- ???? -->
+				<texture depth="3" name="backgroundTexture" material="Materials/Transparent Colored" size="74,74" globalopacity="true" />
 				<!-- 角标 - 收藏 -->
 				<sprite depth="8" name="favoriteIcon" width="24" height="24" sprite="server_favorite" pos="2,-2" foregroundlayer="true" visible="{isfavorite}" />
 				<!-- 图标 - 物品图标 -->
@@ -258,6 +261,9 @@
 		</drag_item_stack>
 	</append>
 	
+	<!-- 物品制作队列 -->
+	<setattribute xpath="/controls/recipe_stack/rect/sprite[@name='background']" name="color">[darkGrey]</setattribute>
+
 	<!-- 组队 -->
 	<remove xpath="/controls/party_entry" />
 	<remove xpath="/controls/companion_entry" />
@@ -346,7 +352,7 @@
 
 				<!-- 物品名称 -->
 				<rect depth="3" pos="0,0" height="24">
-					<sprite color="255,255,255,64" type="sliced" height="24" />
+					<sprite gradient_start="128,128,128,64" gradient_end="255,255,255,64" type="sliced" height="24" />
 					<label name="Name" pos="66,-13" width="120" height="24" text="{CATUI_ItemName}" font_size="14" color="{statecolor}" pivot="center" justify="left" style="CATUI.text.shadow.black.1px" />
 				</rect>
 
@@ -359,9 +365,9 @@
 
 				<!-- 物品价格 -->
 				<rect depth="3" pos="0,-100" height="24">
-					<sprite color="0,0,0,200" type="sliced" />
+					<sprite gradient_start="[black_threequarters_alpha]" gradient_end="[black]" type="sliced" />
 					<sprite pos="2,-2" atlas="UIAtlas" size="20,20" sprite="ui_game_symbol_coin" foregroundlayer="true" color="[gold]" />
-					<label pos="66,-13" depth="4" name="price" height="26" text="{itemprice}" font_size="20" width="80" color="[gold]" style="CATUI.text.shadow.black.1px" pivot="center" justify="left" />
+					<label pos="66,-13" depth="4" name="price" height="26" text="{itemprice}" font_size="18" width="80" color="[gold]" pivot="center" justify="left" />
 					<label pos="60,9" depth="4" name="price" height="26" text="x{CATUI_ItemCount}" font_size="20" width="120" color="[white]" style="CATUI.text.outline.black.1px" pivot="center" justify="right" visible="{# CATUI_ItemCount != '1' }" />
 				</rect>
 			</rect>
@@ -408,11 +414,10 @@
 					<!-- Nerfed -->
 					<sprite depth="2" pos="20,-20" sprite="catui_icon_level_up" size="20,20" color="255,96,96" foregroundlayer="true" visible="{# CATUI_SkillEntryIsNerfed == 'true' }" rotation="180" />
 				</rect>
-				<!-- 技能名称 -->
 
-				<!-- 物品价格 -->
+				<!-- 技能名称 -->
 				<rect depth="3" pos="60,-112" height="24">
-					<sprite pos="-60,13" color="0,0,0,200" type="sliced" />
+					<sprite pos="-60,13" gradient_start="[black_threequarters_alpha]" gradient_end="[black]" type="sliced" />
 					<label depth="2" width="100%" height="24"  pivot="center" text="{groupname}" font_size="14" color="{statuscolor}" justify="center" />
 				</rect>
 			</panel>

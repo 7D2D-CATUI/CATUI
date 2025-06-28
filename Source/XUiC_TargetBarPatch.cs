@@ -141,14 +141,17 @@ public class XUiC_TargetBarPatch
                 value = "";
                 if (Target != null)
                 {
+					EntityClass entityClass = EntityClass.list[Target.entityClass];
+					bool IsCharged = entityClass.Tags.Test_Bit(FastTags<TagGroup.Global>.GetBit("charged"));
 					BuffValue buff = Target.Buffs.GetBuff("buffShocked");
 					if (buff != null)
 					{
-						float Timer = Target.Buffs.GetCustomVar(buff.BuffClass.DisplayValueCVar);
+						// 带电丧尸时间减半（If Charged zombie, reduce time again ==> buffs.xml line:6470）
+						float timer = Mathf.CeilToInt((IsCharged ? buff.BuffClass.DurationMax / 2 : buff.BuffClass.DurationMax) - buff.DurationInSeconds);
 						// 偶尔会出现负数
-						if (Timer > 0f)
+						if (timer > 0f)
 						{
-							value = Timer.ToString();
+							value = timer.ToString();
 						}
 					}
                 }
@@ -172,10 +175,10 @@ public class XUiC_TargetBarPatch
 					BuffValue buff = Target.Buffs.GetBuff("buffIsOnFire");
 					if (buff != null)
 					{
-						float Timer = Target.Buffs.GetCustomVar(buff.BuffClass.DisplayValueCVar);
-						// 燃烧箭会出现倒计时为0的情况
-						if (Timer > 0f) {
-							value = Timer.ToString();
+						float timer = Target.Buffs.GetCustomVar(buff.BuffClass.DisplayValueCVar);
+						// BUG: 燃烧箭&燃烧弩箭 会出现倒计时为0的情况(buffBurningFlamingArrow), 不知道啥原因
+						if (timer > 0f) {
+							value = Mathf.CeilToInt(timer).ToString();
 						}
 					}
 				}

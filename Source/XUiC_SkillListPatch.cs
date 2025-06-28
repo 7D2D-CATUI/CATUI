@@ -15,7 +15,7 @@ public class XUiC_SkillListPatch
 		foreach (ProgressionValue skill in __instance.skills)
 		{
 			ProgressionClass progressionClass = skill?.ProgressionClass;
-			if (progressionClass == null || !progressionClass.ValidDisplay(__instance.DisplayType) || progressionClass.Name == null || progressionClass.IsBook || (flag && !progressionClass.NameKey.ContainsCaseInsensitive(__instance.filterText) && !Localization.Get(progressionClass.NameKey).ContainsCaseInsensitive(__instance.filterText)))
+			if (progressionClass == null || !progressionClass.ValidDisplay(__instance.DisplayType) || progressionClass.Name == null || progressionClass.IsBook || progressionClass.Hidden || (flag && !progressionClass.NameKey.ContainsCaseInsensitive(__instance.filterText) && !Localization.Get(progressionClass.NameKey).ContainsCaseInsensitive(__instance.filterText)))
 			{
 				continue;
 			}

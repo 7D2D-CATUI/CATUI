@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Scripting;
 
-[HarmonyPatch]
+[HarmonyPatch(typeof(XUiC_SkillCraftingInfoEntry))]
 public class XUiC_SkillCraftingInfoEntryPatch
 {
     [HarmonyPrefix]
-	[HarmonyPatch(typeof(XUiC_SkillCraftingInfoEntry), "GetBindingValue")]
+	[HarmonyPatch("GetBindingValue")]
 	public static bool Prefix(string _bindingName, ref string _value, ref bool __result, XUiC_SkillCraftingInfoEntry __instance)
 	{
 		bool flag = __instance.data != null;
@@ -82,6 +82,45 @@ public class XUiC_SkillCraftingInfoEntryPatch
 		}
 	}
 
+/*    [HarmonyPatch("Init")]
+    [HarmonyPostfix]
+    private static void InitPostfixProxy(XUiC_SkillCraftingInfoEntry __instance)
+    {
+        Debug.Log($"<color=#00FF00>InitPostfixProxy ----------------- </color>");
 
+        bool flag = __instance.Data != null;
+        EntityPlayerLocal entityPlayer = __instance.xui.playerUI.entityPlayer;
+        string _value = (flag ? __instance.Data.GetName(entityPlayer.Progression.GetProgressionValue(__instance.Data.Owner.Name).Level) : "");
+        if (flag) {
+            Debug.Log($"<color=#00FF00>Data.CustomName: {__instance.Data.GetIcon(1)}</color>");
+        }
+    }*/
+
+    /* public void Image_OnPress(XUiC_SkillCraftingInfoEntry __instance, int _mouseButton)
+     {
+         ProgressionClass.DisplayData CurrentData = __instance.Data;
+         XUi xUi = __instance.xui;
+         if (CurrentData == null || CurrentData.GetUnlockItemRecipes(0) == null)
+         {
+             return;
+         }
+         xUi.playerUI.windowManager.CloseIfOpen("looting");
+         List<XUiC_RecipeList> childrenByType = xUi.GetChildrenByType<XUiC_RecipeList>();
+         XUiC_RecipeList xUiC_RecipeList = null;
+         for (int i = 0; i < childrenByType.Count; i++)
+         {
+             if (childrenByType[i].WindowGroup != null && childrenByType[i].WindowGroup.isShowing)
+             {
+                 xUiC_RecipeList = childrenByType[i];
+                 break;
+             }
+         }
+         if (xUiC_RecipeList == null)
+         {
+             XUiC_WindowSelector.OpenSelectorAndWindow(xUi.playerUI.entityPlayer, "crafting");
+             xUiC_RecipeList = xUi.GetChildByType<XUiC_RecipeList>();
+         }
+         xUiC_RecipeList?.SetRecipeDataByItems(CurrentData.GetUnlockItemRecipes(0));
+     }*/
 
 }

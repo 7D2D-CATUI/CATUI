@@ -1,4 +1,15 @@
 ﻿<CATUI>
+	<!-- NPC对话字幕 -->
+	<setattribute xpath="//window[@name='subtitlesDisplay']" name="pos">-376,230</setattribute>
+	<setattribute xpath="//window[@name='subtitlesDisplay']/panel/label" name="crispness">OnDesktop</setattribute>
+	<setattribute xpath="//window[@name='subtitlesDisplay']/panel/label[@name='lblSpeaker']" name="pos">6,-30</setattribute>
+	<setattribute xpath="//window[@name='subtitlesDisplay']/panel/label[@name='lblSpeaker']" name="font_size">24</setattribute>
+	<setattribute xpath="//window[@name='subtitlesDisplay']/panel/label[@name='lblSubtitle']" name="pos">143,-30</setattribute>
+	<setattribute xpath="//window[@name='subtitlesDisplay']/panel/label[@name='lblSubtitle']" name="font_size">24</setattribute>
+
+	<!-- // 加载界面 -->
+	<setattribute xpath="//window[@name='loginWindow']//label | //window[@name='loadingScreen']//label" name="crispness">OnDesktop</setattribute>
+
 	<!-- // 美化 字体高清 -->
 	<setattribute xpath="//label[@text]" name="crispness">OnDesktop</setattribute>
 </CATUI>
