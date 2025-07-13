@@ -88,6 +88,14 @@
 		<style name="CATUI.level.color.6">
 			<style_entry name="color" value="172, 51, 193,200" />
 		</style>
+	</append>
 
+	<!-- // 美化 字体高清 -->
+	<append xpath="/styles/style[@type='label' and count(@*)=1]">
+		<style_entry name="crispness" value="OnDesktop" />
+	</append>
+	
+	<append xpath="/styles/style[@type='textlist' and count(@*)=1]">
+		<style_entry name="crispness" value="OnDesktop" />
 	</append>
 </CATUI>

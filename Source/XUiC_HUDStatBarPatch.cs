@@ -159,7 +159,7 @@ public class XUiC_HUDStatBarPatch
 				value = "1";
 				if (__instance.LocalPlayer != null)
 				{
-					value = __instance.LocalPlayer.GetHighestPartyLootStage(0f, 0f).ToString();
+					value = __instance.LocalPlayer.GetLootStage(0f, 0f).ToString();
 				}
 				__result = true;
 				return false;

@@ -11,6 +11,7 @@ public class XUiC_SkillPerkLevelPatch
 	[HarmonyPatch(typeof(XUiC_SkillPerkLevel), "GetBindingValue")]
 	public static bool Prefix(string _bindingName, ref string _value, ref bool __result, XUiC_SkillPerkLevel __instance)
 	{
+		int level = __instance.level;
 		bool flag = __instance.CurrentSkill != null && __instance.CurrentSkill.ProgressionClass.MaxLevel >= __instance.level;
 		EntityPlayerLocal entityPlayer = __instance.xui.playerUI.entityPlayer;
 		bool flag2 = false;
@@ -26,21 +27,7 @@ public class XUiC_SkillPerkLevelPatch
 		}
 		switch (_bindingName)
 		{
-			// 复写 当前等级技能状态
-			case "buyicon":
-				_value = "ui_game_symbol_lock";
-				if (flag3)
-				{
-					_value = "ui_game_symbol_check";
-				}
-				else if (flag2)
-				{
-					_value = "catui_icon_add";
-				}
-				__result = true;
-				return false;
-
-			// 复写 当前等级技能状态
+			// 复写 是否展示购买按钮（默认技能消耗为0的情况也展示了，会出现展示NA的情况）
 			case "buyvisible":
 				_value = flag.ToString();
 				if (__instance.CurrentSkill != null)
@@ -78,16 +65,10 @@ public class XUiC_SkillPerkLevelPatch
 			// 当前等级 消费技能点
 			case "CATUI_BuyCost":
 				_value = "0";
-				if (__instance.CurrentSkill != null && __instance.CurrentSkill.CalculatedLevel(entityPlayer) < __instance.CurrentSkill.ProgressionClass.MaxLevel)
+				if (__instance.CurrentSkill != null)
 				{
-					if (__instance.CurrentSkill.ProgressionClass.CurrencyType == ProgressionCurrencyType.SP)
-					{
-						_value = __instance.CurrentSkill.ProgressionClass.CalculatedCostForLevel(__instance.CurrentSkill.CalculatedLevel(entityPlayer) + 1).ToString();
-					}
-					else
-					{
-						_value = ((1f - __instance.CurrentSkill.PercToNextLevel) * (float)__instance.CurrentSkill.ProgressionClass.CalculatedCostForLevel(__instance.CurrentSkill.CalculatedLevel(entityPlayer) + 1)).ToString();
-					}
+					int num = __instance.CurrentSkill.ProgressionClass.CalculatedCostForLevel(level);
+					_value = num.ToString();
 				}
 				__result = true;
 				return false;

@@ -1,4 +1,9 @@
 using HarmonyLib;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using UniLinq;
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -79,6 +84,42 @@ public class XUiC_SkillCraftingInfoWindowPatch
 		}
 
 		return false;
+	}
+
+
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(XUiC_SkillCraftingInfoWindow), "Entry_OnPress")]
+	public static bool Entry_OnPress_Prefix(XUiC_SkillCraftingInfoWindow __instance, XUiController _sender, int _mouseButton)
+	{
+		XUi xUi = _sender.xui;
+		XUiC_SkillCraftingInfoEntry xUiC_SkillCraftingInfoEntry = _sender as XUiC_SkillCraftingInfoEntry;
+
+		// Debug.Log($"<color=#00FF00>Data.GetName: {xUiC_SkillCraftingInfoEntry.Data.GetName(1)}</color>");
+
+		if (xUiC_SkillCraftingInfoEntry.Data == null || xUiC_SkillCraftingInfoEntry.Data.GetUnlockItemRecipes(0) == null)
+		{
+			return false;
+		}
+
+        xUi.playerUI.windowManager.CloseIfOpen("looting");
+        List<XUiC_RecipeList> childrenByType = xUi.GetChildrenByType<XUiC_RecipeList>();
+        XUiC_RecipeList xUiC_RecipeList = null;
+        for (int i = 0; i < childrenByType.Count; i++)
+        {
+            if (childrenByType[i].WindowGroup != null && childrenByType[i].WindowGroup.isShowing)
+            {
+                xUiC_RecipeList = childrenByType[i];
+                break;
+            }
+        }
+        if (xUiC_RecipeList == null)
+        {
+            XUiC_WindowSelector.OpenSelectorAndWindow(xUi.playerUI.entityPlayer, "crafting");
+            xUiC_RecipeList = xUi.GetChildByType<XUiC_RecipeList>();
+        }
+        xUiC_RecipeList?.SetRecipeDataByItems(xUiC_SkillCraftingInfoEntry.Data.GetUnlockItemRecipes(0));
+
+        return false;
 	}
 
 }
