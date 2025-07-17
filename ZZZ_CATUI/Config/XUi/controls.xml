@@ -87,11 +87,30 @@
 		</recipe_entry>
 	</append>
 
+	<!-- 物品制作 - 制作素材 -->
+	<!-- <remove xpath="/controls/ingredient_row" /> -->
+	<append xpath="/controls">
+		<CATUI_ingredient_row>
+			<rect name="row" width="110" height="110" controller="IngredientEntry">
+				<rect style="hover" depth="2" tooltip_key="{itemname}" visible="{# itemname != ''}">
+					<!-- <sprite depth="1" color="[mediumGrey]" type="sliced" globalopacity="true" /> -->
+					<sprite depth="2" pos="55,-55" width="90" height="90" sprite="catui_bg_ingredient" color="{# CATUI_HasComplete ? '67, 207, 124' : '255,82,82' }" pivot="center" globalopacity="false" />
+					<sprite pos="55,-55" width="100" height="100" sprite="catui_bg_skill_icon" color="[darkestGrey]" type="sliced" pivot="center" />
+					<!-- 素材icon -->
+					<sprite depth="2" pos="55,-55" name="icon" size="56,56" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" pivot="center" foregroundlayer="true" />
+					<!-- 素材数量 -->
+					<label depth="3" name="needCount" pos="55,-96" width="110" height="30" font_size="22" color="[labelColor]" justify="center" pivot="center" text="{# CATUI_HasComplete ? '[43CF7C]' + havecount + '[-]' : '[FF5252]' + havecount + '[-]' }/{needcount}" style="CATUI.text.shadow.black.1px" />
+				</rect>
+			</rect>
+		</CATUI_ingredient_row>
+	</append>
+
+
 	<!-- 背包栏 -->
 	<remove xpath="/controls/backpack_item_stack" />
 	<append xpath="/controls">
 		<backpack_item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false">
-			<rect controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}" >
+			<rect controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}">
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
 				<sprite depth="3" name="background" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,90' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
 				<!-- 背景 - 底色 -->
@@ -402,7 +421,7 @@
 					<sprite sprite="catui_bg_skill_icon" color="0,0,0,150" type="sliced" pivot="center" globalopacity="false" />
 					<!-- 技能图标 技能 -->
 					<sprite depth="2" sprite="{groupicon}" size="42,42" pos="0, 0" pivot="center" color="{statuscolor}" foregroundlayer="true" visible="{# CATUI_GroupType != 'book' }" />
-					<!-- 技能图标 技能书 -->
+					<!-- 技能图标 技能书 (icon从mod路径获取，解决localload时progression.xml不加载的问题) -->
 					<sprite depth="2" atlas="ItemIconAtlas" sprite="{groupicon}" size="64,64" pos="0, 2" pivot="center" color="{statuscolor}" foregroundlayer="true" visible="{# CATUI_GroupType == 'book' }" />
 				</rect>
 
@@ -502,7 +521,7 @@
 						<!-- <sprite depth="3" pos="25,-25" style="icon30px" sprite="ui_game_symbol_perk" pivot="center" color="{# CATUI_SkillStat == 'bought' ? '255, 195, 0' : color_fg }" visible="{iscomplete}" /> -->
 					</rect>				
 					<!-- 技能等级名称 -->
-					<label depth="3" pos="${width/2 + 20}, -${height/2}" width="${width - height - height/2}" height="${height - 20}" text="{text}" pivot="center" justify="left" font_size="22" max_line_count="3" spacing_y="5" color="{color_fg}" />
+					<label depth="3" pos="${width/2 + 6}, -${height/2 - 3}" width="${width - height * 2}" height="${height - 10}" text="{text}" pivot="center" justify="left" font_size="22" max_line_count="2" spacing_y="1" color="{color_fg}" />
 					<!-- 技能状态 -->
 					<sprite depth="3" name="btnBuy" pos="${width-30},-${Round(height/2,0)-2}" size="22,22" sprite="{buyicon}" pivot="center" color="{# CATUI_SkillStat == 'bought' ? '67, 207, 124' : '128,128,128' }" visible="{buyvisible}" gamepad_selectable="false"/>
 				</rect>

@@ -173,8 +173,46 @@
 	</append>
 
 	<!-- 聊天区域调整 -->
-	<setattribute xpath="//window[@name='chatoutput']" name="pos">20, -400</setattribute>
-	<setattribute xpath="//window[@name='chat']" name="pos">20, -400</setattribute>
+	<!-- <setattribute xpath="//window[@name='chatoutput']" name="pos">20, -400</setattribute> -->
+	<!-- <setattribute xpath="//window[@name='chat']" name="pos">20, -400</setattribute> -->
+	<remove xpath="/windows/window[@name='chatoutput']"/>
+	<remove xpath="/windows/window[@name='chat']"/>
+	<append xpath="/windows">
+		<!-- 聊天输出 -->
+		<window name="chatoutput" pos="-410, -500" depth="10" width="400" height="250" anchor="RightTop" controller="ChatOutput" fadeout_wait_time="5" fadeout_duration="2">
+			<textlist name="txtOutput" pos="10,-210" width="384" height="210" list_style="chat" pivot="bottomleft" depth="2" font_size="18" crispness="Never" effect="shadow" effect_distance="1,1" effect_color="[black]" on_press="true" support_urls="Chat,DiscordMessageButton" gamepad_selectable="false"  />
+		</window>
+		<!-- 聊天输入 -->
+		<window name="chat" pos="-410, -500" width="400" height="250" anchor="RightTop" controller="Chat" cursor_area="true">
+			<rect name="frame" depth="0" createuiwidget="true">
+				<rect name="input" depth="2" pos="0,-218" height="32" createuiwidget="true">
+					<!-- <label name="toLabel" pos="10,-19" width="80" height="22" pivot="left" justify="left" font_size="20" color="[white]" text_key="xuiChatTo" /> -->
+					<combobox name="cbxTarget" type="ComboBoxList`1[XUiC_Chat+ChatTarget]" value_max="party" pos="48, -6" width="300" height="22" font_size="20" />
+					<textfield name="txtInput" backgroundcolor="[transparent]" depth="2" pos="6,-34" width="388" height="26" pivot="topleft" justify="left" overflow="resizeheight" character_limit="300" font_size="18" max_line_count="3" crispness="Never" focus_on_open="true" open_vk_on_open="false" ignore_up_down_keys="true" />
+					<!-- 输入框背景 -->
+					<sprite depth="8" name="border" sprite="menu_empty2px" color="[black_threequarters_alpha]" type="sliced" anchor_left="frame,0,0" anchor_right="frame,1,0" anchor_top="input,1,0" anchor_bottom="text,0,-6" globalopacity="false" />
+				</rect>
+				<!-- 聊天窗口背景 -->
+				<sprite depth="8" name="border" sprite="menu_empty2px" color="[black_threequarters_alpha]" type="sliced" anchor_left="frame,0,0" anchor_right="frame,1,0" anchor_top="frame,1,0" anchor_bottom="text,0,-6" globalopacity="false" />
+			</rect>
+		</window>
+	</append>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	<!-- 进入区域屏幕中间的大字提示，右上角已常驻，没鸟用 -->
 	<remove xpath="/windows/window[@name='windowEntering']"/>
@@ -541,8 +579,8 @@
 	<append xpath="/windows">
 		<window name="toolTip" width="100" height="25" depth="310" controller="ToolTip" >
 			<rect>
-				<sprite depth="0" name="sprBackgroundBorder" type="sliced" gradient_start="[white]" gradient_end="225,225,225" />
-				<sprite depth="1" name="sprBackground" type="sliced" pos="3,-3" gradient_start="[white]" gradient_end="225,225,225" />
+				<sprite depth="0" name="sprBackgroundBorder" type="sliced" gradient_start="[white]" gradient_end="225,225,225" globalopacity="false" />
+				<sprite depth="1" name="sprBackground" type="sliced" pos="3,-3" color="[transparent]" />
 				<label depth="3" name="lblText" text="" pos="10,-7" font_size="20" color="[darkestGrey]" overflow="resizefreely" parse_actions="true" />
 			</rect>
 		</window>
@@ -662,6 +700,9 @@
 	<setattribute xpath="//window[@name='windowCraftingQueue']/rect[@controller='CraftingQueue']/grid[@name='queue']" name="cell_height">80</setattribute>
 
 	<!-- 制作详情 -->
+	<setattribute xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/sprite[@name='backgroundMain']" name="fillcenter">true</setattribute>
+	<setattribute xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/sprite[@name='backgroundMain']" name="depth">1</setattribute>
+	<setattribute xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='searchControls']" name="pos">152,-3</setattribute>
 	<remove xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='preview']"/>
 	<append xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']">
 		<rect depth="1" pos="3,-3" name="preview" width="147" height="169">
@@ -687,6 +728,23 @@
 			<sprite depth="3" name="clockIcon" size="24,24" sprite="ui_game_symbol_clock" pos="25, -142" type="sliced" color="[iconColor]" foregroundlayer="true" />
 			<!-- <label depth="3" name="TimeLabel" style="icon30px" pos="53, -119" text="TIME" text_key="xuiTime" font_size="22" /> -->
 			<label depth="3" name="craftingTime" width="100" height="32" pos="55, -143" text="{craftingtime}" font_size="26" color="[beige]"/>
+		</rect>
+	</append>
+
+	<!-- 制作详情 - 制作素材 -->
+	<remove xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='ingredients']"/>
+	<append xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']">
+		<rect depth="1" pos="153,-48" name="CATUI_ingredients" width="447" height="264" visible="{showingredients}">
+			<grid rows="2" cols="4" width="440" height="220" cell_height="110" cell_width="110" controller="IngredientList">
+				<CATUI_ingredient_row name="1"/>
+				<CATUI_ingredient_row name="2"/>
+				<CATUI_ingredient_row name="3"/>
+				<CATUI_ingredient_row name="4"/>
+				<CATUI_ingredient_row name="5"/>
+				<CATUI_ingredient_row name="6"/>
+				<CATUI_ingredient_row name="7"/>
+				<CATUI_ingredient_row name="8"/>
+			</grid>
 		</rect>
 	</append>
 
