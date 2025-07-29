@@ -125,14 +125,14 @@
 
 			<!-- Buff列表 - 有说明 依赖BuffPopoutList rows控制最大显示数量 超出后展示翻页 -->
 			<rect id="BuffHUDList" name="BuffHUDList" pos="22,-131" width="460" actionSet="false">
-				<scrollbar depth="2" name="BuffHUDListScrollbar" pos="-5,-7" width="5" height="680" padding="4" foregroundname="scrollbarHandle">
+				<CATUI_scrollbar depth="2" name="BuffHUDListScrollbar" pos="-5,-7" width="5" height="680" padding="4" foregroundname="scrollbarHandle">
 					<sprite name="scrollbarHandle" color="[white_half_alpha]" style="CATUI.sprite.filled.prue" />
-				</scrollbar>
-				<scrollview depth="2" size="360,700" scrollbar="BuffHUDListScrollbar" clippingsoftness="0,7">
+				</CATUI_scrollbar>
+				<CATUI_scrollview depth="2" size="360,700" scrollbar="BuffHUDListScrollbar" clippingsoftness="0,7">
 					<grid name="ActiveBuffList" controller="ActiveBuffList" rows="100" cols="1" width="360" cell_width="400" cell_height="35" repeat_content="true" hide_inactive="true" Pivot="TopLeft" >
 						<CATUI_active_buff_item  width="400" height="35" />
 					</grid>
-				</scrollview>
+				</CATUI_scrollview>
 
 				<!-- // BUG：controller="Paging"的visible=false，按下esc会失效，暂时无法fix -->
 				<!-- <rect controller="Paging" visible="{# int(maxpagenumber) != 1 }">
@@ -778,10 +778,10 @@
 				<CATUI_ingredient_row name="8"/>
 			</grid>
 			<!-- 滚动条版本，有bug，默认展示了16个占位元素，无法隐藏 -->
-			<!-- <scrollbar depth="2" name="IngredientsListScrollbar" pos="448,0" width="10" height="304" padding="4" foregroundname="scrollbarHandle">
+			<!-- <CATUI_scrollbar depth="2" name="IngredientsListScrollbar" pos="448,0" width="10" height="304" padding="4" foregroundname="scrollbarHandle">
 				<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
-			</scrollbar>
-			<scrollview depth="2" size="440,220" scrollbar="IngredientsListScrollbar" clippingsoftness="0,5">
+			</CATUI_scrollbar>
+			<CATUI_scrollview depth="2" size="440,220" scrollbar="IngredientsListScrollbar" clippingsoftness="0,5">
 				<grid rows="2" cols="4" width="440" height="220" cell_height="110" cell_width="110" controller="IngredientList">
 					<CATUI_ingredient_row name="1"/>
 					<CATUI_ingredient_row name="2"/>
@@ -800,7 +800,7 @@
 					<CATUI_ingredient_row name="15"/>
 					<CATUI_ingredient_row name="16"/>
 				</grid>
-			</scrollview> -->
+			</CATUI_scrollview> -->
 		</rect>
 	</append>
 
@@ -858,21 +858,22 @@
 	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/sprite[@name='background']" name="foregroundlayer">true</setattribute>
 	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel/grid[@name='categories']" name="cols">16</setattribute>
 	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel/grid[@name='categories']" name="pos">5,-20</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[1]" name="pos">-9999,-4</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[2]" name="pos">17,-3</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[3]" name="pos">-9999,-44</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[@width='410']" name="pos">17,-3</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[@width='200']" name="pos">-9999,-4</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[@width='104']" name="pos">-9999,-44</setattribute>
+	
 	<remove xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[2]" />
 	<insertAfter xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']">
 		<sprite depth="1" name="backgroundMain" pos="3,-48" height="685" sprite="menu_empty3px" color="[black]" type="sliced" />
 		<rect name="skillList" depth="1" pos="10,-50" height="640" width="640">
-			<scrollbar depth="2" name="skillListScrollbar" pos="637,0" width="10" height="685" padding="4" foregroundname="scrollbarHandle">
+			<CATUI_scrollbar depth="2" name="skillListScrollbar" pos="637,0" width="10" height="685" padding="4" foregroundname="scrollbarHandle">
 				<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
-			</scrollbar>
-			<scrollview depth="2" size="640,685" scrollbar="skillListScrollbar" clippingsoftness="0,5">
+			</CATUI_scrollbar>
+			<CATUI_scrollview depth="2" size="640,685" scrollbar="skillListScrollbar" clippingsoftness="0,5">
 				<grid name="skills" rows="40" cols="5" cell_width="128" cell_height="128" controller="SkillList" repeat_content="true" >
 					<skill_entry name="0" width="128" height="128" />
 				</grid>
-			</scrollview>
+			</CATUI_scrollview>
 		</rect>
 	</insertAfter>
 
@@ -943,14 +944,14 @@
 
 				<rect name="tableBox" depth="1" pos="0,-279" width="647" height="450">
 					<sprite depth="1" name="backgroundMain" height="451" style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
-					<scrollbar depth="2" name="SkillPerkInfoScrollbar" pos="644,-2" width="10" height="450" padding="4" foregroundname="scrollbarHandle">
+					<CATUI_scrollbar depth="2" name="SkillPerkInfoScrollbar" pos="644,-2" width="10" height="450" padding="4" foregroundname="scrollbarHandle">
 						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
-					</scrollbar>
-					<scrollview depth="2" size="647,451" scrollbar="SkillPerkInfoScrollbar" clippingsoftness="0,7">
+					</CATUI_scrollbar>
+					<CATUI_scrollview depth="2" size="647,451" scrollbar="SkillPerkInfoScrollbar" clippingsoftness="0,7">
 						<grid rows="10" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="86" repeat_content="true" >
 							<skill_perk_level controller="SkillPerkLevel" width="640" height="86" />
 						</grid>
-					</scrollview>
+					</CATUI_scrollview>
 				</rect>
 
 				<rect name="pagerBox" depth="3" width="647" height="43" pos="0,-729" visible="{showPaging}">
@@ -1116,15 +1117,15 @@
 
 				<rect name="tableBox" depth="1" pos="0,-98" width="647" height="632">
 					<sprite depth="1" style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
-					<scrollbar depth="2" name="SkillCraftingInfoScrollbar" pos="644,0" width="10" height="632" padding="4" foregroundname="scrollbarHandle">
+					<CATUI_scrollbar depth="2" name="SkillCraftingInfoScrollbar" pos="644,0" width="10" height="632" padding="4" foregroundname="scrollbarHandle">
 						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
-					</scrollbar>
-					<scrollview depth="2" size="647,632" scrollbar="SkillCraftingInfoScrollbar" clippingsoftness="5,10">
+					</CATUI_scrollbar>
+					<CATUI_scrollview depth="2" size="647,632" scrollbar="SkillCraftingInfoScrollbar" clippingsoftness="5,10">
 						<!-- 最大支持300个entry，多了可能会卡 -->
 						<grid rows="50" cols="6" pos="2,-7" width="644" cell_width="106" cell_height="106" repeat_content="true">
 							<skill_crafting_entry width="106" height="106" />
 						</grid>
-					</scrollview>
+					</CATUI_scrollview>
 				</rect>
 			</rect>
 		</window>

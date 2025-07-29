@@ -38,13 +38,13 @@ public class XUiFromXmlPatch
 
         switch(localName)
         {
-            case "animatedsprite":
+            case "CATUI_animatedsprite":
                 view = new XUiV_AnimatedSprite(id);
                 break;
-            case "scrollview":
+            case "CATUI_scrollview":
                 view = new XUiV_ScrollViewContainer(id);
                 break;
-            case "scrollbar":
+            case "CATUI_scrollbar":
                 view = new XUiV_ScrollBar(id);
                 view.xui = _windowGroup.xui;
                 XUiFromXmlReversePatch.setController(_node, view, _parent);
