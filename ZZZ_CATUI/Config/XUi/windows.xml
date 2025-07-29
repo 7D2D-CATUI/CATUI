@@ -36,7 +36,7 @@
 					<!-- 游戏等级 -->
 					<CATUI_state_item name="GameStage" controller="HUDStatBar" tooltip_key="xuiGameStage" visible="{statvisible}" icon="server_history" text="{CATUI_playerGameStage}" />
 					<!-- 搜刮等级 -->
-					<CATUI_state_item name="LootStage" controller="HUDStatBar" tooltip_key="xuiLootstage" visible="{statvisible}" icon="ui_game_symbol_treasure" text="{CATUI_playerLootStage}" />
+					<CATUI_state_item name="LootStage" controller="HUDStatBar" tooltip_key="xuiLootstage" visible="{statvisible}" icon="ui_game_loot_stage_bad" text="{CATUI_playerLootStage}" />
 					<!-- 商人等级 -->
 					<!-- <CATUI_state_item name="TraderStage" controller="HUDStatBar" tooltip_key="quest" visible="{statvisible}" icon="ui_game_symbol_quest" text="{# int(CATUI_playerTraderStage) + round(int(CATUI_playerTraderStageProgressCurrent) / int(CATUI_playerTraderStageProgressMax), 2) }" /> -->
 
@@ -124,10 +124,16 @@
 			</rect>
 
 			<!-- Buff列表 - 有说明 依赖BuffPopoutList rows控制最大显示数量 超出后展示翻页 -->
-			<rect id="BuffHUDList" name="BuffHUDList" pos="27,-136" width="460" actionSet="false">
-				<grid name="ActiveBuffList" controller="ActiveBuffList" rows="20" cols="1" width="360" cell_width="400" cell_height="35" repeat_content="true" hide_inactive="true" Pivot="TopLeft" >
-					<CATUI_active_buff_item  width="400" height="35" />
-				</grid>
+			<rect id="BuffHUDList" name="BuffHUDList" pos="22,-131" width="460" actionSet="false">
+				<scrollbar depth="2" name="BuffHUDListScrollbar" pos="-5,-7" width="5" height="680" padding="4" foregroundname="scrollbarHandle">
+					<sprite name="scrollbarHandle" color="[white_half_alpha]" style="CATUI.sprite.filled.prue" />
+				</scrollbar>
+				<scrollview depth="2" size="360,700" scrollbar="BuffHUDListScrollbar" clippingsoftness="0,7">
+					<grid name="ActiveBuffList" controller="ActiveBuffList" rows="100" cols="1" width="360" cell_width="400" cell_height="35" repeat_content="true" hide_inactive="true" Pivot="TopLeft" >
+						<CATUI_active_buff_item  width="400" height="35" />
+					</grid>
+				</scrollview>
+
 				<!-- // BUG：controller="Paging"的visible=false，按下esc会失效，暂时无法fix -->
 				<!-- <rect controller="Paging" visible="{# int(maxpagenumber) != 1 }">
 					<grid rows="1" cols="3" pos="54,-370" height="30" cell_width="126" cell_height="30">
@@ -179,16 +185,16 @@
 	<remove xpath="/windows/window[@name='chat']"/>
 	<append xpath="/windows">
 		<!-- 聊天输出 -->
-		<window name="chatoutput" pos="-410, -500" depth="10" width="400" height="250" anchor="RightTop" controller="ChatOutput" fadeout_wait_time="5" fadeout_duration="2">
-			<textlist name="txtOutput" pos="10,-210" width="384" height="210" list_style="chat" pivot="bottomleft" depth="2" font_size="18" crispness="Never" effect="shadow" effect_distance="1,1" effect_color="[black]" on_press="true" support_urls="Chat,DiscordMessageButton" gamepad_selectable="false"  />
+		<window name="chatoutput" pos="320, 418" depth="10" width="400" height="250" anchor="LeftBottom" controller="ChatOutput" fadeout_wait_time="5" fadeout_duration="2">
+			<textlist name="txtOutput" pos="10,-210" width="384" height="210" list_style="chat" pivot="bottomleft" depth="2" font_size="20" crispness="Never" effect="shadow" effect_distance="1,1" effect_color="[black]" on_press="true" support_urls="Chat,DiscordMessageButton" gamepad_selectable="false"  />
 		</window>
 		<!-- 聊天输入 -->
-		<window name="chat" pos="-410, -500" width="400" height="250" anchor="RightTop" controller="Chat" cursor_area="true">
+		<window name="chat" pos="320, 418" width="400" height="250" anchor="LeftBottom" controller="Chat" cursor_area="true">
 			<rect name="frame" depth="0" createuiwidget="true">
 				<rect name="input" depth="2" pos="0,-218" height="32" createuiwidget="true">
 					<!-- <label name="toLabel" pos="10,-19" width="80" height="22" pivot="left" justify="left" font_size="20" color="[white]" text_key="xuiChatTo" /> -->
 					<combobox name="cbxTarget" type="ComboBoxList`1[XUiC_Chat+ChatTarget]" value_max="party" pos="48, -6" width="300" height="22" font_size="20" />
-					<textfield name="txtInput" backgroundcolor="[transparent]" depth="2" pos="6,-34" width="388" height="26" pivot="topleft" justify="left" overflow="resizeheight" character_limit="300" font_size="18" max_line_count="3" crispness="Never" focus_on_open="true" open_vk_on_open="false" ignore_up_down_keys="true" />
+					<textfield name="txtInput" backgroundcolor="[transparent]" depth="2" pos="6,-34" width="388" height="26" pivot="topleft" justify="left" overflow="resizeheight" character_limit="300" font_size="20" max_line_count="3" crispness="Never" focus_on_open="true" open_vk_on_open="false" ignore_up_down_keys="true" />
 					<!-- 输入框背景 -->
 					<sprite depth="8" name="border" sprite="menu_empty2px" color="[black_threequarters_alpha]" type="sliced" anchor_left="frame,0,0" anchor_right="frame,1,0" anchor_top="input,1,0" anchor_bottom="text,0,-6" globalopacity="false" />
 				</rect>
@@ -198,24 +204,34 @@
 		</window>
 	</append>
 
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	<!-- 进入区域屏幕中间的大字提示，右上角已常驻，没鸟用 -->
+	<!-- 进入POI屏幕中间的大字提示 -->
 	<remove xpath="/windows/window[@name='windowEntering']"/>
+	<append xpath="/windows">
+		<window name="windowEntering" controller="EnteringArea" anchor="CenterTop" difficulty_color="[CATUI_red]" biome_color="[green]" inactive_color="[lightGrey]" difficulty_icon="catui_icon_skull" biome_icon="ui_game_symbol_foliage" > 
+			<rect pos="-170,-200" width="340" height="100" >
+				<!-- 区域/POI 名称 -->
+				<!-- <label depth="3" name="TextContent" pos="5,-14" font_size="42" color="[white]" style="CATUI.text.outline.black.1px" pivot="topleft" text="{locationname}" justify="center" width="330" height="60" /> -->
+				<!-- 风暴信息(倒计时,寻找庇护所等) -->
+				<label depth="3" name="MessageContent" pos="0,-1" font_size="22" color="[white]" style="CATUI.text.outline.black.1px" pivot="topleft" text="{messagename}" justify="center" width="340" height="98" spacing_y="5" />
+				<!-- 搜刮阶段已满提示 -->
+				<!-- <sprite depth="2" pos="5, -60" name="windowicon" style="icon32px" sprite="ui_game_loot_stage_bad" visible="{visible_loot_max}"/> -->
+				<!-- POI难度图标 -->
+				<!-- <grid padding="8,10" pos="170, -75" pivot="center" cols="8" cell_width="34" cell_height="32">
+					<sprite depth="2" name="windowicon" style="icon32px" sprite="catui_icon_skull" color="{color1}" visible="{visible1}"/>
+					<sprite depth="2" name="windowicon" style="icon32px" sprite="catui_icon_skull" color="{color2}" visible="{visible2}"/>
+					<sprite depth="2" name="windowicon" style="icon32px" sprite="catui_icon_skull" color="{color3}" visible="{visible3}"/>
+					<sprite depth="2" name="windowicon" style="icon32px" sprite="catui_icon_skull" color="{color4}" visible="{visible4}"/>
+					<sprite depth="2" name="windowicon" style="icon32px" sprite="catui_icon_skull" color="{color5}" visible="{visible5}"/>
+					<sprite depth="2" name="windowicon" style="icon32px" sprite="catui_icon_skull" color="{color6}" visible="{visible6}"/>
+					<sprite depth="2" name="windowicon" style="icon32px" sprite="catui_icon_skull" color="{color7}" visible="{visible7}"/>
+					<rect width="32" height="32" visible="{visible_half}">
+						<sprite depth="2" name="windowicon" style="icon32px" sprite="catui_icon_skull" type="filled" fill="0.5" color="255,128,0"/>
+						<sprite depth="2" name="windowicon" style="icon32px" sprite="catui_icon_skull" type="filled" fill="0.5" fillinvert="true" color="[lightGrey]"/>
+					</rect>
+				</grid> -->
+			</rect>
+		</window>
+	</append>
 
 	<!-- 位置/POI信息 -->
 	<remove xpath="/windows/window[@name='windowLocation']"/>
@@ -290,13 +306,6 @@
 	<setattribute xpath="//window[@name='interactionPrompt']/label[@name='lblText']" name="font_size">28</setattribute>
 	<setattribute xpath="//window[@name='interactionPrompt']/label[@name='lblText']" name="effect">shadow</setattribute>
 	<setattribute xpath="//window[@name='interactionPrompt']/label[@name='lblText']" name="effect_color">0,0,0</setattribute>
-	<!-- 
-	<window name="interactionPrompt" anchor="CenterCenter" pos="0,55" width="2000" height="70" controller="InteractionPrompt" fade_delay="0.02">
-		<label name="lblText" font_size="34" effect="outline" effect_distance="1,1" effect_color="0,0,0,150" justify="center" pivot="center" text="{text}" parse_actions="true" actions_default_format="( ### )" />
-	</window>
-	 -->
-
-
 
 	<!-- 修理方块 -->
 	<setattribute xpath="//window[@name='focusedBlockHealth']" name="width">200</setattribute>
@@ -322,7 +331,8 @@
 
 			<!-- 天气 -->
 			<rect name="hud_weather" pos="72,-39" width="200">
-				<table name="hud_weather_table" depth="2" pos="0,0" columns="7" padding="8,0" hide_inactive="true" always_reposition="true">
+				<!-- 普通天气 -->
+				<table name="hud_weather_table" depth="2" pos="0,0" columns="7" padding="8,0" hide_inactive="true" always_reposition="true" visible="{# CATUI_stormName == '' }">
 					<rect width="30">
 						<sprite color="[transparent]" />
 						<sprite pos="15,-20" size="14,14" pivot="center" sprite="catui_icon_symbol_diamond" globalopacity="false" />
@@ -373,6 +383,29 @@
 						<sprite pos="15,-20" pivot="center" size="20,20" color="255, 100, 100" sprite="catui_icon_moon_full" globalopacity="false" visible="{# CATUI_nextBloodMoonDay - day == 3 }" />
 					</rect>
 				</table>
+				<!-- 风暴天气 -->
+				<rect pos="30,0" visible="{# !(CATUI_stormName == '') }">
+					<sprite pos="-30,-20" size="14,14" pivot="center" sprite="catui_icon_symbol_diamond" globalopacity="false" />
+					<sprite pos="310,-20" size="14,14" pivot="center" sprite="catui_icon_symbol_diamond" globalopacity="false" />
+					<rect pos="0,-7" width="280" height="26">
+						<!-- 1px 实线 风暴边框 颜色-->
+						<!-- <sprite depth="2" type="sliced" sprite="menu_empty" width="286" height="32" pos="-3,3" color="[CATUI_storm_Burnt]" globalopacity="false" fillcenter="false" visible="{# CATUI_stormName == 'Burnt' }" /> -->
+						<!-- 2px 实线 风暴边框 黑色 -->
+						<sprite depth="3" name="background" sprite="menu_empty2px" width="284" height="30" pos="-2,2" color="[black]" type="sliced" globalopacity="true" />
+						<!-- 风暴ICON -->
+						<sprite depth="5" pos="14,-13" pivot="center" size="20,20" color="[white]" sprite="{# 'catui_icon_strom_' + CATUI_stormName }" globalopacity="false" />
+						<!-- 风暴持续时间 - 背景 -->
+						<sprite depth="3" color="[darkestGrey]" type="sliced" globalopacity="true" />
+						<!-- 风暴持续时间 - 进度条 -->
+						<filledsprite depth="4" type="filled" color="[CATUI_storm_Burnt]" fill="{CATUI_stormFill}" globalopacity="false" visible="{# CATUI_stormName == 'Burnt' }" />
+						<filledsprite depth="4" type="filled" color="[CATUI_storm_Desert]" fill="{CATUI_stormFill}" globalopacity="false" visible="{# CATUI_stormName == 'Desert' }" />
+						<filledsprite depth="4" type="filled" color="[CATUI_storm_Snow]" fill="{CATUI_stormFill}" globalopacity="false" visible="{# CATUI_stormName == 'Snow' }" />
+						<filledsprite depth="4" type="filled" color="[CATUI_storm_Wasteland]" fill="{CATUI_stormFill}" globalopacity="false" visible="{# CATUI_stormName == 'Wasteland' }" />
+						<!-- 风暴名称 -->
+						<label width="250" depth="5" pos="140,-14" font_size="18" color="[white]" justify="center" pivot="center" text="{# localization('buff'+ CATUI_stormName + '_StormName')}" />
+					</rect>
+
+				</rect>
 			</rect>
 		</window>
 	</append>
@@ -603,20 +636,19 @@
 				<rect name="CATUI_stamina_bar" pos="520, 0">
 					<CATUI_stat_bar controller="HUDStatBar" width="293" height="34" stat_type="Stamina" stat_bar_color="25,135,84,255" inner_pos_x="60" inner_pos_y="0" inner_width="293" tooltip_key="lblStamina" has_invert="false" />
 				</rect>
-				
 				<!-- 中线位置 504 -->
 				<rect name="Food" pos="440, 24" width="50" height="50"  controller="HUDStatBar" stat_type="Food" tooltip_key="xuiFood" visible="{statvisible}">
 					<sprite pos="-3,3" sprite="catui_bg_satiety" flip="horizontally" size="62,62" color="0,0,0,220" type="sliced" />
-					<sprite type="filled" pos="0,-112" size="112,112" color="[darkestGrey]" sprite="catui_bg_satiety_current" fill="{# statmodifiedmax * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" rotation="90" fillInvert="true" />
-					<sprite type="filled" pos="0,-112" size="112,112" color="255, 193, 7,225" sprite="catui_bg_satiety_current" fill="{# statfill * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" foregroundlayer="true" rotation="90" fillInvert="true" />
+					<sprite type="filled" pos="0,-112" size="112,112" color="[darkestGrey]" sprite="catui_bg_satiety_current" fill="{# Round(statmodifiedmax, 3) * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" rotation="90" fillInvert="true" />
+					<sprite type="filled" pos="0,-112" size="112,112" color="255, 193, 7,225" sprite="catui_bg_satiety_current" fill="{# Round(statfill, 3) * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" foregroundlayer="true" rotation="90" fillInvert="true" />
 					<sprite pos="0,0" sprite="catui_bg_satiety_border" flip="horizontally" size="56,56" color="255,255,255,125" type="sliced" />
 					<sprite atlas="{staticonatlas|once}" sprite="catui_icon_food" color="255,255,255,180" globalopacity="false" size="24,24" pos="30,-23" />
 					<label pos="-7,-50" width="62" font_size="14" color="[white]" text="{CATUI_statCurrentWithMax}" style="CATUI.text.outline.black.1px" justify="right" />
 				</rect>
 				<rect name="Water" pos="508, 24" width="50" height="50" controller="HUDStatBar" stat_type="Water" tooltip_key="xuiWater" visible="{statvisible}">
 					<sprite pos="-3,3" sprite="catui_bg_satiety" size="62,62" color="0,0,0,220" type="sliced" />
-					<sprite type="filled" pos="56,0" size="112,112" color="[darkestGrey]" sprite="catui_bg_satiety_current" fill="{# statmodifiedmax * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" rotation="270" />
-					<sprite type="filled" pos="56,0" size="112,112" color="13,110,253,225" sprite="catui_bg_satiety_current" fill="{# statfill * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" foregroundlayer="true" rotation="270" />
+					<sprite type="filled" pos="56,0" size="112,112" color="[darkestGrey]" sprite="catui_bg_satiety_current" fill="{# Round(statmodifiedmax, 3) * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" rotation="270" />
+					<sprite type="filled" pos="56,0" size="112,112" color="13,110,253,225" sprite="catui_bg_satiety_current" fill="{# Round(statfill, 3) * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" foregroundlayer="true" rotation="270" />
 					<sprite pos="0,0" sprite="catui_bg_satiety_border" size="56,56" color="255,255,255,125" type="sliced" />
 					<sprite atlas="{staticonatlas|once}" sprite="catui_icon_water" color="255,255,255,180" globalopacity="false" size="24,24" pos="1,-23" />
 					<label pos="0,-50" width="62" font_size="14" color="[white]" text="{CATUI_statCurrentWithMax}" style="CATUI.text.outline.black.1px" justify="left" />
@@ -745,6 +777,30 @@
 				<CATUI_ingredient_row name="7"/>
 				<CATUI_ingredient_row name="8"/>
 			</grid>
+			<!-- 滚动条版本，有bug，默认展示了16个占位元素，无法隐藏 -->
+			<!-- <scrollbar depth="2" name="IngredientsListScrollbar" pos="448,0" width="10" height="304" padding="4" foregroundname="scrollbarHandle">
+				<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
+			</scrollbar>
+			<scrollview depth="2" size="440,220" scrollbar="IngredientsListScrollbar" clippingsoftness="0,5">
+				<grid rows="2" cols="4" width="440" height="220" cell_height="110" cell_width="110" controller="IngredientList">
+					<CATUI_ingredient_row name="1"/>
+					<CATUI_ingredient_row name="2"/>
+					<CATUI_ingredient_row name="3"/>
+					<CATUI_ingredient_row name="4"/>
+					<CATUI_ingredient_row name="5"/>
+					<CATUI_ingredient_row name="6"/>
+					<CATUI_ingredient_row name="7"/>
+					<CATUI_ingredient_row name="8"/>
+					<CATUI_ingredient_row name="9"/>
+					<CATUI_ingredient_row name="10"/>
+					<CATUI_ingredient_row name="11"/>
+					<CATUI_ingredient_row name="12"/>
+					<CATUI_ingredient_row name="13"/>
+					<CATUI_ingredient_row name="14"/>
+					<CATUI_ingredient_row name="15"/>
+					<CATUI_ingredient_row name="16"/>
+				</grid>
+			</scrollview> -->
 		</rect>
 	</append>
 
@@ -796,15 +852,28 @@
 	</append>
 
 	<!-- 技能界面 左侧 列表(包含技能，技能书，制作技能) -->
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel/grid" name="cols">16</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[2]" name="pos">22,-44</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[3]" name="pos">540,-44</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/sprite[@name='backgroundMain']" name="foregroundlayer">true</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/sprite[@name='background']" name="height">43</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/sprite[@name='background']" name="color">[mediumGrey]</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/sprite[@name='background']" name="foregroundlayer">true</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel/grid[@name='categories']" name="cols">16</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel/grid[@name='categories']" name="pos">5,-20</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[1]" name="pos">-9999,-4</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[2]" name="pos">17,-3</setattribute>
+	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[3]" name="pos">-9999,-44</setattribute>
 	<remove xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[2]" />
 	<insertAfter xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']">
-		<sprite name="backgroundMain" pos="3,-48" height="685" sprite="menu_empty3px" color="[black]" type="sliced" />
-		<grid name="skills" rows="5" cols="5" pos="7,-90" cell_width="129" cell_height="129" controller="SkillList" repeat_content="true" >
-			<skill_entry name="0"/>
-		</grid>
+		<sprite depth="1" name="backgroundMain" pos="3,-48" height="685" sprite="menu_empty3px" color="[black]" type="sliced" />
+		<rect name="skillList" depth="1" pos="10,-50" height="640" width="640">
+			<scrollbar depth="2" name="skillListScrollbar" pos="637,0" width="10" height="685" padding="4" foregroundname="scrollbarHandle">
+				<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
+			</scrollbar>
+			<scrollview depth="2" size="640,685" scrollbar="skillListScrollbar" clippingsoftness="0,5">
+				<grid name="skills" rows="40" cols="5" cell_width="128" cell_height="128" controller="SkillList" repeat_content="true" >
+					<skill_entry name="0" width="128" height="128" />
+				</grid>
+			</scrollview>
+		</rect>
 	</insertAfter>
 
 	<!-- 技能界面 右侧 属性详情 windowSkillAttributeInfo -->
@@ -850,7 +919,7 @@
 	<!-- 技能界面 右侧 技能详情 windowSkillPerkInfo -->
 	<remove xpath="/windows/window[@name='windowSkillPerkInfo']"/>
 	<append xpath="/windows">
-		<window name="windowSkillPerkInfo" width="647" height="730" panel="Right" controller="SkillPerkInfoWindow" cursor_area="true" hidden_entries_with_paging="1" >
+		<window name="windowSkillPerkInfo" width="647" height="730" panel="Right" controller="SkillPerkInfoWindow" cursor_area="true" hidden_entries_with_paging="0" >
 			<panel name="header" height="43" depth="1" backgroundspritename="ui_game_panel_header">
 				<sprite pos="4,-5" depth="2" name="windowIcon" style="icon32px" sprite="ui_game_symbol_skills"/>
 				<label width="600" style="header.name" text="{groupname}" />
@@ -873,13 +942,19 @@
 				</rect>
 
 				<rect name="tableBox" depth="1" pos="0,-279" width="647" height="450">
-					<sprite name="backgroundMain" height="451" sprite="menu_empty3px" color="[black]" type="sliced" />
-					<grid rows="5" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="88" repeat_content="true" >
-						<skill_perk_level controller="SkillPerkLevel" width="640" height="88" />
-					</grid>
+					<sprite depth="1" name="backgroundMain" height="451" style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
+					<scrollbar depth="2" name="SkillPerkInfoScrollbar" pos="644,-2" width="10" height="450" padding="4" foregroundname="scrollbarHandle">
+						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
+					</scrollbar>
+					<scrollview depth="2" size="647,451" scrollbar="SkillPerkInfoScrollbar" clippingsoftness="0,7">
+						<grid rows="10" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="86" repeat_content="true" >
+							<skill_perk_level controller="SkillPerkLevel" width="640" height="86" />
+						</grid>
+					</scrollview>
 				</rect>
 
-				<rect name="pagerBox" depth="3" width="647" height="36" pos="0,-689" visible="{showPaging}">
+				<rect name="pagerBox" depth="3" width="647" height="43" pos="0,-729" visible="{showPaging}">
+					<sprite style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
 					<panel pos="524,0" width="104" height="43" disableautobackground="true">
 						<pager name="pager" pos="16,-2" contents_parent="content" />
 					</panel>
@@ -939,9 +1014,7 @@
 				<label pos="635, -9" depth="2" width="300" height="28" text="{currentlevel} {skillLevel} / {maxSkillLevel}" font_size="26" justify="right" pivot="topright"/>
 			</panel>
 			<rect name="content" pos="0,-46" height="669" depth="1">
-
 				<sprite depth="4" pos="0,0" name="backgroundMain" sprite="menu_empty3px" height="100" color="[black]" type="sliced" fillcenter="false" />
-
 				<sprite depth="1" pos="2,-2" name="preview" width="95" height="96" color="[black]" type="sliced" />
 				<sprite depth="3" pos="50,-50" size="80,80" sprite="{groupicon}" pivot="center" foregroundlayer="true"/>
 				<!-- 技能描述 -->
@@ -1042,17 +1115,16 @@
 				</rect>
 
 				<rect name="tableBox" depth="1" pos="0,-98" width="647" height="632">
-					<sprite name="backgroundMain" sprite="menu_empty3px" color="[black]" type="sliced" />
-					<grid rows="6" cols="6" pos="2,-7" width="644" cell_width="106" cell_height="106" repeat_content="true">
-						<skill_crafting_entry width="106" height="106" />
-					</grid>
-				</rect>
-
-				<rect name="pagerBox" depth="3" width="647" height="36" pos="0,-729" visible="{showPaging}">
-					<sprite name="backgroundMain" sprite="menu_empty3px" color="[black]" type="sliced" />
-					<panel pos="524,0" width="104" height="43" disableautobackground="true">
-						<pager name="pager" pos="16,-2" contents_parent="content" />
-					</panel>
+					<sprite depth="1" style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
+					<scrollbar depth="2" name="SkillCraftingInfoScrollbar" pos="644,0" width="10" height="632" padding="4" foregroundname="scrollbarHandle">
+						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
+					</scrollbar>
+					<scrollview depth="2" size="647,632" scrollbar="SkillCraftingInfoScrollbar" clippingsoftness="5,10">
+						<!-- 最大支持300个entry，多了可能会卡 -->
+						<grid rows="50" cols="6" pos="2,-7" width="644" cell_width="106" cell_height="106" repeat_content="true">
+							<skill_crafting_entry width="106" height="106" />
+						</grid>
+					</scrollview>
 				</rect>
 			</rect>
 		</window>

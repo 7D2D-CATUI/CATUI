@@ -117,9 +117,9 @@ public class XUiC_SkillCraftingInfoWindowPatch
             XUiC_WindowSelector.OpenSelectorAndWindow(xUi.playerUI.entityPlayer, "crafting");
             xUiC_RecipeList = xUi.GetChildByType<XUiC_RecipeList>();
         }
-        xUiC_RecipeList?.SetRecipeDataByItems(xUiC_SkillCraftingInfoEntry.Data.GetUnlockItemRecipes(0));
-
-        return false;
+		// xUiC_RecipeList?.SetRecipeDataByItems(xUiC_SkillCraftingInfoEntry.Data.GetUnlockItemRecipes(0));
+		xUiC_RecipeList?.SetRecipeDataByItem(xUiC_SkillCraftingInfoEntry.Data.GetUnlockItem(0).Id);
+		return false;
 	}
 
 }

@@ -183,10 +183,8 @@
     <Reference Include="UnityEngine.UnityWebRequestAudioModule">
       <HintPath>7DaysToDie_Data_DLL\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
     </Reference>
-    
-    
-    
-    
-    
+    <Reference Include="mscorlib">
+      <HintPath>7DaysToDie_Data_DLL\mscorlib.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
