@@ -33,7 +33,7 @@ public class XUiC_CompassWindowPatch
 			// 当前天气
 			case "CATUI_currentWeather":
 				value = "None";
-				if (__instance.localPlayer != null)
+				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
 				{
 					// value = WeatherManager.Instance.spectrumSourceType.ToString();
 					// value = WeatherManager.currentWeather.biomeDefinition.weatherSpectrum.ToString();
@@ -67,7 +67,7 @@ public class XUiC_CompassWindowPatch
 			// 风暴名(风暴icon / 风暴名称本地化) return: "Burnt", "Desert", "Snow", "Wasteland"
 			case "CATUI_stormName":
 				value = "";
-				if (__instance.localPlayer != null)
+				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
 				{
 					int stormLevel = (int)(WeatherManager.currentWeather?.biomeDefinition?.currentWeatherGroup?.stormLevel); // 风暴等级
 					BiomeDefinition.BiomeType currentBiomeType = __instance.localPlayer.biomeStandingOn.m_BiomeType;
@@ -91,7 +91,7 @@ public class XUiC_CompassWindowPatch
 			// 风暴持续时间 eg.3200
 			case "CATUI_stormDurationTime":
 				value = "0";
-				if (__instance.localPlayer != null)
+				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
 				{
 					// value = WeatherManager.currentWeather.biomeDefinition.WeatherGetDuration("stormbuild").ToString();
 					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);
@@ -104,7 +104,7 @@ public class XUiC_CompassWindowPatch
 			// 风暴剩余时间 eg.3000
 			case "CATUI_stormRemainingTime":
 				value = "0";
-				if (__instance.localPlayer != null)
+				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
 				{
 					int stormLevel = (int)(WeatherManager.currentWeather?.biomeDefinition?.currentWeatherGroup?.stormLevel); // 风暴等级
 					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);
@@ -120,7 +120,7 @@ public class XUiC_CompassWindowPatch
 			// 风暴开始世界时间 eg.74000（包括当前风暴和下一场风暴开始时间）
 			case "CATUI_stormStartWorldTime":
 				value = "0";
-				if (__instance.localPlayer != null)
+				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
 				{
 					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);
 					int stormWorldTime = biomeWeather.stormWorldTime; // 风暴开始世界时间
@@ -132,7 +132,7 @@ public class XUiC_CompassWindowPatch
 			// 风暴结束世界时间 eg.77200
 			case "CATUI_stormEndWorldTime":
 				value = "0";
-				if (__instance.localPlayer != null)
+				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
 				{
 					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);
 					int stormWorldTime = biomeWeather.stormWorldTime; // 风暴开始世界时间
@@ -156,7 +156,7 @@ public class XUiC_CompassWindowPatch
 			// 风暴结束进度条 eg.0.432
 			case "CATUI_stormFill":
 				value = "0";
-				if (__instance.localPlayer != null)
+				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
 				{
 					int stormLevel = (int)(WeatherManager.currentWeather?.biomeDefinition?.currentWeatherGroup?.stormLevel); // 风暴等级
 					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);

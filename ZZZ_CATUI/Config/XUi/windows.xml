@@ -123,7 +123,7 @@
 				</panel>
 			</rect>
 
-			<!-- Buff列表 - 有说明 依赖BuffPopoutList rows控制最大显示数量 超出后展示翻页 -->
+			<!-- Buff列表 - 有说明 依赖BuffPopoutList rows控制最大显示数量 -->
 			<rect id="BuffHUDList" name="BuffHUDList" pos="22,-131" width="460" actionSet="false">
 				<CATUI_scrollbar depth="2" name="BuffHUDListScrollbar" pos="-5,-7" width="5" height="680" padding="4" foregroundname="scrollbarHandle">
 					<sprite name="scrollbarHandle" color="[white_half_alpha]" style="CATUI.sprite.filled.prue" />
@@ -133,23 +133,6 @@
 						<CATUI_active_buff_item  width="400" height="35" />
 					</grid>
 				</CATUI_scrollview>
-
-				<!-- // BUG：controller="Paging"的visible=false，按下esc会失效，暂时无法fix -->
-				<!-- <rect controller="Paging" visible="{# int(maxpagenumber) != 1 }">
-					<grid rows="1" cols="3" pos="54,-370" height="30" cell_width="126" cell_height="30">
-						<rect width="120" name="pageDown" style="hover, press" sound="[paging_click]" justify="center" pivot="center" sound_play_on_hover="[default_hover]" >
-							<sprite pivot="center" style="CATUI.sprite.filled.prue" color="{# int(pagenumber) &gt; 1 ? '255,255,255,185' : '255,255,255,100' }" />
-							<sprite pivot="center" width="14" height="14" sprite="ui_game_symbol_arrow_left" color="{# int(pagenumber) &gt; 1 ? '255,255,255,255' : '255,255,255,185' }" />
-						</rect>
-						<rect width="120" name="pageUp" style="hover, press" sound="[paging_click]" justify="center" pivot="center" sound_play_on_hover="[default_hover]">
-							<sprite pivot="center" style="CATUI.sprite.filled.prue" color="{# int(pagenumber) &lt; int(maxpagenumber) ? '255,255,255,185' : '255,255,255,100' }" />
-							<sprite pivot="center" width="14" height="14" sprite="ui_game_symbol_arrow_right" color="{# int(pagenumber) &lt; int(maxpagenumber) ? '255,255,255,255' : '255,255,255,185' }" />
-						</rect>
-						<rect width="120" justify="center" pivot="center" >
-							<label width="200" color="222, 206, 163, 255" text="{maxpagenumber}" font_size="24" style="CATUI.text.shadow.black.1px" />
-						</rect>
-					</grid>
-				</rect> -->
 			</rect>
 		</window>
 
@@ -852,29 +835,33 @@
 	</append>
 
 	<!-- 技能界面 左侧 列表(包含技能，技能书，制作技能) -->
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/sprite[@name='backgroundMain']" name="foregroundlayer">true</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/sprite[@name='background']" name="height">43</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/sprite[@name='background']" name="color">[mediumGrey]</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/sprite[@name='background']" name="foregroundlayer">true</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel/grid[@name='categories']" name="cols">16</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel/grid[@name='categories']" name="pos">5,-20</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[@width='410']" name="pos">17,-3</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[@width='200']" name="pos">-9999,-4</setattribute>
-	<setattribute xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']/panel[@width='104']" name="pos">-9999,-44</setattribute>
-	
-	<remove xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[2]" />
-	<insertAfter xpath="/windows/window[@name='windowSkillList']/panel[@name='content']/rect[@name='categoryHeader']">
-		<sprite depth="1" name="backgroundMain" pos="3,-48" height="685" sprite="menu_empty3px" color="[black]" type="sliced" />
-		<rect name="skillList" depth="1" pos="10,-50" height="640" width="640">
-			<CATUI_scrollbar depth="2" name="skillListScrollbar" pos="637,0" width="10" height="685" padding="4" foregroundname="scrollbarHandle">
-				<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
-			</CATUI_scrollbar>
-			<CATUI_scrollview depth="2" size="640,685" scrollbar="skillListScrollbar" clippingsoftness="0,5">
-				<grid name="skills" rows="40" cols="5" cell_width="128" cell_height="128" controller="SkillList" repeat_content="true" >
-					<skill_entry name="0" width="128" height="128" />
-				</grid>
-			</CATUI_scrollview>
-		</rect>
+	<remove xpath="/windows/window[@name='windowSkillList']/panel[@name='content']" />
+	<insertAfter xpath="/windows/window[@name='windowSkillList']/panel[@name='header']">
+		<panel name="content" pos="-3,-43" height="669" depth="1" disableautobackground="true">
+			<rect name="categoryHeader" pos="6,-3" width="644" height="43">
+				<sprite depth="2" name="backgroundMain" sprite="menu_empty3px" pos="-3,0" width="647" height="46" color="[black]" type="sliced" fillcenter="false" foregroundlayer="true" />
+				<sprite depth="1" name="background"  color="[mediumGrey]" type="sliced" height="43" foregroundlayer="true" />
+				<panel depth="1" pos="6,-3" width="410" height="37" disableautobackground="true">
+					<grid name="categories" pos="18,-20" rows="1" cols="16" width="663" height="34" cell_width="43" cell_height="43" repeat_content="true" controller="CategoryList">
+						<category_icon />
+					</grid>
+				</panel>
+			</rect>
+
+			<rect name="categoryContent">
+				<sprite depth="1" name="backgroundMain" pos="3,-48" height="685" sprite="menu_empty3px" color="[black]" type="sliced" />
+				<rect name="skillList" depth="1" pos="10,-50" height="640" width="640">
+					<CATUI_scrollbar depth="2" name="skillListScrollbar" pos="637,0" width="10" height="685" padding="4" foregroundname="scrollbarHandle">
+						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
+					</CATUI_scrollbar>
+					<CATUI_scrollview depth="2" size="640,685" scrollbar="skillListScrollbar" clippingsoftness="0,5">
+						<grid name="skills" rows="40" cols="5" cell_width="128" cell_height="128" controller="SkillList" repeat_content="true" >
+							<skill_entry name="0" width="128" height="128" />
+						</grid>
+					</CATUI_scrollview>
+				</rect>
+			</rect>
+		</panel>
 	</insertAfter>
 
 	<!-- 技能界面 右侧 属性详情 windowSkillAttributeInfo -->
