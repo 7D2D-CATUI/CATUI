@@ -1,5 +1,6 @@
 using HarmonyLib;
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Text;
 
@@ -33,7 +34,7 @@ public class XUiC_HUDStatBarPatch
 	{
 		switch (bindingName)
 		{
-			// ʳ���ˮȡ���ֵ
+			// 食物和水取最大值
 			case "CATUI_statCurrentWithMax":
 				value = "100/100";
 				if (__instance.LocalPlayer != null)
@@ -51,7 +52,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// ��ɫ����
+			// 角色名称
 			case "CATUI_playerName":
 				value = " ";
 				if (__instance.LocalPlayer != null)
@@ -61,7 +62,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// ��ҩ���ֵ
+			// 弹药最大值
 			case "CATUI_AmmoMax":
 				value = "";
 				if (__instance.LocalPlayer != null)
@@ -83,7 +84,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - �������ֵ
+			// 人物属性 - 最大生命值
 			case "CATUI_playerHealthMax":
 				value = "100";
 				if (__instance.LocalPlayer != null)
@@ -93,7 +94,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - �������ֵ
+			// 人物属性 - 最大体力值
 			case "CATUI_playerStaminaMax":
 				value = "100";
 				if (__instance.LocalPlayer != null)
@@ -103,7 +104,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - ���ʱ��
+			// 人物属性 - 存活时间
 			case "CATUI_playerCurrentLife":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -113,7 +114,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - ���׵ȼ�
+			// 人物属性 - 护甲等级
 			case "CATUI_playerArmorRating":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -123,7 +124,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - ���׵ȼ� - ����
+			// 人物属性 - 护甲等级 - 区间
 			case "CATUI_playerArmorLevel":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -144,7 +145,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - ����ȼ�
+			// 人物属性 - 世界等级
 			case "CATUI_playerGameStage":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -154,7 +155,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - �ѹεȼ�
+			// 人物属性 - 搜刮等级
 			case "CATUI_playerLootStage":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -164,7 +165,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - ���˵ȼ�
+			// 人物属性 - 商人等级
 			case "CATUI_playerTraderStage":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -174,7 +175,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - ���˵ȼ� ���� ��ǰֵ
+			// 人物属性 - 商人等级 进度 当前值
 			case "CATUI_playerTraderStageProgressCurrent":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -184,7 +185,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - ���˵ȼ� ���� ���ֵ
+			// 人物属性 - 商人等级 进度 最大值
 			case "CATUI_playerTraderStageProgressMax":
 				value = "10";
 				if (__instance.LocalPlayer != null)
@@ -195,7 +196,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - ���о���
+			// 人物属性 - 旅行距离
 			case "CATUI_playerTraveled":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -205,7 +206,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - ��ɱɥʬ
+			// 人物属性 - 击杀丧尸
 			case "CATUI_playerZombieKills":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -215,7 +216,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// ����״̬ - ping
+			// 网络状态 - ping
 			case "CATUI_playerPing":
 				value = "-1";
 				if (__instance.LocalPlayer != null)
@@ -229,7 +230,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// ����״̬ - ��ɫ
+			// 网络状态 - 颜色
 			case "CATUI_playerPingColor":
 				value = "0,0,0";
 				if (__instance.LocalPlayer != null)
@@ -240,17 +241,17 @@ public class XUiC_HUDStatBarPatch
 					const string PoorColor = "255, 0, 0";
 					if (_ping > 0)
 					{
-						// ��������
+						// 网络良好
 						if (_ping <= 150)
 						{
 							value = GoodColor;
 						}
-						// ����һ��
+						// 网络一般
 						else if (_ping <= 500)
 						{
 							value = MediumColor;
 						}
-						// ����ϲ�
+						// 网络较差
 						else
 						{
 							value = PoorColor;
@@ -260,7 +261,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// ����״̬ - �Ƿ�չʾ
+			// 网络状态 - 是否展示
 			case "CATUI_playerPingVisible":
 				value = "false";
 				if (__instance.LocalPlayer != null)
@@ -274,7 +275,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - �ƶ��ٶ�
+			// 人物属性 - 移动速度
 			case "CATUI_playerMoveSpeed":
 				value = "100";
                 if (__instance.LocalPlayer != null)
@@ -284,7 +285,7 @@ public class XUiC_HUDStatBarPatch
                 }
                 __result = true;
 				return false;
-			// �������� - �ƶ��ٶȵȼ�
+			// 人物属性 - 移动速度等级
 			case "CATUI_playerMoveSpeedLevel":
 				value = "4";
                 if (__instance.LocalPlayer != null)
@@ -306,7 +307,7 @@ public class XUiC_HUDStatBarPatch
                 __result = true;
 				return false;
 
-			// �������� - �����ٶ�
+			// 人物属性 - 奔跑速度
 			case "CATUI_playerRunSpeed":
 				value = "110";
 				if (__instance.LocalPlayer != null)
@@ -317,7 +318,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - �����Ż�
+			// 人物属性 - 购物优惠
 			case "CATUI_playerBarteringBuying":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -328,7 +329,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - �����Ż�
+			// 人物属性 - 出售优惠
 			case "CATUI_playerBarteringSelling":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -339,7 +340,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// ��ǰ�ֳ����� - ͼ��
+			// 当前手持武器 - 图标
 			case "CATUI_playerActiveItemIcon":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -355,7 +356,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// ��ǰ�ֳ����� - ����
+			// 当前手持武器 - 名称
 			case "CATUI_playerActiveItemName":
 				value = "";
 				if (__instance.LocalPlayer != null)
@@ -372,7 +373,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// ��ǰ�ֳ����� - Ʒ��
+			// 当前手持武器 - 品质
 			case "CATUI_playerActiveItemDurabilityColor":
 				value = "255,255,255";
 				if (__instance.LocalPlayer != null)
@@ -389,7 +390,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// ��ǰ�ֳ����� - �;� ʣ��ֵ
+			// 当前手持武器 - 耐久 剩余值
 			case "CATUI_playerActiveItemUseTimesResidue":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -415,7 +416,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// ��ǰ�ֳ����� - �;� ���ֵ
+			// 当前手持武器 - 耐久 最大值
 			case "CATUI_playerActiveItemUseTimesMax":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -442,7 +443,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - Ǳ���˺��ӳ�
+			// 人物属性 - 潜行伤害加成
 			//case "CATUI_playerEntityDamageBonus":
 			//    value = "0";
 			//    if (__instance.LocalPlayer != null)
@@ -453,7 +454,7 @@ public class XUiC_HUDStatBarPatch
 			//    __result = true;
 			//    return false;
 
-			// ���� - ��ʹ�ü��ܵ�
+			// 人物 - 待使用技能点
 			case "CATUI_playerSkillPointsAvailable":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -463,7 +464,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �������� - Ŀ�괩͸
+			// 人物属性 - 目标穿透
 			case "CATUI_playerEntityPenetrationCount":
 				value = "1";
 				if (__instance.LocalPlayer != null)
@@ -473,7 +474,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// �ؾ� - ͼ��
+			// 载具 - 图标
 			case "CATUI_VehicleIcon":
 				value = "";
 				if (__instance.Vehicle != null)
@@ -482,7 +483,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - ��ǰ�ٶȣ���/�룩
+			// 载具 - 当前速度（米/秒）
 			case "CATUI_VehicleCurrentSpeed":
 				value = "0";
 				if (__instance.Vehicle != null)
@@ -492,29 +493,29 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - ��ǰ�ٶȣ��ٷֱȣ�
+			// 载具 - 当前速度（百分比）
 			case "CATUI_VehicleCurrentSpeedFill":
 				value = "0";
 				if (__instance.Vehicle != null)
 				{
 					Vehicle __Vehicle = __instance.Vehicle.GetVehicle();
-					// �ؾ�����ٶ�
+					// 载具最大速度
 					float MaxTurboSpeed = __Vehicle.VelocityMaxTurboForward;
-					// �Ƿ����������
+					// 是否有引擎组件
 					bool hasEnginePart = __Vehicle.HasEnginePart();
-					// ������� ����ϵ��
+					// 引擎组件 加速系数
 					float MaxSpeedPer = __Vehicle.EffectVelocityMaxPer;
-					// ��ǰ����ٶ�
+					// 当前最大速度
 					float MaxSpeed = hasEnginePart ? MaxTurboSpeed * MaxSpeedPer : MaxTurboSpeed;
-					// ��ǰ�ٶ�
+					// 当前速度
 					float currentSpeed = Mathf.Abs(__Vehicle.CurrentForwardVelocity + 0.001f);
-					// ���㵱ǰ�ٶȰٷֱ�
+					// 计算当前速度百分比
 					float SpeedPercent = currentSpeed / MaxSpeed;
 					value = SpeedPercent < 0.01f ? "0" : SpeedPercent.ToString("F3");
 				}
 				__result = true;
 				return false;
-			// �ؾ� - ��ǰ�ٶȣ�����/Сʱ��
+			// 载具 - 当前速度（公里/小时）
 			case "CATUI_VehicleCurrentSpeedKPH":
 				value = "0";
 				if (__instance.Vehicle != null)
@@ -524,7 +525,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - δ���� ����ٶȣ���/�룩
+			// 载具 - 未加速 最大速度（米/秒）
 			case "CATUI_VehicleMaxSpeedNotTurbo":
 				value = "0";
 				if (__instance.Vehicle != null)
@@ -533,22 +534,22 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - ����ٶȣ���/�룩
+			// 载具 - 最大速度（米/秒）
 			case "CATUI_VehicleMaxSpeed":
 				value = "0";
 				if (__instance.Vehicle != null)
 				{
-					// �ؾ�����ٶ�
+					// 载具最大速度
 					float MaxTurboSpeed = __instance.Vehicle.GetVehicle().VelocityMaxTurboForward;
-					// �Ƿ����������
+					// 是否有引擎组件
 					bool hasEnginePart = __instance.Vehicle.GetVehicle().HasEnginePart();
-					// ������� ����ϵ��
+					// 引擎组件 加速系数
 					float MaxSpeedPer = __instance.Vehicle.GetVehicle().EffectVelocityMaxPer;
 					value = (hasEnginePart ? MaxTurboSpeed * MaxSpeedPer : MaxTurboSpeed).ToString("0.00");
 				}
 				__result = true;
 				return false;
-			// �ؾ� - ɲ��
+			// 载具 - 刹车
 			case "CATUI_VehicleIsBrake":
 				value = "false";
 				if (__instance.Vehicle != null)
@@ -557,7 +558,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - ����������
+			// 载具 - 库存最大容量
 			case "CATUI_VehicleInventorySlotCount":
 				value = "false";
 				if (__instance.Vehicle != null && __instance.Vehicle.GetVehicle().HasStorage())
@@ -566,7 +567,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - �����ʹ������
+			// 载具 - 库存已使用容量
 			case "CATUI_VehicleInventoryItemCount":
 				value = "false";
 				if (__instance.Vehicle != null && __instance.Vehicle.GetVehicle().HasStorage())
@@ -575,7 +576,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - �ܷ����
+			// 载具 - 能否加速
 			case "CATUI_VehicleCanTurbo":
 				value = "false";
 				if (__instance.Vehicle != null)
@@ -584,7 +585,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - �Ƿ����
+			// 载具 - 是否加速
 			case "CATUI_VehicleIsTurbo":
 				value = "false";
 				if (__instance.Vehicle != null)
@@ -593,7 +594,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - �Ƿ�����
+			// 载具 - 是否喇叭
 			case "CATUI_VehicleHasHorn":
 				value = "false";
 				if (__instance.Vehicle != null)
@@ -602,7 +603,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - �Ƿ��д��
+			// 载具 - 是否有大灯
 			case "CATUI_VehicleHasLight":
 				value = "false";
 				if (__instance.Vehicle != null)
@@ -611,7 +612,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
-			// �ؾ� - �Ƿ�򿪴��
+			// 载具 - 是否打开大灯
 			case "CATUI_VehicleIsLight":
 				value = "false";
 				if (__instance.Vehicle != null)

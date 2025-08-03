@@ -155,7 +155,7 @@ public class XUiC_CompassWindowPatch
 
 			// 风暴结束进度条 eg.0.432
 			case "CATUI_stormFill":
-				value = "0";
+				value = "0.000";
 				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
 				{
 					int stormLevel = (int)(WeatherManager.currentWeather?.biomeDefinition?.currentWeatherGroup?.stormLevel); // 风暴等级

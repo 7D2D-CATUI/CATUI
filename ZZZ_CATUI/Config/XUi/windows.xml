@@ -311,11 +311,10 @@
 			<rect name="hud_time" pos="465,0" rows="1" cols="1" width="141" >
 				<label depth="2" name="TextContent" pos="4,-11" width="133" height="30" text="{timetitle}: {time}" font_size="24" color="[white]" justify="left" style="CATUI.text.shadow.black.1px" />
 			</rect>
-
 			<!-- 天气 -->
 			<rect name="hud_weather" pos="72,-39" width="200">
 				<!-- 普通天气 -->
-				<table name="hud_weather_table" depth="2" pos="0,0" columns="7" padding="8,0" hide_inactive="true" always_reposition="true" visible="{# CATUI_stormName == '' }">
+				<table name="hud_weather_table" depth="2" pos="0,0" columns="7" padding="8,0" hide_inactive="true" always_reposition="true" visible="{# !(CATUI_stormName != '' &amp;&amp; CATUI_stormFill != '0.000') }">
 					<rect width="30">
 						<sprite color="[transparent]" />
 						<sprite pos="15,-20" size="14,14" pivot="center" sprite="catui_icon_symbol_diamond" globalopacity="false" />
@@ -367,7 +366,7 @@
 					</rect>
 				</table>
 				<!-- 风暴天气 -->
-				<rect pos="30,0" visible="{# !(CATUI_stormName == '') }">
+				<rect pos="30,0" visible="{# CATUI_stormName != '' &amp;&amp; CATUI_stormFill != '0.000' }">
 					<sprite pos="-30,-20" size="14,14" pivot="center" sprite="catui_icon_symbol_diamond" globalopacity="false" />
 					<sprite pos="310,-20" size="14,14" pivot="center" sprite="catui_icon_symbol_diamond" globalopacity="false" />
 					<rect pos="0,-7" width="280" height="26">
@@ -643,7 +642,7 @@
 				<sprite name="background" width="206" height="22" pos="-3,3" color="0,0,0,175" type="sliced" />
 				<sprite name="background" color="25,25,25,255" type="sliced" />
 				<filledsprite width="200" name="BarContent" color="{stealthcolor}" type="filled" fill="0" />
-				<sprite name="Icon" atlas="{staticonatlas|once}" sprite="{staticon|once}" size="16,14" pos="98,-1" color="255,255,255,200" />
+				<sprite name="Icon" atlas="{staticonatlas|once}" sprite="{staticon|once}" size="16,14" pos="94,-1" color="255,255,255,200" />
 				<!-- <label depth="6" name="TextContent" pos="44,-23" font_size="16" color="[white]" justify="center" pivot="left" text="{statcurrent}" width="125" height="35"/> -->
 			</rect>
 		</window>
@@ -841,10 +840,15 @@
 			<rect name="categoryHeader" pos="6,-3" width="644" height="43">
 				<sprite depth="2" name="backgroundMain" sprite="menu_empty3px" pos="-3,0" width="647" height="46" color="[black]" type="sliced" fillcenter="false" foregroundlayer="true" />
 				<sprite depth="1" name="background"  color="[mediumGrey]" type="sliced" height="43" foregroundlayer="true" />
-				<panel depth="1" pos="6,-3" width="410" height="37" disableautobackground="true">
-					<grid name="categories" pos="18,-20" rows="1" cols="16" width="663" height="34" cell_width="43" cell_height="43" repeat_content="true" controller="CategoryList">
-						<category_icon />
-					</grid>
+				<panel depth="1" pos="6,-3" width="640" height="37" disableautobackground="true">
+					<CATUI_scrollbar depth="2" name="skillCategoryListScrollbar" pos="-6,-38" width="646" height="5" padding="4" foregroundname="scrollbarHandle">
+						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
+					</CATUI_scrollbar>
+					<CATUI_scrollview depth="2" size="646,43" scrollbar="skillCategoryListScrollbar" clippingsoftness="10,0" scroll_direction="0">
+						<grid name="categories" pos="0,-20" rows="1" cols="26" cell_width="43" cell_height="43" repeat_content="true" controller="CategoryList">
+							<category_icon />
+						</grid>
+					</CATUI_scrollview>
 				</panel>
 			</rect>
 

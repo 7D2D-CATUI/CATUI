@@ -297,6 +297,9 @@
 	<!-- 物品制作队列 -->
 	<setattribute xpath="/controls/recipe_stack/rect/sprite[@name='background']" name="color">[darkGrey]</setattribute>
 
+	<!-- 分类TAB ICON -->
+	<setattribute xpath="/controls/category_icon/button[@name='categoryIcon']" name="visible">{# categoryicon != '' }</setattribute>
+
 	<!-- 组队 -->
 	<remove xpath="/controls/party_entry" />
 	<remove xpath="/controls/companion_entry" />
