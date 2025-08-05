@@ -41,6 +41,9 @@ public class XUiFromXmlPatch
             case "CATUI_animatedsprite":
                 view = new XUiV_AnimatedSprite(id);
                 break;
+            case "CATUI_videoplayer":
+                view = new XUiV_VideoPlayer(id);
+                break;
             case "CATUI_scrollview":
                 view = new XUiV_ScrollViewContainer(id);
                 break;

@@ -104,17 +104,21 @@
 	<!-- 背包栏 -->
 	<remove xpath="/controls/backpack_item_stack" />
 	<append xpath="/controls">
-		<backpack_item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false">
+		<backpack_item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false" allow_clicklock="true">
 			<!-- todo: 2.2 -->
 			<!-- <rect controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}"> -->
 			<!-- 2.1 -->
-			<rect controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}">
+			<rect name="backpackItemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}" allow_clicklock="${allow_clicklock}">
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
-				<sprite depth="3" name="background" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,90' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
+				<sprite depth="5" name="background" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,90' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
 				<!-- 背景 - 底色 -->
 				<sprite depth="2" name="highlightOverlay" width="68" height="68" color="25,25,25,255" pos="-2,2" type="sliced" globalopacitymod="1.15" />
 				<!-- ???? -->
 				<texture depth="3" name="backgroundTexture" material="Materials/Transparent Colored" size="66,66" globalopacity="true" />
+				<!-- 书籍 未读 -->
+				<sprite depth="3" width="64" height="64" sprite="catui_bg_book_learn" color="[white]" type="sliced" visible="{# itemtypeicon == 'book'}" />
+				<!-- 书籍 已读 -->
+				<!-- <sprite depth="3" width="64" height="64" sprite="catui_bg_book_learned" color="[white]" type="sliced" visible="{# itemtypeicon == 'book_read'}" /> -->
 				<!-- 图标 - 物品图标 -->
 				<sprite depth="6" name="itemIcon" width="64" height="64" atlas="ItemIconAtlas" sprite="{itemicon}" pos="32,-32" pivot="center" foregroundlayer="true" color="{iconcolor}" />
 				<!-- 角标 - 物品状态 -->
@@ -156,11 +160,11 @@
 	<!-- 工具栏/箱子/载具/cm 上帝背包 -->
 	<remove xpath="/controls/item_stack" />
 	<append xpath="/controls">
-		<item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false" show_favorites="false" show_slotnum="false">
+		<item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false" show_favorites="false" show_slotnum="false" allow_clicklock="false">
 			<!-- todo: 2.2 -->
 			<!-- <rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="72" height="72" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}" visible="{# !defined('container_slots') or (int(${repeat_i}) &lt; int(container_slots)) }"> -->
 			<!-- 2.1 -->
-			<rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="72" height="72" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" show_slotnum="${show_slotnum}">
+			<rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="72" height="72" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" show_slotnum="${show_slotnum}" allow_clicklock="${allow_clicklock}">
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
 				<rect>
 					<!-- 选中状态 -->
@@ -172,6 +176,10 @@
 				<sprite depth="2" name="highlightOverlay" color="25,25,25,255" type="sliced" globalopacitymod="1.15" />
 				<!-- ???? -->
 				<texture depth="3" name="backgroundTexture" material="Materials/Transparent Colored" size="74,74" globalopacity="true" />
+				<!-- 书籍 未读 -->
+				<sprite depth="3" width="72" height="72" sprite="catui_bg_book_learn" color="[white]" type="sliced" visible="{# itemtypeicon == 'book'}" />
+				<!-- 书籍 已读 -->
+				<!-- <sprite depth="3" width="72" height="72" sprite="catui_bg_book_learned" color="[white]" type="sliced" visible="{# itemtypeicon == 'book_read'}" /> -->
 				<!-- 角标 - 收藏 -->
 				<sprite depth="8" name="favoriteIcon" width="24" height="24" sprite="server_favorite" pos="2,-2" foregroundlayer="true" visible="{isfavorite}" />
 				<!-- 图标 - 物品图标 -->

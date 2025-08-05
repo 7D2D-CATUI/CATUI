@@ -621,16 +621,16 @@
 				<!-- 中线位置 504 -->
 				<rect name="Food" pos="440, 24" width="50" height="50"  controller="HUDStatBar" stat_type="Food" tooltip_key="xuiFood" visible="{statvisible}">
 					<sprite pos="-3,3" sprite="catui_bg_satiety" flip="horizontally" size="62,62" color="0,0,0,220" type="sliced" />
-					<sprite type="filled" pos="0,-112" size="112,112" color="[darkestGrey]" sprite="catui_bg_satiety_current" fill="{# Round(statmodifiedmax, 3) * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" rotation="90" fillInvert="true" />
-					<sprite type="filled" pos="0,-112" size="112,112" color="255, 193, 7,225" sprite="catui_bg_satiety_current" fill="{# Round(statfill, 3) * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" foregroundlayer="true" rotation="90" fillInvert="true" />
+					<sprite type="filled" pos="0,-56" size="56,56" color="[darkestGrey]" sprite="catui_bg_satiety_fill" fill="1" style="CATUI.sprite.filled.prue" filldirection="Radial90" rotation="90" fillInvert="true" />
+					<sprite type="filled" pos="0,-56" size="56,56" color="255, 193, 7,225" sprite="catui_bg_satiety_fill" fill="{statfill}" style="CATUI.sprite.filled.prue" filldirection="Radial90" foregroundlayer="true" rotation="90" fillInvert="true" />
 					<sprite pos="0,0" sprite="catui_bg_satiety_border" flip="horizontally" size="56,56" color="255,255,255,125" type="sliced" />
 					<sprite atlas="{staticonatlas|once}" sprite="catui_icon_food" color="255,255,255,180" globalopacity="false" size="24,24" pos="30,-23" />
 					<label pos="-7,-50" width="62" font_size="14" color="[white]" text="{CATUI_statCurrentWithMax}" style="CATUI.text.outline.black.1px" justify="right" />
 				</rect>
 				<rect name="Water" pos="508, 24" width="50" height="50" controller="HUDStatBar" stat_type="Water" tooltip_key="xuiWater" visible="{statvisible}">
 					<sprite pos="-3,3" sprite="catui_bg_satiety" size="62,62" color="0,0,0,220" type="sliced" />
-					<sprite type="filled" pos="56,0" size="112,112" color="[darkestGrey]" sprite="catui_bg_satiety_current" fill="{# Round(statmodifiedmax, 3) * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" rotation="270" />
-					<sprite type="filled" pos="56,0" size="112,112" color="13,110,253,225" sprite="catui_bg_satiety_current" fill="{# Round(statfill, 3) * 0.25 }" style="CATUI.sprite.filled.prue" filldirection="Radial360" foregroundlayer="true" rotation="270" />
+					<sprite type="filled" pos="0,0" size="56,56" color="[darkestGrey]" sprite="catui_bg_satiety_fill" fill="1" style="CATUI.sprite.filled.prue" filldirection="Radial90" />
+					<sprite type="filled" pos="0,0" size="56,56" color="13,110,253,225" sprite="catui_bg_satiety_fill" fill="{statfill}" style="CATUI.sprite.filled.prue" filldirection="Radial90" foregroundlayer="true" />
 					<sprite pos="0,0" sprite="catui_bg_satiety_border" size="56,56" color="255,255,255,125" type="sliced" />
 					<sprite atlas="{staticonatlas|once}" sprite="catui_icon_water" color="255,255,255,180" globalopacity="false" size="24,24" pos="1,-23" />
 					<label pos="0,-50" width="62" font_size="14" color="[white]" text="{CATUI_statCurrentWithMax}" style="CATUI.text.outline.black.1px" justify="left" />
