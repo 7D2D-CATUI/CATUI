@@ -105,10 +105,7 @@
 	<remove xpath="/controls/backpack_item_stack" />
 	<append xpath="/controls">
 		<backpack_item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false" allow_clicklock="true">
-			<!-- todo: 2.2 -->
-			<!-- <rect controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}"> -->
-			<!-- 2.1 -->
-			<rect name="backpackItemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}" allow_clicklock="${allow_clicklock}">
+			<rect name="backpackItemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}" allow_clicklock="${allow_clicklock}">
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
 				<sprite depth="5" name="background" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,90' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
 				<!-- 背景 - 底色 -->
@@ -142,10 +139,7 @@
 				<!-- 定时器??? -->
 				<label depth="7" name="timer" pos="31,-32" height="24" font_size="24" justify="center" pivot="center" color="[beige]" style="CATUI.text.outline.black.1px" />
 				<!-- 前景 - 物品不可用 -->
-				<!-- todo: 2.2 -->
-				<!-- <sprite depth="9" name="cancel" sprite="ui_game_symbol_x" width="62" height="62" color="255,0,0,255" type="sliced" visible="{# ishovered and islocked}" foregroundlayer="true"/> -->
-				<!-- todo: 2.1 -->
-				<sprite depth="9" name="cancel" sprite="ui_game_symbol_x" width="62" height="62" color="255,0,0,255" type="sliced" visible="false" foregroundlayer="true"/>
+				<sprite depth="9" name="cancel" sprite="ui_game_symbol_x" width="62" height="62" color="255,0,0,255" type="sliced" visible="{# ishovered and islocked}" foregroundlayer="true"/>
 				<!-- 前景 - 物品锁定 -->
 				<sprite depth="13" name="assembleIcon" size="35,35" sprite="{stacklockicon}" color="255,255,255,150" visible="{isassemblelocked}" pos="14,-14" foregroundlayer="true" />
 				<!-- 栏位锁  -->
@@ -161,10 +155,7 @@
 	<remove xpath="/controls/item_stack" />
 	<append xpath="/controls">
 		<item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false" show_favorites="false" show_slotnum="false" allow_clicklock="false">
-			<!-- todo: 2.2 -->
-			<!-- <rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="72" height="72" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}" visible="{# !defined('container_slots') or (int(${repeat_i}) &lt; int(container_slots)) }"> -->
-			<!-- 2.1 -->
-			<rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="72" height="72" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" show_slotnum="${show_slotnum}" allow_clicklock="${allow_clicklock}">
+			<rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="72" height="72" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}" visible="{# !defined('container_slots') or (int(${repeat_i}) &lt; int(container_slots)) }" show_slotnum="${show_slotnum}" allow_clicklock="${allow_clicklock}">
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
 				<rect>
 					<!-- 选中状态 -->
@@ -202,17 +193,13 @@
 				<!-- 定时器??? -->
 				<label depth="7" name="timer" pos="35,-38" height="24" font_size="24" justify="center" pivot="center" color="[beige]" style="CATUI.text.outline.black.1px" />
 				<!-- 前景 - 物品不可用 -->
-				<!-- todo: 2.2 -->
-				<!-- <sprite depth="9" name="cancel" sprite="ui_game_symbol_x" color="255,0,0,255" type="sliced" visible="{# ishovered and islocked}" foregroundlayer="true" /> -->
-				<!-- 2.1 -->
-				<sprite depth="9" name="cancel" sprite="ui_game_symbol_x" color="255,0,0,255" type="sliced" visible="false" foregroundlayer="true" />
+				<sprite depth="9" name="cancel" sprite="ui_game_symbol_x" color="255,0,0,255" type="sliced" visible="{# ishovered and islocked}" foregroundlayer="true" />
 				<!-- 前景 - 物品锁定 -->
 				<sprite depth="13" name="assembleIcon" size="40,40" sprite="{stacklockicon}" color="{stacklockcolor}" visible="{isassemblelocked}" pos="14,-14" foregroundlayer="true" />
 				<!-- 栏位锁  -->
-				<!-- todo: 2.2 -->
-				<!-- <button name="rectSlotLock" depth="15" sprite="" style="press, hover" width="71" height="71" visible="{# defined('userlockmode') and userlockmode}" hoverscale="1" use_selection_box="true">
-					<sprite depth="16" name="button" width="24" height="24" sprite="{# !defined('userlockmode') ? '' : (userlockedslot ? 'ui_game_symbol_lock' : 'ui_game_symbol_unlock') }" pos="56, -16" style="icon32px" pivot="center" color="{# !defined('userlockmode') ? '255,255,255,1' : (userlockedslot ? '222,206,163' : '255,255,255') }" />					
-				</button> -->
+				<button name="rectSlotLock" depth="15" sprite="" style="press, hover" width="71" height="71" visible="{# defined('userlockmode') and userlockmode}" hoverscale="1" use_selection_box="true">
+					<sprite depth="16" name="button" width="24" height="24" sprite="{# !defined('userlockmode') ? '' : (userlockedslot ? 'ui_game_symbol_lock' : 'ui_game_symbol_unlock') }" pos="56, -16" style="icon32px" pivot="center" color="{# !defined('userlockmode') ? '255,255,255,1' : (userlockedslot ? '222,206,163' : '255,255,255') }" />
+				</button>
 				<sprite depth="3" sprite="menu_empty2px" width="72" height="72" color="255, 195, 0,150" type="sliced" fillcenter="false" globalopacity="true" visible="{userlockedslot}" />
 				<!-- 角标 - 快速切换 -->
 				<sprite depth="14" name="quickswapIcon" size="30,30" sprite="server_refresh" pos="3,-36" foregroundlayer="true" visible="{isQuickSwap}" />

@@ -12,7 +12,7 @@ public class XUiC_IngredientEntryPatch
 		bool flag = __instance.ingredient != null;
 		switch (bindingName)
 		{
-			// 是否满足素材数量要求
+			// 鏄惁婊¤冻绱犳潗鏁伴噺瑕佹眰
 			case "CATUI_HasComplete":
 				int havecount;
 				value = "false";

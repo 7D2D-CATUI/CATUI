@@ -61,28 +61,29 @@ public class XUiC_ItemStackPatch
 				if (_sender.CustomAttributes.ContainsKey(ALLOW_CLICKLOCK_ATTR)) {
 					allowClicklock = StringParsers.ParseBool(_sender.CustomAttributes[ALLOW_CLICKLOCK_ATTR]);
 				}
-				// 允许栏位锁（配置写在xml上，allow_clicklock="${allow_clicklock}"）
+				// 是否允许栏位锁（配置写在xml上，allow_clicklock="${allow_clicklock}"）
 				if (!allowClicklock) return;
-				// ALT+点击触发
+				// 是否ALT+点击触发
 				if (!InputUtils.AltKeyPressed) return;
 
 				var backpackWindow = __instance.xui.GetChildByType<XUiC_BackpackWindow>();
                 var lootWindow = __instance.xui.GetChildByType<XUiC_LootWindow>();
                 var vehicleContainer = __instance.xui.GetChildByType<XUiC_VehicleContainer>();
-				// 箱子/载具容器窗口是否打开 2.2+
-				// Debug.Log("<color=#FF9900> CATUI [AltClickPatch] lootWindow.IsOpen: " + lootWindow.IsOpen + "</color>");
-				// Debug.Log("<color=#FF9900> CATUI [AltClickPatch] vehicleContainer.IsOpen: " + vehicleContainer.IsOpen + "</color>");
-
 				if (backpackWindow != null || lootWindow != null || vehicleContainer != null)
                 {
 					__instance.UserLockedSlot = !__instance.UserLockedSlot;
                     __instance.RefreshBindings();
                     // 背包 更新栏位锁状态
                     backpackWindow.UpdateLockedSlots(backpackWindow.standardControls);
-					// 箱子 更新栏位锁状态 2.2+
-					// lootWindow.UpdateLockedSlots(lootWindow.standardControls);
-					// 载具 更新栏位锁状态 2.2+
-					// vehicleContainer.UpdateLockedSlots(vehicleContainer.standardControls);
+					// 箱子 容器窗口是否打开 更新栏位锁状态 2.2+
+					if (lootWindow.IsOpen && lootWindow.standardControls != null) {
+						lootWindow.UpdateLockedSlots(lootWindow.standardControls);
+					}
+					// 载具 容器窗口是否打开 更新栏位锁状态 2.2+
+					if (vehicleContainer.IsOpen && vehicleContainer.standardControls != null)
+					{
+						vehicleContainer.UpdateLockedSlots(vehicleContainer.standardControls);
+					}
 					PlayClickSound();
                 }
             };

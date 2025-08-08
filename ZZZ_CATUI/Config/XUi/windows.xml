@@ -125,10 +125,10 @@
 
 			<!-- Buff列表 - 有说明 依赖BuffPopoutList rows控制最大显示数量 -->
 			<rect id="BuffHUDList" name="BuffHUDList" pos="22,-131" width="460" actionSet="false">
-				<CATUI_scrollbar depth="2" name="BuffHUDListScrollbar" pos="-5,-7" width="5" height="680" padding="4" foregroundname="scrollbarHandle">
+				<CATUI_scrollbar depth="2" name="BuffHUDListScrollbar" pos="-5,-8" width="4" height="359" padding="4" foregroundname="scrollbarHandle">
 					<sprite name="scrollbarHandle" color="[white_half_alpha]" style="CATUI.sprite.filled.prue" />
 				</CATUI_scrollbar>
-				<CATUI_scrollview depth="2" size="360,700" scrollbar="BuffHUDListScrollbar" clippingsoftness="0,7">
+				<CATUI_scrollview depth="2" size="360,380" scrollbar="BuffHUDListScrollbar" clippingsoftness="0,7">
 					<grid name="ActiveBuffList" controller="ActiveBuffList" rows="100" cols="1" width="360" cell_width="400" cell_height="35" repeat_content="true" hide_inactive="true" Pivot="TopLeft" >
 						<CATUI_active_buff_item  width="400" height="35" />
 					</grid>
@@ -713,6 +713,9 @@
 	<setattribute xpath="//window[@name='windowCraftingQueue']/rect[@controller='CraftingQueue']/grid[@name='queue']" name="cell_width">80</setattribute>
 	<setattribute xpath="//window[@name='windowCraftingQueue']/rect[@controller='CraftingQueue']/grid[@name='queue']" name="cell_height">80</setattribute>
 
+	<!-- 箱子支持快捷键锁定栏位 -->
+	<setattribute xpath="//window[@name='windowLooting']/rect[@name='content']/grid[@name='queue']/item_stack" name="allow_clicklock">true</setattribute>
+
 	<!-- 制作详情 -->
 	<setattribute xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/sprite[@name='backgroundMain']" name="fillcenter">true</setattribute>
 	<setattribute xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/sprite[@name='backgroundMain']" name="depth">1</setattribute>
@@ -759,30 +762,6 @@
 				<CATUI_ingredient_row name="7"/>
 				<CATUI_ingredient_row name="8"/>
 			</grid>
-			<!-- 滚动条版本，有bug，默认展示了16个占位元素，无法隐藏 -->
-			<!-- <CATUI_scrollbar depth="2" name="IngredientsListScrollbar" pos="448,0" width="10" height="304" padding="4" foregroundname="scrollbarHandle">
-				<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
-			</CATUI_scrollbar>
-			<CATUI_scrollview depth="2" size="440,220" scrollbar="IngredientsListScrollbar" clippingsoftness="0,5">
-				<grid rows="2" cols="4" width="440" height="220" cell_height="110" cell_width="110" controller="IngredientList">
-					<CATUI_ingredient_row name="1"/>
-					<CATUI_ingredient_row name="2"/>
-					<CATUI_ingredient_row name="3"/>
-					<CATUI_ingredient_row name="4"/>
-					<CATUI_ingredient_row name="5"/>
-					<CATUI_ingredient_row name="6"/>
-					<CATUI_ingredient_row name="7"/>
-					<CATUI_ingredient_row name="8"/>
-					<CATUI_ingredient_row name="9"/>
-					<CATUI_ingredient_row name="10"/>
-					<CATUI_ingredient_row name="11"/>
-					<CATUI_ingredient_row name="12"/>
-					<CATUI_ingredient_row name="13"/>
-					<CATUI_ingredient_row name="14"/>
-					<CATUI_ingredient_row name="15"/>
-					<CATUI_ingredient_row name="16"/>
-				</grid>
-			</CATUI_scrollview> -->
 		</rect>
 	</append>
 
@@ -808,6 +787,9 @@
 	<!-- 武器/工具模组更改详情 -->
 	<!-- 删除耐久进度条 -->
 	<remove xpath="/windows/window[@name='windowAssemble']/panel[@name='header']/sprite[@pos!='5,-5']"/>
+
+	<!-- 载具支持快捷键锁定栏位 -->
+	<setattribute xpath="//window[@name='windowVehicleStorage']/grid[@name='queue']/item_stack" name="allow_clicklock">true</setattribute>
 
 	<!-- 商人库存 -->
 	<remove xpath="/windows/window[@name='windowTrader']/panel[@name='content']/rect[@name='tableHeader']"/>
@@ -844,8 +826,8 @@
 					<CATUI_scrollbar depth="2" name="skillCategoryListScrollbar" pos="-6,-38" width="646" height="5" padding="4" foregroundname="scrollbarHandle">
 						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
 					</CATUI_scrollbar>
-					<CATUI_scrollview depth="2" size="646,43" scrollbar="skillCategoryListScrollbar" clippingsoftness="10,0" scroll_direction="0">
-						<grid name="categories" pos="0,-20" rows="1" cols="26" cell_width="43" cell_height="43" repeat_content="true" controller="CategoryList">
+					<CATUI_scrollview depth="2" size="630,43" scrollbar="skillCategoryListScrollbar" clippingsoftness="10,0" scroll_direction="0">
+						<grid name="categories" pos="0,-20" rows="1" cols="100" cell_width="43" cell_height="43" repeat_content="true" controller="CategoryList">
 							<category_icon />
 						</grid>
 					</CATUI_scrollview>
@@ -859,7 +841,7 @@
 						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
 					</CATUI_scrollbar>
 					<CATUI_scrollview depth="2" size="640,685" scrollbar="skillListScrollbar" clippingsoftness="0,5">
-						<grid name="skills" rows="40" cols="5" cell_width="128" cell_height="128" controller="SkillList" repeat_content="true" >
+						<grid name="skills" rows="60" cols="5" cell_width="128" cell_height="128" controller="SkillList" repeat_content="true">
 							<skill_entry name="0" width="128" height="128" />
 						</grid>
 					</CATUI_scrollview>
@@ -939,7 +921,7 @@
 						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
 					</CATUI_scrollbar>
 					<CATUI_scrollview depth="2" size="647,451" scrollbar="SkillPerkInfoScrollbar" clippingsoftness="0,7">
-						<grid rows="10" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="86" repeat_content="true" >
+						<grid rows="100" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="86" repeat_content="true" >
 							<skill_perk_level controller="SkillPerkLevel" width="640" height="86" />
 						</grid>
 					</CATUI_scrollview>
