@@ -48,6 +48,3 @@ Nexus mods：https://www.nexusmods.com/7daystodie/mods/5248/
 - CATUI can be referenced, packaged, or used for secondary development by any other mod, provided that the source is indicated.
 - CATUI is still in the early development stage and is far from meeting the standard for a finalized UI. Therefore, CATUI needs your feedback—please don’t hesitate to share your thoughts! Any suggestions or opinions are welcome. After downloading and experiencing it, write about your experience in the forum, or join the QQ group and directly @ "Big Cat"! Your support is my greatest motivation!
 - Additionally, if you’re interested in mod development, you’re welcome to exchange ideas and learn together!
-
-## 源码
-https://github.com/7D2D-CATUI/CATUI
