@@ -3,19 +3,19 @@ A 《7 Days to Die》 Simple UI.
 ![CATUI](https://i.postimg.cc/FRDbR8cr/image.png "CATUI")
 
 ## Feature
-– Interface: Redesigned UI;
-– Shortcuts: Hold the SHIFT key for priority execution (cutting in line) when crafting, repairing, or disassembling; hold ALT + click on inventory slots to lock/unlock them;
-– Status data: Including armor level, mobility, world level, looting level, merchant level, trading bonus, running speed, and more;
-– Zombie health bars: Health bars distinguishing between ferocious and irradiated zombie types, as well as various zombie buffs/debuffs, including armor level, bleeding/electrified/burning statuses, etc.;
-– Vehicles: Vehicle speedometer, vehicle inventory status, and other related info;
-– Current weather status and storm countdown;
-– Blood Moon countdown;
-– Skill interface;
-– Merchant interface;
-– Crafting list;
-– Large Belt (optional; you can customize the number of toolbar slots and switch via ALT+123…0);
-– Large Backpack (optional);
-– Theoretically supports various UI-free custom overhaul mods, including War3zuk, ETF, and many more;
+- Interface: Redesigned UI;
+- Shortcuts: Hold the SHIFT key for priority execution (cutting in line) when crafting, repairing, or disassembling; hold ALT + click on inventory slots to lock/unlock them;
+- Status data: Including armor level, mobility, world level, looting level, merchant level, trading bonus, running speed, and more;
+- Zombie health bars: Health bars distinguishing between ferocious and irradiated zombie types, as well as various zombie buffs/debuffs, including armor level, bleeding/electrified/burning statuses, etc.;
+- Vehicles: Vehicle speedometer, vehicle inventory status, and other related info;
+- Current weather status and storm countdown;
+- Blood Moon countdown;
+- Skill interface;
+- Merchant interface;
+- Crafting list;
+- Large Belt (optional; you can customize the number of toolbar slots and switch via ALT+123…0);
+- Large Backpack (optional);
+- Theoretically supports various UI-free custom overhaul mods, including War3zuk, ETF, and many more;
 
 ## Important Notes:
 - Make sure to disable EAC!!
