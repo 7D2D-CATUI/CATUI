@@ -12,10 +12,10 @@ A 《7 Days to Die》 Simple UI.
 - Blood Moon countdown
 - Skill interface
 - Merchant interface
-- Crafting list
-- Large Belt (optional; customize the number of toolbar slots and switch via ALT+123…0)
+- Crafting interface
+- Large Toolbelt (optional; customize the number of toolbar slots and switch via ALT+123…0)
 - Large Backpack (optional)
-- Theoretically supports various UI-free custom overhaul mods, including War3zuk, ETF, and many more
+- Theoretically supports various UI-free custom overhaul mods, including Ravenharest, War3zuk, ETF, and many more
 
 ## Optional Mods
 - ZZZ_CATUI_toolbelt_more_slot: A large toolbelt with 12 slots by default. Switch slots via ALT+123...0. Adjust slot count by modifying numbers in /Config/XUi/windows.xml
