@@ -3,9 +3,9 @@ A 《7 Days to Die》 Simple UI.
 ![CATUI](https://i.postimg.cc/FRDbR8cr/image.png "CATUI")
 
 ## Feature
-- Interface: Redesigned UI
+- Interface: Redesigned UI for QoL
 - Shortcuts: Hold the SHIFT key for priority execution (cutting in line) when crafting, repairing, or disassembling; ALT+LMB on inventory slots to lock/unlock them
-- Status data: Including armor level, mobility, world level, looting level, trading bonus, running speed, and more
+- Status data: Including world stage, looting stage, trading bonus, armor level, mobility, running speed, and more
 - Zombie health bars: Health bars distinguishing between ferocious and irradiated zombie types, as well as various zombie buffs/debuffs (armor level, bleeding/electrified/burning statuses, etc.)
 - Vehicles: Vehicle speedometer, vehicle inventory status, and other related info
 - Current weather status and storm countdown
