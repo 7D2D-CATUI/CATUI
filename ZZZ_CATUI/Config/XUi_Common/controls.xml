@@ -1,4 +1,4 @@
 ﻿<CATUI>
 	<!-- // 美化 字体高清 -->
-	<setattribute xpath="/controls/textfield[@crispness='Never']" name="crispness">OnDesktop</setattribute>
+	<setattribute xpath="/controls//textfield" name="crispness">OnDesktop</setattribute>
 </CATUI>

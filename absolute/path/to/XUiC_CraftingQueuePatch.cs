@@ -6,6 +6,10 @@ using Audio;
 [HarmonyPatch]
 public class XUiC_CraftingQueuePatch
 {
+    // 常量定义，替换魔法数字
+    private const KeyCode LEFT_CONTROL = KeyCode.LeftControl;
+    private const KeyCode RIGHT_CONTROL = KeyCode.RightControl;
+
     // 制作
     [HarmonyPrefix]
     [HarmonyPatch(typeof(XUiC_CraftingQueue), "AddRecipeToCraft")]
@@ -18,14 +22,16 @@ public class XUiC_CraftingQueuePatch
             return false;
         }
 
-        // 检查是否按下Shift
-        if (InputUtils.ShiftKeyPressed)
+        // 检查是否按下了修饰键
+        if (Input.GetKey(LEFT_CONTROL) || Input.GetKey(RIGHT_CONTROL))
         {
             AddToStartOfQueue(__instance, ref _recipe, ref _count, ref craftTime, ref isCrafting, ref _oneItemCraftingTime, ref __result);
             return false;
         }
 
+        // 缓存队列长度
         int queueLength = __instance.queueItems.Length;
+
         for (int num = queueLength - 1; num >= 0; num--)
         {
             if (__instance.AddRecipeToCraftAtIndex(num, _recipe, _count, craftTime, isCrafting, recipeModification: false, -1, -1, _oneItemCraftingTime))
@@ -75,8 +81,8 @@ public class XUiC_CraftingQueuePatch
     [HarmonyPatch(typeof(XUiC_CraftingQueue), "AddItemToRepair")]
     public static bool AddItemToRepairPrefix(XUiC_CraftingQueue __instance, ref float _repairTimeLeft, ref ItemValue _itemToRepair, ref int _amountToRepair, ref bool __result, ref XUiController[] ___queueItems)
     {
-        // 检查是否按下Shift
-        if (!InputUtils.ShiftKeyPressed)
+        // 检查是否按下了修饰键
+        if (!Input.GetKey(LEFT_CONTROL) && !Input.GetKey(RIGHT_CONTROL))
         {
             return true;
         }
@@ -116,12 +122,15 @@ public class XUiC_CraftingQueuePatch
         return false;
     }
 
+    // 提取重复代码为通用方法
     private static void ShiftQueueItems(XUiController[] queueItems)
     {
         if (queueItems == null || queueItems.Length <= 1)
             return;
 
+        // 缓存队列长度
         int queueLength = queueItems.Length;
+
         for (int i = 1; i < queueLength; i++)
         {
             XUiC_RecipeStack currentItem = (XUiC_RecipeStack)queueItems[i];

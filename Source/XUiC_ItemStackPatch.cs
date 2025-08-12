@@ -1,120 +1,154 @@
-using System;
 using Audio;
 using HarmonyLib;
 using UnityEngine;
-using System.Xml.Linq;
+using System.Collections.Generic;
 
 [HarmonyPatch]
 public class XUiC_ItemStackPatch
 {
-	private const string UI_CLICK_SOUND_PATH = "@:Sounds/UI/ui_menu_click.wav";
-	private static AudioClip _cachedClickSound;
- 	private const string ALLOW_CLICKLOCK_ATTR = "allow_clicklock";
+    private const string UI_CLICK_SOUND_PATH = "@:Sounds/UI/ui_menu_click.wav";
+    private static AudioClip _cachedClickSound;
+    private const string ALLOW_CLICKLOCK_ATTR = "allow_clicklock";
+    private static readonly HashSet<XUiC_ItemStack> _patchedInstances = new HashSet<XUiC_ItemStack>();
+    // 定义默认样式常量，提高可维护性
+    private const string MODIFICATION_HIGHLIGHTED = "[04FE85]▇[-] ";
+    private const string MODIFICATION_DEFAULT = "▇ ";
 
-	[HarmonyPrefix]
-	[HarmonyPatch(typeof(XUiC_ItemStack), "GetBindingValue")]
-	public static bool Prefix(string _bindingName, ref string _value, ref bool __result, XUiC_ItemStack __instance)
-	{
-		switch (_bindingName)
-		{
-			// 给道具增加index
-			case "CATUI_itemStackSlotIndex":
-				_value = (__instance.SlotNumber).ToString();
-				__result = true;
-				return false;
-			// 有品质的道具 插槽状态 创造模式有bug
-			/*case "CATUI_itemStackModifications":
-				_value = "";
-				ItemValue itemValue = __instance.itemStack.itemValue;
-				ItemValue[] mods = itemValue.Modifications;
-				if (itemValue.Quality > 0 && mods != null && mods.Length > 0) {
-					string text = "";
-					for (int i = 0; i < mods.Length; i++)
-					{
-						ItemClass itemClass = mods[i].ItemClass;
-						if (itemClass != null && itemClass.GetItemName() != "") {
-							text += "[FFC300]▇[-] ";
-						}
-						else
-						{
-							text += "▇ ";
-						}
-					}
-					_value = text;
-				}
-				__result = true;
-				return false;*/
-			default:
-				return true;
-		}
-	}
-
-	[HarmonyPostfix]
-	[HarmonyPatch(typeof(XUiC_ItemStack), "Init")]
-	public static void InitPostfixProxy(XUiC_ItemStack __instance)
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(XUiC_ItemStack), "GetBindingValue")]
+    public static bool GetBindingValuePrefix(string _bindingName, ref string _value, ref bool __result, XUiC_ItemStack __instance)
     {
-		try
-		{
-			__instance.OnPress += (XUiController _sender, int _mouseButton) =>
-			{
-				bool allowClicklock = false;
-				if (_sender.CustomAttributes.ContainsKey(ALLOW_CLICKLOCK_ATTR)) {
-					allowClicklock = StringParsers.ParseBool(_sender.CustomAttributes[ALLOW_CLICKLOCK_ATTR]);
-				}
-				// 是否允许栏位锁（配置写在xml上，allow_clicklock="${allow_clicklock}"）
-				if (!allowClicklock) return;
-				// 是否ALT+点击触发
-				if (!InputUtils.AltKeyPressed) return;
-
-				var backpackWindow = __instance.xui.GetChildByType<XUiC_BackpackWindow>();
-                var lootWindow = __instance.xui.GetChildByType<XUiC_LootWindow>();
-                var vehicleContainer = __instance.xui.GetChildByType<XUiC_VehicleContainer>();
-				if (backpackWindow != null || lootWindow != null || vehicleContainer != null)
+        switch (_bindingName)
+        {
+            // 给道具增加index
+            case "CATUI_itemStackSlotIndex":
+                _value = "0";
+                if (__instance?.SlotNumber != null)
                 {
-					__instance.UserLockedSlot = !__instance.UserLockedSlot;
-                    __instance.RefreshBindings();
-                    // 背包 更新栏位锁状态
-                    backpackWindow.UpdateLockedSlots(backpackWindow.standardControls);
-					// 箱子 容器窗口是否打开 更新栏位锁状态 2.2+
-					if (lootWindow.IsOpen && lootWindow.standardControls != null) {
-						lootWindow.UpdateLockedSlots(lootWindow.standardControls);
-					}
-					// 载具 容器窗口是否打开 更新栏位锁状态 2.2+
-					if (vehicleContainer.IsOpen && vehicleContainer.standardControls != null)
-					{
-						vehicleContainer.UpdateLockedSlots(vehicleContainer.standardControls);
-					}
-					PlayClickSound();
+                    _value = (__instance.SlotNumber + 1).ToString();
                 }
-            };
-		}
-		catch (System.Exception ex)
-		{
-			Debug.Log("<color=#FF9900> CATUI [AltClickPatch] Failed to add event handler: " + ex.Message + "</color>");
-		}
-	}
+                __result = true;
+                return false;
 
-	private static void PlayClickSound()
-	{
-		// 播放缓存音效
-		if (_cachedClickSound != null)
-		{
-			Manager.PlayXUiSound(_cachedClickSound, .75f);
+            // 道具插槽状态
+            case "CATUI_itemStackModifications":
+                _value = "";
+                if (__instance?.itemStack?.itemValue == null)
+                {
+                    __result = true;
+                    return false;
+                }
+
+                // 取View上的属性
+                __instance.CustomAttributes.TryGetValue("mod_highlight", out string highlightStyle);
+                __instance.CustomAttributes.TryGetValue("mod_default", out string defaultStyle);
+                highlightStyle ??= MODIFICATION_HIGHLIGHTED;
+                defaultStyle ??= MODIFICATION_DEFAULT;
+
+                ItemValue itemValue = __instance.itemStack.itemValue;
+                ItemValue[] mods = itemValue.Modifications;
+                
+                // mods数组空值检查
+                if (itemValue.Quality <= 0 || mods == null || mods.Length == 0)
+                {
+                    __result = true;
+                    return false;
+                }
+
+                System.Text.StringBuilder textBuilder = new System.Text.StringBuilder();
+                for (int i = 0; i < mods.Length; i++)
+                {
+                    if (mods[i] == null) continue;
+
+                    var itemClass = mods[i]?.ItemClass;
+                    if (itemClass != null && !string.IsNullOrEmpty(itemClass?.GetItemName()))
+                    {
+                        textBuilder.Append(highlightStyle);
+                    }
+                    else
+                    {
+                        textBuilder.Append(defaultStyle);
+                    }
+                }
+                _value = textBuilder.ToString();
+                __result = true;
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(XUiC_ItemStack), "Init")]
+    public static void InitPostfixProxy(XUiC_ItemStack __instance)
+    {
+		if (_patchedInstances.Contains(__instance))
 			return;
-		}
 
-		// 加载音效，缓存并播放
-		LoadManager.LoadAsset<AudioClip>(UI_CLICK_SOUND_PATH, clip =>
+		_patchedInstances.Add(__instance);
+		__instance.OnPress += (XUiController _sender, int _mouseButton) =>
 		{
-			if (clip != null)
+            // 判断alt键是否按下
+			if (!InputUtils.AltKeyPressed)
+				return;
+
+            // 是否允许栏位锁（配置写在xml上，allow_clicklock="${allow_clicklock}"）
+			bool allowClicklock = false;
+			if (_sender.CustomAttributes.ContainsKey(ALLOW_CLICKLOCK_ATTR))
 			{
-				_cachedClickSound = clip;
-				Manager.PlayXUiSound(clip, .75f);
+				allowClicklock = StringParsers.ParseBool(_sender.CustomAttributes[ALLOW_CLICKLOCK_ATTR]);
 			}
-			else
-			{
-				Debug.LogError("<color=#FF0000>CATUI [AltClickPatch] Failed to load UI click sound</color>");
-			}
-		});
-	}
+			if (!allowClicklock)
+				return;
+
+			var backpackWindow = __instance.xui.GetChildByType<XUiC_BackpackWindow>();
+			var lootWindow = __instance.xui.GetChildByType<XUiC_LootWindow>();
+			var vehicleContainer = __instance.xui.GetChildByType<XUiC_VehicleContainer>();
+
+            __instance.UserLockedSlot = !__instance.UserLockedSlot;
+            __instance.RefreshBindings();
+
+            // 背包 更新栏位锁状态
+            if (_sender.Parent.ToString() == "XUiC_Backpack") {
+                backpackWindow.UpdateLockedSlots(backpackWindow.standardControls);
+            }
+            // 箱子 容器窗口是否打开 更新栏位锁状态 2.2+
+            else if (_sender.Parent.ToString() == "XUiC_LootContainer" && lootWindow.IsOpen)
+            {
+                lootWindow.UpdateLockedSlots(lootWindow.standardControls);
+            }
+            // 载具 容器窗口是否打开 更新栏位锁状态 2.2+
+            else if (_sender.Parent.ToString() == "XUiController" && vehicleContainer.IsOpen)
+            {
+                vehicleContainer.UpdateLockedSlots(vehicleContainer.standardControls);
+            }
+
+			// 播放点击音效
+			PlayClickSound();
+		};
+    }
+
+    private static void PlayClickSound()
+    {
+        // 播放缓存音效
+        if (_cachedClickSound != null)
+        {
+            Manager.PlayXUiSound(_cachedClickSound, .75f);
+            return;
+        }
+
+        // 加载音效，缓存并播放
+        LoadManager.LoadAsset<AudioClip>(UI_CLICK_SOUND_PATH, clip =>
+        {
+            if (clip != null)
+            {
+                _cachedClickSound = clip;
+                Manager.PlayXUiSound(clip, .75f);
+            }
+            else
+            {
+                Debug.LogError("<color=#FF0000>CATUI [AltClickPatch] Failed to load UI click sound</color>");
+            }
+        });
+    }
 }

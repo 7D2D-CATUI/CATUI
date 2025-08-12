@@ -8,163 +8,154 @@ public class XUiC_CompassWindowPatch
 	[HarmonyPatch(typeof(XUiC_CompassWindow), "GetBindingValue")]
 	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_CompassWindow __instance)
 	{
+		// ç¼“å­˜å˜é‡
+		var localPlayer = __instance.localPlayer;
+		bool hasLocalPlayer = localPlayer != null;
+		BiomeDefinition.BiomeType? currentBiomeType = null;
+		WeatherManager.BiomeWeather biomeWeather = null;
+		int stormLevel = 0;
+		int worldTime = 0;
+
+		// é¢„èŽ·å–å˜é‡
+		if (hasLocalPlayer)
+		{
+			worldTime = WeatherManager.worldTime;
+			var biomeStandingOn = localPlayer.biomeStandingOn;
+			if (biomeStandingOn != null)
+			{
+				currentBiomeType = biomeStandingOn.m_BiomeType;
+				biomeWeather = WeatherManager.Instance.FindBiomeWeather(currentBiomeType.Value);
+			}
+			stormLevel = WeatherManager.currentWeather?.biomeDefinition?.currentWeatherGroup?.stormLevel ?? 0;
+		}
+
 		switch (bindingName)
 		{
-			// ÏÂ´ÎÑªÔÂÊ±¼ä£¨¶Ô±È×ÜÌìÊýµÄµÚ¼¸Ìì£©
+			// ä¸‹æ¬¡è¡€æœˆæ—¶é—´ï¼ˆå¯¹æ¯”æ€»å¤©æ•°çš„ç¬¬å‡ å¤©ï¼‰
 			case "CATUI_nextBloodMoonDay":
 				value = "7";
-				if (__instance.localPlayer != null)
+				if (hasLocalPlayer)
 				{
 					value = GameStats.GetInt(EnumGameStats.BloodMoonDay).ToString();
 				}
 				__result = true;
 				return false;
 
-			// ¿ÕÍ¶ÆµÂÊ
+			// ç©ºæŠ•é¢‘çŽ‡
 			case "CATUI_airDropFrequency":
 				value = "3";
-				if (__instance.localPlayer != null)
+				if (hasLocalPlayer)
 				{
-					value = (GameStats.GetInt(EnumGameStats.AirDropFrequency) / 24f).ToString();
+					value = (GameStats.GetInt(EnumGameStats.AirDropFrequency) / 24f).ToString("F1");
 				}
 				__result = true;
 				return false;
 
-			// µ±Ç°ÌìÆø
+			// å½“å‰å¤©æ°”
 			case "CATUI_currentWeather":
 				value = "None";
-				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
+				if (hasLocalPlayer && currentBiomeType.HasValue && biomeWeather != null && biomeWeather.biomeDefinition != null)
 				{
-					// value = WeatherManager.Instance.spectrumSourceType.ToString();
-					// value = WeatherManager.currentWeather.biomeDefinition.weatherSpectrum.ToString();
-					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);
 					value = biomeWeather.biomeDefinition.weatherSpectrum.ToString();
 				}
 				__result = true;
 				return false;
-			// ÊÇ·ñ°×Ìì
+
+			// æ˜¯å¦ç™½å¤©
 			case "CATUI_isDaytime":
 				value = "true";
-				if (__instance.localPlayer != null)
+				if (hasLocalPlayer)
 				{
 					value = GameManager.Instance.World.IsDaytime().ToString();
 				}
 				__result = true;
 				return false;
-			
-			/* ·ç±©Âß¼­ ================================================================== */
-			// ·ç±©µÈ¼‰£º0=ÎÞ£¬1=·ç±©¾¯¸æ£¬2=·ç±©ÖÐ
+
+			/* é£Žæš´é€»è¾‘ ================================================================== */
+			// é£Žæš´ç­‰ç´šï¼š0=æ— ï¼Œ1=é£Žæš´è­¦å‘Šï¼Œ2=é£Žæš´ä¸­
 			case "CATUI_stormLevel":
-				value = "0";
-				if (__instance.localPlayer != null)
-				{
-					int stormLevel = (int)(WeatherManager.currentWeather?.biomeDefinition?.currentWeatherGroup?.stormLevel); // ·ç±©µÈ¼¶
-					value = stormLevel.ToString();
-				}
+				value = stormLevel.ToString();
 				__result = true;
 				return false;
 
-			// ·ç±©Ãû(·ç±©icon / ·ç±©Ãû³Æ±¾µØ»¯) return: "Burnt", "Desert", "Snow", "Wasteland"
+			// é£Žæš´å(é£Žæš´icon / é£Žæš´åç§°æœ¬åœ°åŒ–) return: "Burnt", "Desert", "Snow", "Wasteland"
 			case "CATUI_stormName":
 				value = "";
-				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
+				if (hasLocalPlayer && currentBiomeType.HasValue && stormLevel > 0)
 				{
-					int stormLevel = (int)(WeatherManager.currentWeather?.biomeDefinition?.currentWeatherGroup?.stormLevel); // ·ç±©µÈ¼¶
-					BiomeDefinition.BiomeType currentBiomeType = __instance.localPlayer.biomeStandingOn.m_BiomeType;
-					// BiomeDefinition.WeatherGroup currentWeatherGroup = WeatherManager.currentWeather.biomeDefinition.currentWeatherGroup;
-					// BiomeDefinition.BiomeType biomeType = (BiomeDefinition.BiomeType)(WeatherManager.currentWeather?.biomeDefinition.m_BiomeType);
-					/*string buffName = currentWeatherGroup.buffName; // ¶þ½×¶Î·ç±©ÉËº¦buff
-					string name = currentWeatherGroup.name; // ·µ»ØÖµ£ºstorm
-					string spectrum = currentWeatherGroup.spectrum.ToString();  // µ±Ç°ÌìÆø
-					value = $"currentBiomeType: {currentBiomeType}, biomeType: {biomeType}, buffName: {buffName},";*/
-					// »ðÉÕµØÌØÊâ´¦Àí
-					if (stormLevel > 0 && currentBiomeType == BiomeDefinition.BiomeType.burnt_forest) {
+					if (currentBiomeType.Value == BiomeDefinition.BiomeType.burnt_forest)
+					{
 						value = "Burnt";
-					} 
-					else if (stormLevel > 0 && (currentBiomeType == BiomeDefinition.BiomeType.Desert || currentBiomeType == BiomeDefinition.BiomeType.Snow || currentBiomeType == BiomeDefinition.BiomeType.Wasteland)) {
-						value = currentBiomeType.ToString();
+					}
+					else if (currentBiomeType.Value == BiomeDefinition.BiomeType.Desert ||
+							 currentBiomeType.Value == BiomeDefinition.BiomeType.Snow ||
+							 currentBiomeType.Value == BiomeDefinition.BiomeType.Wasteland)
+					{
+						value = currentBiomeType.Value.ToString();
 					}
 				}
 				__result = true;
 				return false;
 
-			// ·ç±©³ÖÐøÊ±¼ä eg.3200
+			// é£Žæš´æŒç»­æ—¶é—´ eg.3200
 			case "CATUI_stormDurationTime":
 				value = "0";
-				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
+				if (hasLocalPlayer && biomeWeather != null)
 				{
-					// value = WeatherManager.currentWeather.biomeDefinition.WeatherGetDuration("stormbuild").ToString();
-					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);
-					int stormDuration = biomeWeather.stormDuration; // ³ÖÐøÊ±¼ä
-					value = stormDuration.ToString();
+					value = biomeWeather.stormDuration.ToString();
 				}
 				__result = true;
 				return false;
 
-			// ·ç±©Ê£ÓàÊ±¼ä eg.3000
+			// é£Žæš´å‰©ä½™æ—¶é—´ eg.3000
 			case "CATUI_stormRemainingTime":
 				value = "0";
-				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
+				if (hasLocalPlayer && biomeWeather != null && stormLevel > 0)
 				{
-					int stormLevel = (int)(WeatherManager.currentWeather?.biomeDefinition?.currentWeatherGroup?.stormLevel); // ·ç±©µÈ¼¶
-					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);
-					int worldTime = WeatherManager.worldTime; // ÊÀ½çÊ±¼ä
-					int stormWorldTime = biomeWeather.stormWorldTime; // ·ç±©¿ªÊ¼ÊÀ½çÊ±¼ä
-					int stormDuration = biomeWeather.stormDuration; // ·ç±©³ÖÐøÊ±¼ä
-					int stormRemaining = stormWorldTime + stormDuration - worldTime; // ¿ªÊ¼ÊÀ½çÊ±¼ä74000 + ³ÖÐøÊ±¼ä3200 - µ±Ç°ÊÀ½çÊ±¼ä74200£¨·ç±©ÖÐ½á¹û±Ø¶¨´óÓÚ0£©
-					value = (stormLevel > 0 ? stormRemaining : 0).ToString(); // ·ç±©ÖÐ¸ø³ö½á¹û
+					int stormRemaining = biomeWeather.stormWorldTime + biomeWeather.stormDuration - worldTime;
+					value = stormRemaining.ToString();
 				}
 				__result = true;
 				return false;
 
-			// ·ç±©¿ªÊ¼ÊÀ½çÊ±¼ä eg.74000£¨°üÀ¨µ±Ç°·ç±©ºÍÏÂÒ»³¡·ç±©¿ªÊ¼Ê±¼ä£©
+			// é£Žæš´å¼€å§‹ä¸–ç•Œæ—¶é—´ eg.74000ï¼ˆåŒ…æ‹¬å½“å‰é£Žæš´å’Œä¸‹ä¸€åœºé£Žæš´å¼€å§‹æ—¶é—´ï¼‰
 			case "CATUI_stormStartWorldTime":
 				value = "0";
-				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
+				if (hasLocalPlayer && biomeWeather != null)
 				{
-					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);
-					int stormWorldTime = biomeWeather.stormWorldTime; // ·ç±©¿ªÊ¼ÊÀ½çÊ±¼ä
-					value = stormWorldTime.ToString();
+					value = biomeWeather.stormWorldTime.ToString();
 				}
 				__result = true;
 				return false;
 
-			// ·ç±©½áÊøÊÀ½çÊ±¼ä eg.77200
+			// é£Žæš´ç»“æŸä¸–ç•Œæ—¶é—´ eg.77200
 			case "CATUI_stormEndWorldTime":
 				value = "0";
-				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
+				if (hasLocalPlayer && biomeWeather != null)
 				{
-					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);
-					int stormWorldTime = biomeWeather.stormWorldTime; // ·ç±©¿ªÊ¼ÊÀ½çÊ±¼ä
-					int stormDuration = biomeWeather.stormDuration; // ·ç±©³ÖÐøÊ±¼ä
-					value = (stormWorldTime + stormDuration).ToString();
+					value = (biomeWeather.stormWorldTime + biomeWeather.stormDuration).ToString();
 				}
 				__result = true;
 				return false;
 
-			// ÌìÆøÊÀ½çÊ±¼ä eg.77000
+			// å¤©æ°”ä¸–ç•Œæ—¶é—´ eg.77000
 			case "CATUI_worldTime":
 				value = "0";
-				if (__instance.localPlayer != null)
+				if (hasLocalPlayer)
 				{
-					int worldTime = WeatherManager.worldTime; // ÊÀ½çÊ±¼ä
 					value = worldTime.ToString();
 				}
 				__result = true;
 				return false;
 
-			// ·ç±©½áÊø½ø¶ÈÌõ eg.0.432
+			// é£Žæš´ç»“æŸè¿›åº¦æ¡ eg.0.432
 			case "CATUI_stormFill":
 				value = "0.000";
-				if (__instance.localPlayer != null && __instance.localPlayer.biomeStandingOn != null)
+				if (hasLocalPlayer && biomeWeather != null && stormLevel > 0)
 				{
-					int stormLevel = (int)(WeatherManager.currentWeather?.biomeDefinition?.currentWeatherGroup?.stormLevel); // ·ç±©µÈ¼¶
-					WeatherManager.BiomeWeather biomeWeather = WeatherManager.Instance.FindBiomeWeather(__instance.localPlayer.biomeStandingOn.m_BiomeType);
-					int worldTime = WeatherManager.worldTime; // ÊÀ½çÊ±¼ä
-					int stormWorldTime = biomeWeather.stormWorldTime; // ·ç±©¿ªÊ¼ÊÀ½çÊ±¼ä
-					int stormDuration = biomeWeather.stormDuration; // ·ç±©³ÖÐøÊ±¼ä
-					int stormRemaining = stormWorldTime + stormDuration - worldTime; // ¿ªÊ¼ÊÀ½çÊ±¼ä74000 + ³ÖÐøÊ±¼ä3200 - µ±Ç°ÊÀ½çÊ±¼ä74200£¨·ç±©ÖÐ½á¹û±Ø¶¨´óÓÚ0£©
-					value = (stormLevel > 0 ? ((double)stormRemaining / stormDuration) : 0).ToString("F3"); // ·ç±©ÖÐ¸ø³ö½á¹û
+					int stormRemaining = biomeWeather.stormWorldTime + biomeWeather.stormDuration - worldTime;
+					double fillPercentage = (double)stormRemaining / biomeWeather.stormDuration;
+					value = fillPercentage.ToString("F3");
 				}
 				__result = true;
 				return false;

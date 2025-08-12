@@ -6,6 +6,11 @@
 			<rect pos="${inner_pos_x}, ${inner_pos_y}" width="${width}" height="${height}" controller="${controller}" stat_type="${stat_type}" tooltip_key="${tooltip_key}" visible="{statvisible}" >
 				<sprite type="filled" width="${inner_width}" color="25,25,25,255" fill="{#Round(statmodifiedmax, 2)}" style="CATUI.sprite.filled.prue" globalopacity="false" fillInvert="${has_invert}" />
 				<sprite type="filled" width="${inner_width}" fill="{#1 - Round(statmodifiedmax, 2)}" sprite="catui_stat_background_disabled" foregroundlayer="true" fillInvert="${!has_invert}" />
+
+				<!-- <sprite height="50" type="filled" width="${inner_width}" color="[white]" fill="{CATUI_statfillDelay}" style="CATUI.sprite.filled.prue" foregroundlayer="true" fillInvert="${has_invert}" />
+				<label pos="${has_invert ? '-6' : '6'},${height / 1}" width="${inner_width}" font_size="28" color="[white]" text="{CATUI_statfillDelay}" style="CATUI.text.shadow.black.1px" justify="${has_invert ? 'right' : 'left'}" /> -->
+
+
 				<sprite type="filled" width="${inner_width}" color="${stat_bar_color}" fill="{statfill}" style="CATUI.sprite.filled.prue" foregroundlayer="true" fillInvert="${has_invert}" />
 				<sprite type="filled" width="${inner_width}" color="255,255,255,50" fill="{statfill}" sprite="catui_background_gradient" fillInvert="${has_invert}" />
 				<sprite height="1" pos="0, -${height - 2}" width="${inner_width}" color="255,255,255,75" type="sliced" />
@@ -105,7 +110,7 @@
 	<remove xpath="/controls/backpack_item_stack" />
 	<append xpath="/controls">
 		<backpack_item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false" allow_clicklock="true">
-			<rect name="backpackItemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}" allow_clicklock="${allow_clicklock}">
+			<rect name="backpackItemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}" allow_clicklock="${allow_clicklock}" mod_highlight="[04FE85]▇[-] " mod_default="[A6A6A6]▇[-] ">
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
 				<sprite depth="5" name="background" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,90' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
 				<!-- 背景 - 底色 -->
@@ -119,10 +124,9 @@
 				<!-- 图标 - 物品图标 -->
 				<sprite depth="6" name="itemIcon" width="64" height="64" atlas="ItemIconAtlas" sprite="{itemicon}" pos="32,-32" pivot="center" foregroundlayer="true" color="{iconcolor}" />
 				<!-- 角标 - 物品状态 -->
-				<sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true" />
-				<!-- <sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true" visible="{# locktypeicon != 'ui_game_symbol_modded' }" /> -->
+				<sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true" visible="{# locktypeicon != 'ui_game_symbol_modded' }" />
 				<!-- 角标 - 小方块 模组插槽 -->
-				<!-- <label depth="7" pos="5,-4" text="{CATUI_itemStackModifications}" font_size="4" /> -->
+				<label depth="7" name="" width="60" pos="2,-51" text="{CATUI_itemStackModifications}" font_size="4" max_line_count="2" spacing_y="2" justify="Right" visible="{# hasdurability }" />
 				<!-- 角标 - 物品类型 -->
 				<sprite depth="8" name="itemtypeicon" width="24" height="24" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 				<!-- 背景 - 物品品质 -->
@@ -133,7 +137,6 @@
 				<filledsprite depth="7" name="durability" width="59" height="4" color="255, 255, 255, 255" fill="{durabilityfill}" type="filled" pos="3, -58" foregroundlayer="true" visible="{hasdurability}" />
 				<!-- 物品不可用 -->
 				<!-- <sprite depth="15" name="disabledOverlay" color="255,96,0,255" type="sliced" sprite="catui_stat_background_disabled" visible="false" /> -->
-
 				<!-- 物品数量 -->
 				<label depth="7" name="stackValue" pos="-12,-44" text="{itemcount}" font_size="20" style="CATUI.text.outline.black.1px" justify="Right" visible="{#hasdurability ? 'false' : 'true'}" />
 				<!-- 定时器??? -->
@@ -144,7 +147,7 @@
 				<sprite depth="13" name="assembleIcon" size="35,35" sprite="{stacklockicon}" color="255,255,255,150" visible="{isassemblelocked}" pos="14,-14" foregroundlayer="true" />
 				<!-- 栏位锁  -->
 				<button name="rectSlotLock" depth="15" style="press, hover" width="65" height="65" visible="{userlockmode}" sprite="" hoverscale="1" use_selection_box="true">
-					<sprite depth="16" name="button" width="24" height="24" sprite="{# userlockedslot ? 'ui_game_symbol_lock' : 'ui_game_symbol_unlock' }" pos="50, -14" style="icon32px" pivot="center" color="{# userlockedslot ? '222,206,163' : '255,255,255' }" />
+					<sprite depth="16" name="slotLockIcon" width="24" height="24" sprite="{# userlockedslot ? 'ui_game_symbol_lock' : 'ui_game_symbol_unlock' }" pos="50, -14" style="icon32px" pivot="center" color="{# userlockedslot ? '222,206,163' : '255,255,255' }" />
 				</button>
 				<sprite depth="3" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="255, 195, 0,150" type="sliced" fillcenter="false" globalopacity="true" visible="{userlockedslot}" />
 			</rect>
@@ -155,7 +158,7 @@
 	<remove xpath="/controls/item_stack" />
 	<append xpath="/controls">
 		<item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false" show_favorites="false" show_slotnum="false" allow_clicklock="false">
-			<rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="72" height="72" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}" visible="{# !defined('container_slots') or (int(${repeat_i}) &lt; int(container_slots)) }" show_slotnum="${show_slotnum}" allow_clicklock="${allow_clicklock}">
+			<rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="72" height="72" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}" visible="{# !defined('container_slots') or (int(${repeat_i}) &lt; int(container_slots)) }" show_slotnum="${show_slotnum}" allow_clicklock="${allow_clicklock}" mod_highlight="[04FE85]▇[-] " mod_default="[A6A6A6]▇[-] ">
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
 				<rect>
 					<!-- 选中状态 -->
@@ -176,9 +179,9 @@
 				<!-- 图标 - 物品图标 -->
 				<sprite depth="6" name="itemIcon" width="66" height="66" atlas="ItemIconAtlas" sprite="{itemicon}" pos="35,-37" pivot="center" foregroundlayer="true" color="{iconcolor}" />
 				<!-- 角标 - 物品状态 -->
-				<sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true" />
+				<sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true" visible="{# locktypeicon != 'ui_game_symbol_modded' }" />
 				<!-- 角标 - 小方块 模组插槽 -->
-				<!-- <label depth="7" pos="6,-5" text="{CATUI_itemStackModifications}" font_size="4" /> -->
+				<label depth="7" name="" width="68" pos="0,-58" text="{CATUI_itemStackModifications}" max_line_count="2" spacing_y="2" font_size="4" justify="Right" visible="{# hasdurability }" />
 				<!-- 角标 - 物品类型 -->
 				<sprite depth="8" name="itemtypeicon" width="24" height="24" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 				<!-- 背景 - 物品品质 -->
@@ -198,15 +201,15 @@
 				<sprite depth="13" name="assembleIcon" size="40,40" sprite="{stacklockicon}" color="{stacklockcolor}" visible="{isassemblelocked}" pos="14,-14" foregroundlayer="true" />
 				<!-- 栏位锁  -->
 				<button name="rectSlotLock" depth="15" sprite="" style="press, hover" width="71" height="71" visible="{# defined('userlockmode') and userlockmode}" hoverscale="1" use_selection_box="true">
-					<sprite depth="16" name="button" width="24" height="24" sprite="{# !defined('userlockmode') ? '' : (userlockedslot ? 'ui_game_symbol_lock' : 'ui_game_symbol_unlock') }" pos="56, -16" style="icon32px" pivot="center" color="{# !defined('userlockmode') ? '255,255,255,1' : (userlockedslot ? '222,206,163' : '255,255,255') }" />
+					<sprite depth="16" name="slotLockIcon" width="24" height="24" sprite="{# !defined('userlockmode') ? '' : (userlockedslot ? 'ui_game_symbol_lock' : 'ui_game_symbol_unlock') }" pos="56, -16" style="icon32px" pivot="center" color="{# !defined('userlockmode') ? '255,255,255,1' : (userlockedslot ? '222,206,163' : '255,255,255') }" />
 				</button>
 				<sprite depth="3" sprite="menu_empty2px" width="72" height="72" color="255, 195, 0,150" type="sliced" fillcenter="false" globalopacity="true" visible="{userlockedslot}" />
 				<!-- 角标 - 快速切换 -->
 				<sprite depth="14" name="quickswapIcon" size="30,30" sprite="server_refresh" pos="3,-36" foregroundlayer="true" visible="{isQuickSwap}" />
 				<!-- 工具栏 - 数字编号 -->
-				<rect depth="15" pos="0, -99" width="15" height="15" visible="{#${show_slotnum}}" >
+				<rect depth="15" pos="0, -99" width="15" height="15" visible="{# ${show_slotnum} and CATUI_itemStackSlotIndex != '0'}" >
 					<sprite size="20,16" type="sliced" justify="center" pivot="center" sprite="catui_bg_toolbelt_slot_num" pos="36,16" gradient_start="[white]" gradient_end="225,225,225" />
-					<label pos="36,15" text="{# int(CATUI_itemStackSlotIndex) + 1 }" justify="center" pivot="center" font_size="15" color="[black]" />
+					<label pos="36,15" text="{CATUI_itemStackSlotIndex}" justify="center" pivot="center" font_size="15" color="[black]" />
 				</rect>
 			</rect>
 		</item_stack>

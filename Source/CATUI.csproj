@@ -10,6 +10,11 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
+    <Compile Remove="Assembly-CSharp-Decompiled\**" />
+    <EmbeddedResource Remove="Assembly-CSharp-Decompiled\**" />
+    <None Remove="Assembly-CSharp-Decompiled\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="ShowSleepersCount3.cs" />
     <Compile Remove="XUiC_ActiveItem.cs" />
     <Compile Remove="XUiC_ActiveItemPartEntry.cs" />
