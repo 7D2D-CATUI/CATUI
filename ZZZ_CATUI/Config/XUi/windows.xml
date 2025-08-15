@@ -396,7 +396,7 @@
 	<remove xpath="/windows/window[@name='windowTargetBar']/rect"/>
 	<append xpath="/windows/window[@name='windowTargetBar']">
 		<window name="windowTargetBar" controller="TargetBar" visibility="always" anchor="CenterTop">
-			<rect pos="-250, -130" width="500" height="27" visible="{isnotboss}" >
+			<rect name="targetHealthBarNotboss" pos="-250, -130" width="500" height="27" visible="{isnotboss}" >
 				<sprite depth="1" name="background" width="508" height="35" pos="-4,4" color="0,0,0,175" type="sliced" />
 				<rect depth="2" pos="-1,1" width="502" height="29">
 					<!-- 凶残 -->
@@ -448,7 +448,7 @@
 					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_deep_cuts" buff_corner_text="{CATUI_EntityBleedingCounter}" buff_icon_text="" buff_timer="{CATUI_EntityBleedingTimer}" visible="{CATUI_EntityIsBleeding}" />
 				</table>
 			</rect>
-			<rect pos="-267,-85" width="725" height="25" visible="{isboss}" >
+			<rect name="targetHealthBarIsboss" pos="-267,-85" width="725" height="25" visible="{isboss}" >
 				<!-- <sprite depth="1" name="border" color="0,0,0,180" type="sliced" width="400" globalopacity="false"/> -->
 				<sprite pos="60,-45" width="448" depth="1" name="border" color="0,0,0,255" type="sliced"  globalopacity="false"/>
 				<filledsprite pos="60,-45" width="448" depth="2" name="BarContent" type="filled" fill="{fill}" globalopacity="false" sprite="ui_game_symbol_twitch_boss_bar_HP" />
@@ -685,9 +685,9 @@
 			<sprite depth="8" name="durabilityBar" pos="1, -119" width="145" height="10" type="filled" color="255, 255, 255, 255" fill="{durabilityfill}" style="CATUI.sprite.filled.prue" globalopacity="false" foregroundlayer="true" visible="{hasdurability}" />
 			<!-- 耐久 百分比 -->
 			<!-- <label depth="12" pos="3,-108" width="145" height="32" text="{#Floor(durabilityfill * 100)}%" font_size="22" justify="left" style="CATUI.text.outline.black.1px" visible="{hasdurability}" /> -->
-			<label depth="12" pos="3,-108" width="145" height="32" text="{CATUI_ItemUseTimesResidue}/{CATUI_ItemUseTimesMax}" font_size="22" justify="left" style="CATUI.text.outline.black.1px" visible="{hasdurability}" />			
+			<label name="itemUseTimes" depth="12" pos="3,-108" width="145" height="32" text="{CATUI_ItemUseTimesResidue}/{CATUI_ItemUseTimesMax}" font_size="22" justify="left" style="CATUI.text.outline.black.1px" visible="{hasdurability}" />			
 			<!-- 数量(有品质不显示) -->
-			<label depth="12" pos="-3,-103" width="145" height="32" text="{durabilitytext}" font_size="28" justify="right" style="CATUI.text.shadow.black.1px" visible="{# hasdurability ? 'false' : 'true' }" />
+			<label name="durability" depth="12" pos="-3,-103" width="145" height="32" text="{durabilitytext}" font_size="28" justify="right" style="CATUI.text.shadow.black.1px" visible="{# hasdurability ? 'false' : 'true' }" />
 		</rect>
 	</append>
 
@@ -827,7 +827,7 @@
 						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
 					</CATUI_scrollbar>
 					<CATUI_scrollview depth="2" size="630,43" scrollbar="skillCategoryListScrollbar" clippingsoftness="10,0" scroll_direction="0">
-						<grid name="categories" pos="0,-20" rows="1" cols="100" cell_width="43" cell_height="43" repeat_content="true" controller="CategoryList">
+						<grid controller="CategoryList" name="categories" pos="0,-20" rows="1" cols="100" cell_width="43" cell_height="43" hide_inactive="true" repeat_content="true">
 							<category_icon />
 						</grid>
 					</CATUI_scrollview>
@@ -841,7 +841,7 @@
 						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
 					</CATUI_scrollbar>
 					<CATUI_scrollview depth="2" size="640,685" scrollbar="skillListScrollbar" clippingsoftness="0,5">
-						<grid name="skills" rows="60" cols="5" cell_width="128" cell_height="128" controller="SkillList" repeat_content="true">
+						<grid controller="SkillList" name="skills" rows="60" cols="5" cell_width="128" cell_height="128"  hide_inactive="true" repeat_content="true">
 							<skill_entry name="0" width="128" height="128" />
 						</grid>
 					</CATUI_scrollview>
@@ -921,7 +921,7 @@
 						<sprite name="scrollbarHandle" color="[white]" style="CATUI.sprite.filled.prue" />
 					</CATUI_scrollbar>
 					<CATUI_scrollview depth="2" size="647,451" scrollbar="SkillPerkInfoScrollbar" clippingsoftness="0,7">
-						<grid rows="100" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="86" repeat_content="true" >
+						<grid rows="100" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="86" hide_inactive="true" repeat_content="true">
 							<skill_perk_level controller="SkillPerkLevel" width="640" height="86" />
 						</grid>
 					</CATUI_scrollview>
@@ -1095,7 +1095,7 @@
 					</CATUI_scrollbar>
 					<CATUI_scrollview depth="2" size="647,632" scrollbar="SkillCraftingInfoScrollbar" clippingsoftness="5,10">
 						<!-- 最大支持300个entry，多了可能会卡 -->
-						<grid rows="50" cols="6" pos="2,-7" width="644" cell_width="106" cell_height="106" repeat_content="true">
+						<grid rows="50" cols="6" pos="2,-7" width="644" cell_width="106" cell_height="106" hide_inactive="true" repeat_content="true">
 							<skill_crafting_entry width="106" height="106" />
 						</grid>
 					</CATUI_scrollview>

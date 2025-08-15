@@ -6,11 +6,6 @@
 			<rect pos="${inner_pos_x}, ${inner_pos_y}" width="${width}" height="${height}" controller="${controller}" stat_type="${stat_type}" tooltip_key="${tooltip_key}" visible="{statvisible}" >
 				<sprite type="filled" width="${inner_width}" color="25,25,25,255" fill="{#Round(statmodifiedmax, 2)}" style="CATUI.sprite.filled.prue" globalopacity="false" fillInvert="${has_invert}" />
 				<sprite type="filled" width="${inner_width}" fill="{#1 - Round(statmodifiedmax, 2)}" sprite="catui_stat_background_disabled" foregroundlayer="true" fillInvert="${!has_invert}" />
-
-				<!-- <sprite height="50" type="filled" width="${inner_width}" color="[white]" fill="{CATUI_statfillDelay}" style="CATUI.sprite.filled.prue" foregroundlayer="true" fillInvert="${has_invert}" />
-				<label pos="${has_invert ? '-6' : '6'},${height / 1}" width="${inner_width}" font_size="28" color="[white]" text="{CATUI_statfillDelay}" style="CATUI.text.shadow.black.1px" justify="${has_invert ? 'right' : 'left'}" /> -->
-
-
 				<sprite type="filled" width="${inner_width}" color="${stat_bar_color}" fill="{statfill}" style="CATUI.sprite.filled.prue" foregroundlayer="true" fillInvert="${has_invert}" />
 				<sprite type="filled" width="${inner_width}" color="255,255,255,50" fill="{statfill}" sprite="catui_background_gradient" fillInvert="${has_invert}" />
 				<sprite height="1" pos="0, -${height - 2}" width="${inner_width}" color="255,255,255,75" type="sliced" />
@@ -114,27 +109,26 @@
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
 				<sprite depth="5" name="background" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,90' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
 				<!-- 背景 - 底色 -->
-				<sprite depth="2" name="highlightOverlay" width="68" height="68" color="25,25,25,255" pos="-2,2" type="sliced" globalopacitymod="1.15" />
+				<sprite depth="2" name="highlightOverlay" width="68" height="68" color="25,25,25,255" pos="-2,2" type="sliced" globalopacity="false" />
 				<!-- ???? -->
 				<texture depth="3" name="backgroundTexture" material="Materials/Transparent Colored" size="66,66" globalopacity="true" />
 				<!-- 书籍 未读 -->
-				<sprite depth="3" width="64" height="64" sprite="catui_bg_book_learn" color="[white]" type="sliced" visible="{# itemtypeicon == 'book'}" />
+				<sprite depth="3" name="backgroundBookLearn" width="64" height="64" sprite="catui_bg_book_learn" color="[white]" type="sliced" visible="{# itemtypeicon == 'book'}" />
 				<!-- 书籍 已读 -->
-				<!-- <sprite depth="3" width="64" height="64" sprite="catui_bg_book_learned" color="[white]" type="sliced" visible="{# itemtypeicon == 'book_read'}" /> -->
+				<!-- <sprite depth="3" name="backgroundBookLearned" width="64" height="64" sprite="catui_bg_book_learned" color="[white]" type="sliced" visible="{# itemtypeicon == 'book_read'}" /> -->
 				<!-- 图标 - 物品图标 -->
 				<sprite depth="6" name="itemIcon" width="64" height="64" atlas="ItemIconAtlas" sprite="{itemicon}" pos="32,-32" pivot="center" foregroundlayer="true" color="{iconcolor}" />
 				<!-- 角标 - 物品状态 -->
 				<sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true" visible="{# locktypeicon != 'ui_game_symbol_modded' }" />
 				<!-- 角标 - 小方块 模组插槽 -->
-				<label depth="7" name="" width="60" pos="2,-51" text="{CATUI_itemStackModifications}" font_size="4" max_line_count="2" spacing_y="2" justify="Right" visible="{# hasdurability }" />
+				<label depth="7" name="itemStackModifications" width="60" pos="2,-51" text="{CATUI_itemStackModifications}" font_size="4" max_line_count="2" spacing_y="2" justify="Right" visible="{# hasdurability }" />
 				<!-- 角标 - 物品类型 -->
 				<sprite depth="8" name="itemtypeicon" width="24" height="24" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 				<!-- 背景 - 物品品质 -->
-				<sprite depth="1" width="63" height="63" color="25,25,25,255" pos="1,-1" type="sliced" globalopacity="false" visible="{hasdurability}" />
-				<sprite depth="2" width="63" height="63" color="{durabilitycolor}" pos="1,-1" type="sliced" sprite="Row Outline" globalopacity="true" visible="{hasdurability}" />
+				<sprite depth="2" name="durabilityColor" width="63" height="63" color="{durabilitycolor}" pos="1,-1" type="sliced" sprite="Row Outline" visible="{hasdurability}" />
 				<!-- 物品耐久 -->
 				<sprite depth="7" name="durabilityBackground" width="59" height="4" color="[darkGrey]" type="sliced" pos="3, -58" foregroundlayer="true" visible="{hasdurability}" />
-				<filledsprite depth="7" name="durability" width="59" height="4" color="255, 255, 255, 255" fill="{durabilityfill}" type="filled" pos="3, -58" foregroundlayer="true" visible="{hasdurability}" />
+				<filledsprite depth="7" name="durability" width="59" height="4" color="[white]" fill="{durabilityfill}" type="filled" pos="3, -58" foregroundlayer="true" visible="{hasdurability}" />
 				<!-- 物品不可用 -->
 				<!-- <sprite depth="15" name="disabledOverlay" color="255,96,0,255" type="sliced" sprite="catui_stat_background_disabled" visible="false" /> -->
 				<!-- 物品数量 -->
@@ -144,12 +138,12 @@
 				<!-- 前景 - 物品不可用 -->
 				<sprite depth="9" name="cancel" sprite="ui_game_symbol_x" width="62" height="62" color="255,0,0,255" type="sliced" visible="{# ishovered and islocked}" foregroundlayer="true"/>
 				<!-- 前景 - 物品锁定 -->
-				<sprite depth="13" name="assembleIcon" size="35,35" sprite="{stacklockicon}" color="255,255,255,150" visible="{isassemblelocked}" pos="14,-14" foregroundlayer="true" />
+				<sprite depth="13" name="assembleIcon" size="35,35" sprite="{stacklockicon}" color="[white_half_alpha]" visible="{isassemblelocked}" pos="14,-14" foregroundlayer="true" />
 				<!-- 栏位锁  -->
 				<button name="rectSlotLock" depth="15" style="press, hover" width="65" height="65" visible="{userlockmode}" sprite="" hoverscale="1" use_selection_box="true">
 					<sprite depth="16" name="slotLockIcon" width="24" height="24" sprite="{# userlockedslot ? 'ui_game_symbol_lock' : 'ui_game_symbol_unlock' }" pos="50, -14" style="icon32px" pivot="center" color="{# userlockedslot ? '222,206,163' : '255,255,255' }" />
 				</button>
-				<sprite depth="3" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="255, 195, 0,150" type="sliced" fillcenter="false" globalopacity="true" visible="{userlockedslot}" />
+				<sprite name="rectSlotLocked" depth="3" sprite="menu_empty2px" width="66" height="66" pos="-1,1" color="255, 195, 0,150" type="sliced" fillcenter="false" globalopacity="true" visible="{userlockedslot}" />
 			</rect>
 		</backpack_item_stack>
 	</append>
@@ -167,13 +161,13 @@
 					<sprite depth="3" name="background" sprite="menu_empty2px" color="{selectionbordercolor}" type="sliced" globalopacity="true" fillcenter="false" visible="{#selectionbordercolor != '255,255,255,255'}" />
 				</rect>
 				<!-- 背景 - 底色 -->
-				<sprite depth="2" name="highlightOverlay" color="25,25,25,255" type="sliced" globalopacitymod="1.15" />
+				<sprite depth="2" name="highlightOverlay" color="25,25,25,255" type="sliced" globalopacity="false" />
 				<!-- ???? -->
 				<texture depth="3" name="backgroundTexture" material="Materials/Transparent Colored" size="74,74" globalopacity="true" />
 				<!-- 书籍 未读 -->
-				<sprite depth="3" width="72" height="72" sprite="catui_bg_book_learn" color="[white]" type="sliced" visible="{# itemtypeicon == 'book'}" />
+				<sprite depth="3" name="backgroundBookLearn" width="72" height="72" sprite="catui_bg_book_learn" color="[white]" type="sliced" visible="{# itemtypeicon == 'book'}" />
 				<!-- 书籍 已读 -->
-				<!-- <sprite depth="3" width="72" height="72" sprite="catui_bg_book_learned" color="[white]" type="sliced" visible="{# itemtypeicon == 'book_read'}" /> -->
+				<!-- <sprite depth="3" name="backgroundBookLearned" width="72" height="72" sprite="catui_bg_book_learned" color="[white]" type="sliced" visible="{# itemtypeicon == 'book_read'}" /> -->
 				<!-- 角标 - 收藏 -->
 				<sprite depth="8" name="favoriteIcon" width="24" height="24" sprite="server_favorite" pos="2,-2" foregroundlayer="true" visible="{isfavorite}" />
 				<!-- 图标 - 物品图标 -->
@@ -181,7 +175,7 @@
 				<!-- 角标 - 物品状态 -->
 				<sprite depth="8" name="lockTypeIcon" width="24" height="24" sprite="{locktypeicon}" pos="2,-2" foregroundlayer="true" visible="{# locktypeicon != 'ui_game_symbol_modded' }" />
 				<!-- 角标 - 小方块 模组插槽 -->
-				<label depth="7" name="" width="68" pos="0,-58" text="{CATUI_itemStackModifications}" max_line_count="2" spacing_y="2" font_size="4" justify="Right" visible="{# hasdurability }" />
+				<label depth="7" name="itemStackModifications" width="68" pos="0,-58" text="{CATUI_itemStackModifications}" max_line_count="2" spacing_y="2" font_size="4" justify="Right" visible="{# hasdurability }" />
 				<!-- 角标 - 物品类型 -->
 				<sprite depth="8" name="itemtypeicon" width="24" height="24" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 				<!-- 背景 - 物品品质 -->
@@ -203,7 +197,7 @@
 				<button name="rectSlotLock" depth="15" sprite="" style="press, hover" width="71" height="71" visible="{# defined('userlockmode') and userlockmode}" hoverscale="1" use_selection_box="true">
 					<sprite depth="16" name="slotLockIcon" width="24" height="24" sprite="{# !defined('userlockmode') ? '' : (userlockedslot ? 'ui_game_symbol_lock' : 'ui_game_symbol_unlock') }" pos="56, -16" style="icon32px" pivot="center" color="{# !defined('userlockmode') ? '255,255,255,1' : (userlockedslot ? '222,206,163' : '255,255,255') }" />
 				</button>
-				<sprite depth="3" sprite="menu_empty2px" width="72" height="72" color="255, 195, 0,150" type="sliced" fillcenter="false" globalopacity="true" visible="{userlockedslot}" />
+				<sprite depth="3" name="rectSlotLocked" sprite="menu_empty2px" width="72" height="72" color="255, 195, 0,150" type="sliced" fillcenter="false" globalopacity="true" visible="{userlockedslot}" />
 				<!-- 角标 - 快速切换 -->
 				<sprite depth="14" name="quickswapIcon" size="30,30" sprite="server_refresh" pos="3,-36" foregroundlayer="true" visible="{isQuickSwap}" />
 				<!-- 工具栏 - 数字编号 -->
