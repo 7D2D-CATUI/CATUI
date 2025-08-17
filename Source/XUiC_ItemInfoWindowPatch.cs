@@ -7,11 +7,11 @@ public class XUiC_ItemInfoWindowPatch
 {
 	[HarmonyPostfix]
 	[HarmonyPatch(typeof(XUiC_ItemInfoWindow), "GetBindingValue")]
-	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_ItemInfoWindow __instance)
+	public static bool Prefix(ref string value, string bindingName, ref bool __result, XUiC_ItemInfoWindow __instance)
 	{
 		switch (bindingName)
 		{
-			// µÀ¾ßÄÍ¾Ã
+			// é“å…·è€ä¹…
 			case "CATUI_ItemUseTimesResidue":
 				ItemStack itemStack = __instance.itemStack;
 				if (itemStack.IsEmpty())
@@ -31,7 +31,7 @@ public class XUiC_ItemInfoWindowPatch
 				}
 				__result = true;
 				return false;
-			// µÀ¾ßÄÍ¾Ã×î´óÖµ
+			// é“å…·è€ä¹…æœ€å¤§å€¼
 			case "CATUI_ItemUseTimesMax":
 				ItemStack _itemStack = __instance.itemStack;
 				if (_itemStack.IsEmpty())

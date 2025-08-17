@@ -14,7 +14,7 @@ public class XUiC_SkillCraftingInfoWindowPatch
 	[HarmonyPatch(typeof(XUiC_SkillCraftingInfoWindow), "UpdateSkill")]
 	public static bool UpdateSkill_Prefix(XUiC_SkillCraftingInfoWindow __instance)
 	{
-		// Patch±äÁ¿ÃûÖØĞÂ¸³Öµ
+		// Patchå˜é‡åé‡æ–°èµ‹å€¼
 		ProgressionValue CurrentSkill = __instance.CurrentSkill;
 		XUiC_ItemActionList actionItemList = __instance.actionItemList;
 		int skillsPerPage = __instance.skillsPerPage;
@@ -32,19 +32,19 @@ public class XUiC_SkillCraftingInfoWindowPatch
 		{
 			XUiC_SkillEntry entryForSkill = windowGroup.Controller.GetChildByType<XUiC_SkillList>().GetEntryForSkill(CurrentSkill);
 			{
-                // ÖØĞÂ¹¹½¨ progressionClass.DisplayDataList
+                // é‡æ–°æ„å»º progressionClass.DisplayDataList
                 List<ProgressionClass.DisplayData> newDisplayDataList = new();
                 for (int i = 0; i < progressionClass.DisplayDataList.Count; i++)
                 {
-					// UnlockDataListÎª¿ÕËµÃ÷Ã»ÓĞĞèÒª½âËøµÄÎïÆ·£¬²»Ö´ĞĞ
+					// UnlockDataListä¸ºç©ºè¯´æ˜æ²¡æœ‰éœ€è¦è§£é”çš„ç‰©å“ï¼Œä¸æ‰§è¡Œ
 					if (progressionClass.DisplayDataList[i].UnlockDataList != null)
                     {
-						// ½«UnlockDataList£¨·ÖÀàÏÂµÄ½âËøÎïÆ·ÁĞ±í£©Êı¾İÉèÖÃµ½DisplayDataListÉÏ
+						// å°†UnlockDataListï¼ˆåˆ†ç±»ä¸‹çš„è§£é”ç‰©å“åˆ—è¡¨ï¼‰æ•°æ®è®¾ç½®åˆ°DisplayDataListä¸Š
 						for (int j = 0; j < progressionClass.DisplayDataList[i].UnlockDataList.Count; j++)
 						{
 							ProgressionClass.DisplayData originalDisplayData = progressionClass.DisplayDataList[i];
 							ProgressionClass.DisplayData.UnlockData unlockData = originalDisplayData.UnlockDataList[j];
-							// ĞÂDisplayData¸³Öµ
+							// æ–°DisplayDataèµ‹å€¼
 							ProgressionClass.DisplayData newDisplayData = new ProgressionClass.DisplayData();
 							newDisplayData.CustomHasQuality = originalDisplayData.CustomHasQuality;
 							newDisplayData.CustomIcon = originalDisplayData.CustomIcon;
@@ -52,10 +52,10 @@ public class XUiC_SkillCraftingInfoWindowPatch
 							newDisplayData.item = originalDisplayData.item;
 							newDisplayData.Owner = originalDisplayData.Owner;
 							newDisplayData.QualityStarts = originalDisplayData.QualityStarts;
-							// UnlockDataListÖ»±£Áô1Ìõ£¬±ÜÃâ»ìÏı
+							// UnlockDataListåªä¿ç•™1æ¡ï¼Œé¿å…æ··æ·†
 							newDisplayData.UnlockDataList = new List<ProgressionClass.DisplayData.UnlockData>();
 							newDisplayData.UnlockDataList.Add(unlockData);
-							// ½«unlockData.ItemNameÉèÖÃÎªDisplayData.ItemName£¨»ù´¡Êı¾İ£¬²éÑ¯½âËøµÈ¼¶iconµÈÊı¾İĞèÒª£©
+							// å°†unlockData.ItemNameè®¾ç½®ä¸ºDisplayData.ItemNameï¼ˆåŸºç¡€æ•°æ®ï¼ŒæŸ¥è¯¢è§£é”ç­‰çº§iconç­‰æ•°æ®éœ€è¦ï¼‰
 							newDisplayData.ItemName = unlockData.ItemName;
 							newDisplayDataList.Add(newDisplayData);
 						}
@@ -64,7 +64,7 @@ public class XUiC_SkillCraftingInfoWindowPatch
 
 				foreach (XUiC_SkillCraftingInfoEntry levelEntry in levelEntries)
 				{
-					// Ó¦ÓÃĞÂDisplayDataList
+					// åº”ç”¨æ–°DisplayDataList
 					ProgressionClass.DisplayData data = (newDisplayDataList.Count > num) ? newDisplayDataList[num] : null;
 					levelEntry.Data = data;
 					levelEntry.IsDirty = true;
@@ -94,9 +94,7 @@ public class XUiC_SkillCraftingInfoWindowPatch
 		XUi xUi = _sender.xui;
 		XUiC_SkillCraftingInfoEntry xUiC_SkillCraftingInfoEntry = _sender as XUiC_SkillCraftingInfoEntry;
 
-		// Debug.Log($"<color=#00FF00>Data.GetName: {xUiC_SkillCraftingInfoEntry.Data.GetName(1)}</color>");
-
-		if (xUiC_SkillCraftingInfoEntry.Data == null || xUiC_SkillCraftingInfoEntry.Data.GetUnlockItemRecipes(0) == null)
+		if (xUiC_SkillCraftingInfoEntry?.Data?.GetUnlockItem(0) == null)
 		{
 			return false;
 		}
@@ -112,12 +110,13 @@ public class XUiC_SkillCraftingInfoWindowPatch
                 break;
             }
         }
+		// è®¾ç½®åˆ¶ä½œç‰©å“ï¼ˆé…æ–¹ï¼‰åˆ—è¡¨
         if (xUiC_RecipeList == null)
         {
             XUiC_WindowSelector.OpenSelectorAndWindow(xUi.playerUI.entityPlayer, "crafting");
             xUiC_RecipeList = xUi.GetChildByType<XUiC_RecipeList>();
         }
-		// xUiC_RecipeList?.SetRecipeDataByItems(xUiC_SkillCraftingInfoEntry.Data.GetUnlockItemRecipes(0));
+		// å±•ç¤ºç¬¬ä¸€ä¸ªè§£é”ç‰©å“çš„é…æ–¹
 		xUiC_RecipeList?.SetRecipeDataByItem(xUiC_SkillCraftingInfoEntry.Data.GetUnlockItem(0).Id);
 		return false;
 	}

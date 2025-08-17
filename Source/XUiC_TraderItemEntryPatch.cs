@@ -1,7 +1,7 @@
 using HarmonyLib;
 using UnityEngine;
 
-[HarmonyPatch(typeof(XUiC_CompassWindow))]
+[HarmonyPatch]
 public class XUiC_TraderItemEntryPatch
 {
 	[HarmonyPostfix]

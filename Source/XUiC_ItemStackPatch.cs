@@ -2,6 +2,7 @@ using Audio;
 using HarmonyLib;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Reflection;
 
 [HarmonyPatch]
 public class XUiC_ItemStackPatch
@@ -13,70 +14,6 @@ public class XUiC_ItemStackPatch
     // 定义默认样式常量，提高可维护性
     private const string MODIFICATION_HIGHLIGHTED = "[04FE85]▇[-] ";
     private const string MODIFICATION_DEFAULT = "▇ ";
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(XUiC_ItemStack), "GetBindingValue")]
-    public static bool GetBindingValuePrefix(string _bindingName, ref string _value, ref bool __result, XUiC_ItemStack __instance)
-    {
-        switch (_bindingName)
-        {
-            // 给道具增加index
-            case "CATUI_itemStackSlotIndex":
-                _value = "0";
-                if (__instance?.SlotNumber != null)
-                {
-                    _value = (__instance.SlotNumber + 1).ToString();
-                }
-                __result = true;
-                return false;
-
-            // 道具插槽状态
-            case "CATUI_itemStackModifications":
-                _value = "";
-                if (__instance?.itemStack?.itemValue == null)
-                {
-                    __result = true;
-                    return false;
-                }
-
-                // 取View上的属性
-                __instance.CustomAttributes.TryGetValue("mod_highlight", out string highlightStyle);
-                __instance.CustomAttributes.TryGetValue("mod_default", out string defaultStyle);
-                highlightStyle ??= MODIFICATION_HIGHLIGHTED;
-                defaultStyle ??= MODIFICATION_DEFAULT;
-
-                ItemValue itemValue = __instance.itemStack.itemValue;
-                ItemValue[] mods = itemValue.Modifications;
-                
-                // mods数组空值检查
-                if (itemValue.Quality <= 0 || mods == null || mods.Length == 0)
-                {
-                    __result = true;
-                    return false;
-                }
-
-                System.Text.StringBuilder textBuilder = new System.Text.StringBuilder();
-                for (int i = 0; i < mods.Length; i++)
-                {
-                    if (mods[i] == null) continue;
-
-                    var itemClass = mods[i]?.ItemClass;
-                    if (itemClass != null && !string.IsNullOrEmpty(itemClass?.GetItemName()))
-                    {
-                        textBuilder.Append(highlightStyle);
-                    }
-                    else
-                    {
-                        textBuilder.Append(defaultStyle);
-                    }
-                }
-                _value = textBuilder.ToString();
-                __result = true;
-                return false;
-            default:
-                return true;
-        }
-    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(XUiC_ItemStack), "Init")]
@@ -150,5 +87,78 @@ public class XUiC_ItemStackPatch
                 Debug.LogError("<color=#FF0000>CATUI [AltClickPatch] Failed to load UI click sound</color>");
             }
         });
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(XUiC_ItemStack), "GetBindingValue")]
+    public static bool GetBindingValuePrefix(string _bindingName, ref string _value, ref bool __result, XUiC_ItemStack __instance)
+    {
+        switch (_bindingName)
+        {
+            // 给道具增加index
+            case "CATUI_itemStackSlotIndex":
+                _value = "0";
+                if (__instance?.SlotNumber != null)
+                {
+                    _value = (__instance.SlotNumber + 1).ToString();
+                }
+                __result = true;
+                return false;
+
+            // 道具插槽状态
+            case "CATUI_itemStackModifications":
+                _value = "";
+                if (__instance?.itemStack?.itemValue == null)
+                {
+                    Debug.Log($"<color=#00FF00>__instance?.itemStack?.itemValue == null </color>");
+                    __result = true;
+                    return false;
+                }
+
+                // 取View上的属性
+                __instance.CustomAttributes.TryGetValue("mod_highlight", out string highlightStyle);
+                __instance.CustomAttributes.TryGetValue("mod_default", out string defaultStyle);
+                highlightStyle ??= MODIFICATION_HIGHLIGHTED;
+                defaultStyle ??= MODIFICATION_DEFAULT;
+
+                ItemValue itemValue = __instance.itemStack.itemValue;
+                ItemValue[] mods = itemValue.Modifications;
+                
+                // mods数组空值检查
+                if (itemValue.Quality <= 0 || mods == null || mods.Length == 0)
+                {
+                    __result = true;
+                    return false;
+                }
+
+                System.Text.StringBuilder textBuilder = new System.Text.StringBuilder();
+                for (int i = 0; i < mods.Length; i++)
+                {
+                    if (mods[i] == null) continue;
+
+                    var itemClass = mods[i]?.ItemClass;
+                    if (itemClass != null && !string.IsNullOrEmpty(itemClass?.GetItemName()))
+                    {
+                        textBuilder.Append(highlightStyle);
+                    }
+                    else
+                    {
+                        textBuilder.Append(defaultStyle);
+                    }
+                }
+                _value = textBuilder.ToString();
+                __result = true;
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    // 去掉鼠标hover的icon缩放动画
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(XUiC_ItemStack), "AllowIconGrow", MethodType.Getter)]
+    public static void Postfix(ref bool __result)
+    {
+        __result = false;
     }
 }

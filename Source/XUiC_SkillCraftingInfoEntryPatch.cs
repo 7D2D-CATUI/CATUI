@@ -16,7 +16,7 @@ public class XUiC_SkillCraftingInfoEntryPatch
 		ProgressionClass.DisplayData data = __instance.data;
         switch (_bindingName)
 		{
-            // ¸´Ð´ ÎïÆ·ÊÇ·ñÒÑ½âËø
+            // å¤å†™ ç‰©å“æ˜¯å¦å·²è§£é”
             case "showlock":
                 _value = "false";
                 if (flag)
@@ -26,7 +26,7 @@ public class XUiC_SkillCraftingInfoEntryPatch
                 __result = true;
                 return false;
 
-            // ¸´Ð´ Í¼Æ¬atlasÂ·¾¶
+            // å¤å†™ å›¾ç‰‡atlasè·¯å¾„
             case "iconatlas":
                 _value = "ItemIconAtlas";
                 if (flag)
@@ -36,7 +36,7 @@ public class XUiC_SkillCraftingInfoEntryPatch
                 __result = true;
                 return false;
 
-            // µ±Ç°ÖÆ×÷¼¼ÄÜµÈ¼¶
+            // å½“å‰åˆ¶ä½œæŠ€èƒ½ç­‰çº§
             case "CATUI_SkillLevel":
                 _value = "";
                 if (flag)
@@ -46,7 +46,7 @@ public class XUiC_SkillCraftingInfoEntryPatch
                 __result = true;
                 return false;
 
-            // ÎïÆ·½âËøËùÐèÖÆ×÷¼¼ÄÜµÈ¼¶
+            // ç‰©å“è§£é”æ‰€éœ€åˆ¶ä½œæŠ€èƒ½ç­‰çº§
             case "CATUI_ItemUnlockLevel":
                 _value = "";
                 if (flag)
@@ -60,14 +60,14 @@ public class XUiC_SkillCraftingInfoEntryPatch
                 __result = true;
                 return false;
 
-            // ÎïÆ·µÈ½× - ÏÂÒ»¼¶½ø¶ÈÌõ
+            // ç‰©å“ç­‰é˜¶ - ä¸‹ä¸€çº§è¿›åº¦æ¡
             case "CATUI_QualityNextLevelFill":
                 _value = "0";
                 if (flag)
                 {
                     float SkillLevel = entityPlayer.Progression.GetProgressionValue(data.Owner.Name).Level;
                     float QualityNextLevel = data.GetNextPoints(entityPlayer.Progression.GetProgressionValue(data.Owner.Name).Level);
-                    // Âú¼¶ºóQualityNextLevelÎª0
+                    // æ»¡çº§åŽQualityNextLevelä¸º0
                     if (QualityNextLevel > 0)
                     {
                         float percent = SkillLevel / QualityNextLevel;
@@ -81,46 +81,4 @@ public class XUiC_SkillCraftingInfoEntryPatch
 				return true;
 		}
 	}
-
-/*    [HarmonyPatch("Init")]
-    [HarmonyPostfix]
-    private static void InitPostfixProxy(XUiC_SkillCraftingInfoEntry __instance)
-    {
-        Debug.Log($"<color=#00FF00>InitPostfixProxy ----------------- </color>");
-
-        bool flag = __instance.Data != null;
-        EntityPlayerLocal entityPlayer = __instance.xui.playerUI.entityPlayer;
-        string _value = (flag ? __instance.Data.GetName(entityPlayer.Progression.GetProgressionValue(__instance.Data.Owner.Name).Level) : "");
-        if (flag) {
-            Debug.Log($"<color=#00FF00>Data.CustomName: {__instance.Data.GetIcon(1)}</color>");
-        }
-    }*/
-
-    /* public void Image_OnPress(XUiC_SkillCraftingInfoEntry __instance, int _mouseButton)
-     {
-         ProgressionClass.DisplayData CurrentData = __instance.Data;
-         XUi xUi = __instance.xui;
-         if (CurrentData == null || CurrentData.GetUnlockItemRecipes(0) == null)
-         {
-             return;
-         }
-         xUi.playerUI.windowManager.CloseIfOpen("looting");
-         List<XUiC_RecipeList> childrenByType = xUi.GetChildrenByType<XUiC_RecipeList>();
-         XUiC_RecipeList xUiC_RecipeList = null;
-         for (int i = 0; i < childrenByType.Count; i++)
-         {
-             if (childrenByType[i].WindowGroup != null && childrenByType[i].WindowGroup.isShowing)
-             {
-                 xUiC_RecipeList = childrenByType[i];
-                 break;
-             }
-         }
-         if (xUiC_RecipeList == null)
-         {
-             XUiC_WindowSelector.OpenSelectorAndWindow(xUi.playerUI.entityPlayer, "crafting");
-             xUiC_RecipeList = xUi.GetChildByType<XUiC_RecipeList>();
-         }
-         xUiC_RecipeList?.SetRecipeDataByItems(CurrentData.GetUnlockItemRecipes(0));
-     }*/
-
 }

@@ -292,12 +292,15 @@
 
 	<!-- 修理方块 -->
 	<setattribute xpath="//window[@name='focusedBlockHealth']" name="width">200</setattribute>
-	<setattribute xpath="//window[@name='focusedBlockHealth']/sprite" name="pos">-97,0</setattribute>
-	<setattribute xpath="//window[@name='focusedBlockHealth']/sprite" name="width">194</setattribute>
-	<setattribute xpath="//window[@name='focusedBlockHealth']/filledsprite" name="pos">-95,0</setattribute>
-	<setattribute xpath="//window[@name='focusedBlockHealth']/filledsprite" name="width">190</setattribute>
-	<setattribute xpath="//window[@name='focusedBlockHealth']/filledsprite" name="color">[white]</setattribute>
-	<setattribute xpath="//window[@name='focusedBlockHealth']/label" name="font_size">24</setattribute>
+	<setattribute xpath="//window[@name='focusedBlockHealth']/sprite[@name='background']" name="pos">-97,0</setattribute>
+	<setattribute xpath="//window[@name='focusedBlockHealth']/sprite[@name='background']" name="width">194</setattribute>
+	<setattribute xpath="//window[@name='focusedBlockHealth']/filledsprite[@name='bar']" name="pos">-95,0</setattribute>
+	<setattribute xpath="//window[@name='focusedBlockHealth']/filledsprite[@name='bar']" name="width">190</setattribute>
+	<setattribute xpath="//window[@name='focusedBlockHealth']/filledsprite[@name='bar']" name="color">[white]</setattribute>
+	<setattribute xpath="//window[@name='focusedBlockHealth']/label[@name='lblText']" name="font_size">24</setattribute>
+	<insertAfter xpath="//window[@name='focusedBlockHealth']/filledsprite[@name='bar']">
+		<sprite name="border" depth="3" pos="-95,0" width="190" height="8" sprite="menu_empty" color="[white_half_alpha]" pivot="left" type="sliced" fillcenter="false" />
+	</insertAfter>
 
 	<!-- 罗盘 -->
 	<remove xpath="/windows/window[@name='windowCompass']"/>
@@ -464,6 +467,7 @@
 	<setattribute xpath="//window[@name='toolTipPopups']" name="pos">0,230</setattribute>
 	<setattribute xpath="//window[@name='toolTipPopups']/label" name="font_size">26</setattribute>
 
+	<!-- 右下角当前物品状态 -->
 	<setattribute xpath="//window[@name='HUDRightStatBars']/rect[@controller='CollectedItemList']" name="pos">-90,200</setattribute>
 	<remove xpath="/windows/window[@name='HUDRightStatBars']/rect/rect[@stat_type='VehicleFuel']" />
 	<remove xpath="/windows/window[@name='HUDRightStatBars']/rect/rect[@stat_type='VehicleHealth']" />
@@ -595,7 +599,7 @@
 		<window name="toolTip" width="100" height="25" depth="310" controller="ToolTip" >
 			<rect>
 				<sprite depth="0" name="sprBackgroundBorder" type="sliced" gradient_start="[white]" gradient_end="225,225,225" globalopacity="false" />
-				<sprite depth="1" name="sprBackground" type="sliced" pos="3,-3" color="[transparent]" />
+				<sprite depth="1" name="sprBackground" type="sliced" pos="3,-3" gradient_start="[white]" gradient_end="225,225,225"  />
 				<label depth="3" name="lblText" text="" pos="10,-7" font_size="20" color="[darkestGrey]" overflow="resizefreely" parse_actions="true" />
 			</rect>
 		</window>
@@ -664,9 +668,8 @@
 		</window>
 	</append>
 
-	<!-- 背包 - 库存 -->
-	<setattribute xpath="//window[@name='windowBackpack']/panel[@name='content']/grid[@name='inventory']" name="pos">3,0</setattribute>
-	<!-- 背包 - 道具详情 - 大图标 -->
+	<!-- 道具详情 -->
+	<setattribute xpath="/windows/window[@name='itemInfoPanel']/rect[@name='contentInfo']/grid[@name='parts']" name="pos">153,-272</setattribute>
 	<remove xpath="/windows/window[@name='itemInfoPanel']/rect[@name='contentInfo']/rect[@name='preview']"/>
 	<append xpath="/windows/window[@name='itemInfoPanel']/rect[@name='contentInfo']">
 		<rect depth="1" pos="3,0" name="preview" width="147" height="130">
@@ -719,7 +722,11 @@
 	<!-- 制作详情 -->
 	<setattribute xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/sprite[@name='backgroundMain']" name="fillcenter">true</setattribute>
 	<setattribute xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/sprite[@name='backgroundMain']" name="depth">1</setattribute>
-	<setattribute xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='searchControls']" name="pos">152,-3</setattribute>
+	<remove xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='description']/sprite[@name='backgroundMain']" />
+	<remove xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='description']/rect/sprite[@height='301']" />
+	<setattribute xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='description']/rect/label[@name='descriptionText']" name="pos">6,-10</setattribute>
+	<setattribute xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='description']/rect/label[@name='descriptionText']" name="height">289</setattribute>
+	<!-- 制作详情 左侧大图标等内容 -->
 	<remove xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='preview']"/>
 	<append xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']">
 		<rect depth="1" pos="3,-3" name="preview" width="147" height="169">
@@ -747,6 +754,79 @@
 			<label depth="3" name="craftingTime" width="100" height="32" pos="55, -143" text="{craftingtime}" font_size="26" color="[beige]"/>
 		</rect>
 	</append>
+	<!-- 制作详情 新增物品状态TAB相关 -->
+	<remove xpath="//window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='searchControls']"/>
+	<append xpath="//window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']">
+		<rect depth="2" name="searchControls" width="449" height="43" pos="152,-3">
+			<sprite depth="1" color="[mediumGrey]" type="sliced" globalopacity="true" />
+			<table pos="0,-1" depth="2" columns="10" padding="6,5" hide_inactive="true" always_reposition="true">
+				<button depth="4" name="ingredientsButton" style="icon30px, press" sprite="ui_game_symbol_resource" pivot="center" tooltip_key="ingredient" sound="[paging_click]" selected="true" />
+				<button depth="4" name="statButton" style="icon30px, press" sprite="ui_game_symbol_ping" pivot="center" tooltip="Stats" tooltip_key="lblStats" sound="[paging_click]" visible="{showStatTab}" />
+				<button depth="4" name="descriptionButton" style="icon30px, press" sprite="ui_game_symbol_book" pivot="center" tooltip_key="lblBookDesc" sound="[paging_click]"/>
+				<button depth="4" name="showunlocksButton" style="icon30px, press" sprite="ui_game_symbol_unlock" pivot="center" tooltip_key="xuiSkillUnlocks" sound="[paging_click]" visible="{showunlockedbytab}" />
+			</table>
+		</rect>
+	</append>
+	<insertAfter xpath="//window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='unlockedBy']">
+		<rect depth="1" pos="154,-47" name="stat" width="448" height="270" visible="{showstats}">
+			<grid depth="2" pos="-1,0" rows="9" cols="1" width="448" height="33" cell_width="452" cell_height="33">
+				<rect>
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle0}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat0}" justify="right" color="[selectedColor]" />
+				</rect>
+				<rect>
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36"  color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" color="[darkGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle1}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat1}" justify="right" color="[selectedColor]" />
+				</rect>
+				<rect>
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle2}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat2}" justify="right" color="[selectedColor]" />
+				</rect>
+				<rect>
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36"  color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" color="[darkGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle3}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat3}" justify="right" color="[selectedColor]" />
+				</rect>
+				<rect>
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle4}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat4}" justify="right" color="[selectedColor]" />
+				</rect>
+				<rect>
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36"  color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" color="[darkGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle5}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat5}" justify="right" color="[selectedColor]" />
+				</rect>
+				<rect>
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle6}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat6}" justify="right" color="[selectedColor]" />
+				</rect>
+				<rect>
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36"  color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" color="[darkGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle7}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat7}" justify="right" color="[selectedColor]" />
+				</rect>
+				<rect>
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle8}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat8}" justify="right" color="[selectedColor]" />
+				</rect>
+			</grid>
+		</rect>
+	</insertAfter>
 
 	<!-- 制作详情 - 制作素材 -->
 	<remove xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='ingredients']"/>

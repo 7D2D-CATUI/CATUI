@@ -69,6 +69,12 @@
 					<sprite depth="2" pos="55,-55" name="icon" size="56,56" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" pivot="center" foregroundlayer="true" />
 					<!-- 素材数量 -->
 					<label depth="3" name="needCount" pos="55,-96" width="110" height="30" font_size="22" color="[labelColor]" justify="center" pivot="center" text="{# CATUI_HasComplete ? '[43CF7C]' + havecount + '[-]' : '[FF5252]' + havecount + '[-]' }/{needcount}" style="CATUI.text.shadow.black.1px" />
+					<!-- 素材配方 -->
+					<button name="btnInventoryRecipe" depth="3" pos="90, -16" style="press, hover" size="26,26" pivot="center" tooltip="{itemname} {# localization('lblContextActionRecipes') }" defaultcolor="[black_threequarters_alpha]" hoverscale="1.0" hovercolor="[black]" visible="{CATUI_InventoryHasRecipe}" sound_play_on_hover="[default_hover]">
+						<sprite depth="1" pos="0,0" sprite="menu_empty" color="[lightGrey]" pivot="center" type="sliced" fillcenter="false" width="28" height="28" />
+						<sprite depth="1" width="100%" height="100%" pivot="center" type="sliced" gradient_start="[mediumGrey_half_alpha]" gradient_end="[darkGrey_half_alpha]" />
+						<sprite depth="1" pos="-0,0" sprite="ui_game_symbol_search" size="20,20" color="[white]" pivot="center" type="sliced" />
+					</button>
 				</rect>
 			</rect>
 		</CATUI_ingredient_row>
@@ -161,7 +167,8 @@
 					<sprite depth="3" name="background" sprite="menu_empty2px" color="{selectionbordercolor}" type="sliced" globalopacity="true" fillcenter="false" visible="{#selectionbordercolor != '255,255,255,255'}" />
 				</rect>
 				<!-- 背景 - 底色 -->
-				<sprite depth="2" name="highlightOverlay" color="25,25,25,255" type="sliced" globalopacity="false" />
+				<sprite depth="2" name="highlightOverlay" color="25,25,25,255" type="sliced" globalopacity="false" visible="{# ${show_slotnum} }" />
+				<sprite depth="2" name="highlightOverlay" pos="-2,2"  width="76" height="76" color="25,25,25,255" type="sliced" globalopacity="false" visible="{# !${show_slotnum} }"  />
 				<!-- ???? -->
 				<texture depth="3" name="backgroundTexture" material="Materials/Transparent Colored" size="74,74" globalopacity="true" />
 				<!-- 书籍 未读 -->

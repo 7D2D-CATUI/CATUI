@@ -1,28 +1,28 @@
-// ÒıÈëËùĞèµÄÃüÃû¿Õ¼ä
+// å¼•å…¥æ‰€éœ€çš„å‘½åç©ºé—´
 using System.Reflection;
 using HarmonyLib;
 using UnityEngine;
 
 
 
-// ¶¨ÒåÒ»¸öÃûÎªModStartupµÄ¹«¹²Àà£¬¼Ì³Ğ×ÔIModApi½Ó¿Ú
+// å®šä¹‰ä¸€ä¸ªåä¸ºModStartupçš„å…¬å…±ç±»ï¼Œç»§æ‰¿è‡ªIModApiæ¥å£
 public class ModStartup : IModApi
 {
-    // ³õÊ¼»¯·½·¨
+    // åˆå§‹åŒ–æ–¹æ³•
     public void InitMod(Mod modInstance)
     {
-        // ¼ÓÔØAssembly-CSharp.dll
+        // åŠ è½½Assembly-CSharp.dll
         Assembly executeAssembly = Assembly.GetExecutingAssembly();
 
-        // ´´½¨HarmonyÊµÀı
+        // åˆ›å»ºHarmonyå®ä¾‹
         Harmony harmony = new Harmony(executeAssembly.GetName().Name);
 
-        // ´ò²¹¶¡
+        // æ‰“è¡¥ä¸
         harmony.PatchAll(executeAssembly);
 
         Debug.Log("<color=#00FF00>CATUI Applied.</color>");
 
-        // ³£Á¿²¹¶¡(×é¶Ó¶ÓÓÑµÄÑÕÉ«)
+        // å¸¸é‡è¡¥ä¸(ç»„é˜Ÿé˜Ÿå‹çš„é¢œè‰²)
         ModEvents.GameAwake.RegisterHandler((ref ModEvents.SGameAwakeData _data) =>
         {
             Constants.TrackedFriendColors = new Color[8]
