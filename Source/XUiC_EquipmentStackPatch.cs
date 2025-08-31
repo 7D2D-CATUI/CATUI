@@ -11,8 +11,9 @@ public class XUiC_EquipmentStackPatch
 	public static CachedStringFormatterFloat durabilityFillFormatter = new();
 
 	[HarmonyPrefix]
-	[HarmonyPatch(typeof(XUiController), "GetBindingValue")]
-	public static bool Prefix(string _bindingName, ref string _value, ref bool __result, XUiController __instance)
+	[HarmonyPatch(typeof(XUiController), "GetBindingValueInternal")]
+
+	public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiController __instance)
 	{
 		XUiC_EquipmentStack itemStack = __instance as XUiC_EquipmentStack;
 		switch (_bindingName)

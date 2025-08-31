@@ -6,8 +6,8 @@ using UnityEngine;
 public class XUiC_SkillEntryPatch
 {
 	[HarmonyPrefix]
-	[HarmonyPatch(typeof(XUiC_SkillEntry), "GetBindingValue")]
-	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_SkillEntry __instance)
+	[HarmonyPatch(typeof(XUiC_SkillEntry), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string bindingName, ref string value, ref bool __result, XUiC_SkillEntry __instance)
 	{
 		switch (bindingName)
 		{

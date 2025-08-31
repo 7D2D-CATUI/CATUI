@@ -4,13 +4,13 @@ using UnityEngine;
 [HarmonyPatch]
 public class XUiC_TraderItemEntryPatch
 {
-	[HarmonyPostfix]
-	[HarmonyPatch(typeof(XUiC_TraderItemEntry), "GetBindingValue")]
-	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_TraderItemEntry __instance)
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(XUiC_TraderItemEntry), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string bindingName, ref string value, ref bool __result, XUiC_TraderItemEntry __instance)
 	{
 		switch (bindingName)
 		{
-			// 商品名称
+			// 鍟嗗搧鍚嶇О
 			case "CATUI_ItemName":
 				value = "";
 				if (__instance.item != null)
@@ -21,7 +21,7 @@ public class XUiC_TraderItemEntryPatch
 				__result = true;
 				return false;
 
-			// 商品库存
+			// 鍟嗗搧搴撳瓨
 			case "CATUI_ItemCount":
 				value = "1";
 				if (__instance.item != null)

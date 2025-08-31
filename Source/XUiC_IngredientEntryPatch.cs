@@ -9,8 +9,8 @@ public class XUiC_IngredientEntryPatch
 	private static readonly HashSet<XUiC_IngredientEntry> _patchedInstances = new HashSet<XUiC_IngredientEntry>();
 
 	[HarmonyPrefix]
-	[HarmonyPatch(typeof(XUiC_IngredientEntry), "GetBindingValue")]
-	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_IngredientEntry __instance)
+	[HarmonyPatch(typeof(XUiC_IngredientEntry), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string bindingName, ref string value, ref bool __result, XUiC_IngredientEntry __instance)
 	{
 		bool flag = __instance.ingredient != null;
 		switch (bindingName)

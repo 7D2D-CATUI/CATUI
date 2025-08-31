@@ -8,8 +8,8 @@ using UnityEngine.Scripting;
 public class XUiC_SkillAttributeLevelPatch
 {
     [HarmonyPrefix]
-	[HarmonyPatch(typeof(XUiC_SkillAttributeLevel), "GetBindingValue")]
-	public static bool Prefix(string _bindingName, ref string _value, ref bool __result, XUiC_SkillAttributeLevel __instance)
+	[HarmonyPatch(typeof(XUiC_SkillAttributeLevel), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiC_SkillAttributeLevel __instance)
 	{
 		int level = __instance.level;
 		bool flag = __instance.CurrentSkill != null && __instance.CurrentSkill.ProgressionClass.MaxLevel >= __instance.level;

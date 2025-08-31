@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Scripting;
 
-[HarmonyPatch(typeof(XUiC_SkillCraftingInfoEntry))]
+[HarmonyPatch]
 public class XUiC_SkillCraftingInfoEntryPatch
 {
     [HarmonyPrefix]
-	[HarmonyPatch("GetBindingValue")]
+	[HarmonyPatch(typeof(XUiC_SkillCraftingInfoEntry), "GetBindingValueInternal")]
 	public static bool Prefix(string _bindingName, ref string _value, ref bool __result, XUiC_SkillCraftingInfoEntry __instance)
 	{
 		bool flag = __instance.data != null;

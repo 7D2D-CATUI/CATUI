@@ -6,7 +6,7 @@ using UnityEngine;
 public class XUiC_PartyEntryPatch
 {
 	[HarmonyPrefix]
-	[HarmonyPatch(typeof(XUiC_PartyEntry), "GetBindingValue")]
+	[HarmonyPatch(typeof(XUiC_PartyEntry), "GetBindingValueInternal")]
 	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_PartyEntry __instance)
 	{
 		switch (bindingName)
@@ -33,15 +33,15 @@ public class XUiC_PartyEntryPatch
 					const string PoorColor = "255, 0, 0";
 					if (_ping > 0)
 					{
-						// ÍøÂçÁ¼ºÃ
+						// ç½‘ç»œè‰¯å¥½
 						if (_ping <= 150) {
 							value = GoodColor;
 						}
-						// ÍøÂçÒ»°ã
+						// ç½‘ç»œä¸€èˆ¬
 						else if (_ping <= 500) {
 							value = MediumColor;
 						}
-						// ÍøÂç½Ï²î
+						// ç½‘ç»œè¾ƒå·®
 						else
 						{
 							value = PoorColor;

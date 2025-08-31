@@ -2,12 +2,12 @@ using HarmonyLib;
 using System;
 using UnityEngine;
 
-[HarmonyPatch(typeof(XUiC_ItemInfoWindow))]
+[HarmonyPatch]
 public class XUiC_ItemInfoWindowPatch
 {
-	[HarmonyPostfix]
-	[HarmonyPatch(typeof(XUiC_ItemInfoWindow), "GetBindingValue")]
-	public static bool Prefix(ref string value, string bindingName, ref bool __result, XUiC_ItemInfoWindow __instance)
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(XUiC_ItemInfoWindow), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(ref string value, string bindingName, ref bool __result, XUiC_ItemInfoWindow __instance)
 	{
 		switch (bindingName)
 		{

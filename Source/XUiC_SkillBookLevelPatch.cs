@@ -8,8 +8,8 @@ using UnityEngine.Scripting;
 public class XUiC_SkillBookLevelPatch
 {
     [HarmonyPrefix]
-	[HarmonyPatch(typeof(XUiC_SkillBookLevel), "GetBindingValue")]
-	public static bool Prefix(string _bindingName, ref string _value, ref bool __result, XUiC_SkillBookLevel __instance)
+	[HarmonyPatch(typeof(XUiC_SkillBookLevel), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiC_SkillBookLevel __instance)
 	{
 		bool flag = __instance.CurrentSkill != null && __instance.perk != null;
 		EntityPlayerLocal entityPlayer = __instance.xui.playerUI.entityPlayer;

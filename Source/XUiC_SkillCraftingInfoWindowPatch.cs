@@ -1,11 +1,5 @@
 using HarmonyLib;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using UniLinq;
-
 using System.Collections.Generic;
-using UnityEngine;
 
 [HarmonyPatch]
 public class XUiC_SkillCraftingInfoWindowPatch

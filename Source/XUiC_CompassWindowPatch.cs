@@ -1,12 +1,12 @@
 using HarmonyLib;
 using UnityEngine;
 
-[HarmonyPatch(typeof(XUiC_CompassWindow))]
+[HarmonyPatch]
 public class XUiC_CompassWindowPatch
 {
-	[HarmonyPostfix]
-	[HarmonyPatch(typeof(XUiC_CompassWindow), "GetBindingValue")]
-	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_CompassWindow __instance)
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(XUiC_CompassWindow), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(ref string value, string bindingName, ref bool __result, XUiC_CompassWindow __instance)
 	{
 		// 缓存变量
 		var localPlayer = __instance.localPlayer;

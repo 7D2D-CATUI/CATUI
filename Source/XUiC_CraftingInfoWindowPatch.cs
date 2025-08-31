@@ -34,8 +34,8 @@ public class XUiC_CraftingInfoWindowPatch
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(XUiC_CraftingInfoWindow), "GetBindingValue")]
-    public static bool GetBindingValuePrefix(string bindingName, ref string value, ref bool __result, XUiC_CraftingInfoWindow __instance)
+    [HarmonyPatch(typeof(XUiC_CraftingInfoWindow), "GetBindingValueInternal")]
+    public static bool GetBindingValueInternalPrefix(string bindingName, ref string value, ref bool __result, XUiC_CraftingInfoWindow __instance)
     {
         if (__instance == null)
             return false;

@@ -1,24 +1,24 @@
 using HarmonyLib;
 using UnityEngine;
 
-[HarmonyPatch(typeof(XUiC_ItemInfoWindow))]
+[HarmonyPatch]
 public class XUiC_PartyWindowPatch
 {
 	[HarmonyPrefix]
-	[HarmonyPatch(typeof(XUiC_PartyWindow), "GetBindingValue")]
-	public static bool Prefix(string _bindingName, ref string _value, ref bool __result, XUiC_PartyWindow __instance)
+	[HarmonyPatch(typeof(XUiC_PartyWindow), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiC_PartyWindow __instance)
 	{
 		switch (_bindingName)
 		{
-			// 根据团队数量设置PartyWindow Pos Y
-			// 已知bug：Companions（非玩家组队）变化后不会触发此bind
+			// 鏍规嵁鍥㈤槦鏁伴噺璁剧疆PartyWindow Pos Y
+			// 宸茬煡bug锛欳ompanions锛堥潪鐜╁缁勯槦锛夊彉鍖栧悗涓嶄細瑙﹀彂姝ind
 			case "CATUI_PartyWindowPositionY":
-				// 默认间距
+				// 榛樿闂磋窛
 				int defaultHeight = 130;
-				// 单项高度
+				// 鍗曢」楂樺害
 				int entryHeight = 56;
 				_value = defaultHeight.ToString();
-                // 组队
+                // 缁勯槦
                 if (__instance.player != null && __instance.player.Party != null && __instance.player.Party.MemberList != null)
                 {
                     int entryListCount = __instance.player.Party.MemberList.Count;
@@ -28,7 +28,7 @@ public class XUiC_PartyWindowPatch
                         _value = PositionY.ToString();
                     }
                 }
-                // 伙伴
+                // 浼欎即
                 else if (__instance.player != null && __instance.player.Party != null && __instance.player.Companions != null)
                 {
                     int entryListCount = __instance.player.Companions.Count;

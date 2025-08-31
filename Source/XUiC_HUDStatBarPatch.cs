@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Text;
 
-[HarmonyPatch(typeof(XUiC_HUDStatBar))]
+[HarmonyPatch]
 public class XUiC_HUDStatBarPatch
 {
 	[PublicizedFrom(EAccessModifier.Private)]
@@ -29,8 +29,8 @@ public class XUiC_HUDStatBarPatch
 	public static CachedStringFormatterInt playerCurrencyAmountFormatter = new();
 
 	[HarmonyPrefix]
-	[HarmonyPatch(typeof(XUiC_HUDStatBar), "GetBindingValue")]
-	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_HUDStatBar __instance)
+	[HarmonyPatch(typeof(XUiC_HUDStatBar), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string bindingName, ref string value, ref bool __result, XUiC_HUDStatBar __instance)
 	{
 		switch (bindingName)
 		{

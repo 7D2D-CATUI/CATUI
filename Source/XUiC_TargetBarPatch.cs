@@ -2,17 +2,17 @@ using HarmonyLib;
 using System.Collections.Generic;
 using UnityEngine;
 
-[HarmonyPatch(typeof(XUiC_TargetBar))]
+[HarmonyPatch]
 public class XUiC_TargetBarPatch
 {
-	[HarmonyPostfix]
-	[HarmonyPatch(typeof(XUiC_TargetBar), "GetBindingValue")]
-	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_TargetBar __instance)
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(XUiC_TargetBar), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string bindingName, ref string value, ref bool __result, XUiC_TargetBar __instance)
 	{
 		EntityAlive Target = __instance.Target;
 		switch (bindingName)
 		{
-			// ��ȡɥʬ����
+			// 获取丧尸类型
 			case "CATUI_EntityType":
 				value = "normal";
 				if (Target != null)
@@ -26,26 +26,26 @@ public class XUiC_TargetBarPatch
 					bool IsBear = entityClass.entityClassName == "animalBear";
 					bool IsZombieBear = entityClass.entityClassName == "animalZombieBear";
 					bool IsDireWolf = entityClass.entityClassName == "animalDireWolf";
-					// ����
+					// 辐射
 					if (IsRadiated) {
 						value = "radiated";
 					}
-					// ����
+					// 带电
 					else if(IsCharged)
 					{
 						value = "charged";
 					}
-					// ����
+					// 炼狱
 					else if(IsInfernal)
 					{
 						value = "infernal";
 					}
-					// �ײ�
+					// 凶残
 					else if (IsFeral)
                     {
                         value = "feral";
                     }
-					// BOSS ���������ܣ�ɥʬ�ܣ�����
+					// BOSS 猪王，大熊，丧尸熊，恐狼
 					else if (IsBoss || IsBear || IsZombieBear || IsDireWolf)
                     {
                         value = "boss";
@@ -54,7 +54,7 @@ public class XUiC_TargetBarPatch
 				__result = true;
 				return false;
 
-			// ��ȡɥʬ����
+			// 获取丧尸类型
 			case "CATUI_EntityTags":
 				value = "";
 				if (Target != null)
@@ -64,7 +64,7 @@ public class XUiC_TargetBarPatch
 				__result = true;
 				return false;
 
-			// ɥʬ״̬ - ����ֵ
+			// 丧尸状态 - 护甲值
 			case "CATUI_EntityArmorRating":
 				value = "0";
 				if (Target != null)
@@ -74,7 +74,7 @@ public class XUiC_TargetBarPatch
 				__result = true;
 				return false;
 
-			// ɥʬ״̬ - �Ƿ�˯��
+			// 丧尸状态 - 是否睡眠
 			case "CATUI_EntityIsSleeping":
 				value = "false";
 				if (Target != null)
@@ -84,7 +84,7 @@ public class XUiC_TargetBarPatch
 				__result = true;
 				return false;
 
-			// ɥʬ״̬ - �Ƿ���Ѫ
+			// 丧尸状态 - 是否流血
 			case "CATUI_EntityIsBleeding":
 				value = "false";
 				if (Target != null)
@@ -93,7 +93,7 @@ public class XUiC_TargetBarPatch
 				}
 				__result = true;
 				return false;
-			// ɥʬ״̬ - ��Ѫ����
+			// 丧尸状态 - 流血层数
 			case "CATUI_EntityBleedingCounter":
 				value = "false";
 				if (Target != null)
@@ -110,7 +110,7 @@ public class XUiC_TargetBarPatch
 				}
 				__result = true;
 				return false;
-			// ɥʬ״̬ - ��Ѫ����ʱ
+			// 丧尸状态 - 流血倒计时
 			case "CATUI_EntityBleedingTimer":
                 value = "";
                 if (Target != null)
@@ -127,7 +127,7 @@ public class XUiC_TargetBarPatch
 				__result = true;
                 return false;
 
-            // ɥʬ״̬ - �Ƿ���
+            // 丧尸状态 - 是否电击
             case "CATUI_EntityIsShocked":
 				value = "false";
 				if (Target != null)
@@ -136,7 +136,7 @@ public class XUiC_TargetBarPatch
 				}
 				__result = true;
 				return false;
-            // ɥʬ״̬ - �������ʱ
+            // 丧尸状态 - 电击倒计时
             case "CATUI_EntityShockedTimer":
                 value = "";
                 if (Target != null)
@@ -146,9 +146,9 @@ public class XUiC_TargetBarPatch
 					BuffValue buff = Target.Buffs.GetBuff("buffShocked");
 					if (buff != null)
 					{
-						// ����ɥʬʱ����루If Charged zombie, reduce time again ==> buffs.xml line:6470��
+						// 带电丧尸时间减半（If Charged zombie, reduce time again ==> buffs.xml line:6470）
 						float timer = Mathf.CeilToInt((IsCharged ? buff.BuffClass.DurationMax / 2 : buff.BuffClass.DurationMax) - buff.DurationInSeconds);
-						// ż������ָ���
+						// 偶尔会出现负数
 						if (timer > 0f)
 						{
 							value = timer.ToString();
@@ -158,7 +158,7 @@ public class XUiC_TargetBarPatch
                 __result = true;
                 return false;
 
-            // ɥʬ״̬ - �Ƿ��Ż�
+            // 丧尸状态 - 是否着火
             case "CATUI_EntityIsOnFire":
 				value = "false";
 				if (Target != null)
@@ -167,7 +167,7 @@ public class XUiC_TargetBarPatch
 				}
 				__result = true;
 				return false;
-            // ɥʬ״̬ - �Ż𵹼�ʱ
+            // 丧尸状态 - 着火倒计时
             case "CATUI_EntityOnFireTimer":
                 value = "";
                 if (Target != null)
@@ -176,7 +176,7 @@ public class XUiC_TargetBarPatch
 					if (buff != null)
 					{
 						float timer = Target.Buffs.GetCustomVar(buff.BuffClass.DisplayValueCVar);
-						// BUG: ȼ�ռ�&ȼ����� ����ֵ���ʱΪ0�����(buffBurningFlamingArrow), ��֪��ɶԭ��
+						// BUG: 燃烧箭&燃烧弩箭 会出现倒计时为0的情况(buffBurningFlamingArrow), 不知道啥原因
 						if (timer > 0f) {
 							value = Mathf.CeilToInt(timer).ToString();
 						}
@@ -185,7 +185,7 @@ public class XUiC_TargetBarPatch
                 __result = true;
                 return false;
 
-            // ɥʬ״̬ - �Ƿ��²�
+            // 丧尸状态 - 是否致残
             case "CATUI_EntityIsCrippled":
 				value = "false";
 				if (Target != null)
@@ -195,7 +195,7 @@ public class XUiC_TargetBarPatch
 				__result = true;
 				return false;
 
-			// ɥʬ״̬ - �Ƿ��Ѫ
+			// 丧尸状态 - 是否回血
 			case "CATUI_EntityIsRadiatedRegen":
 				value = "false";
 				if (Target != null)
@@ -205,7 +205,7 @@ public class XUiC_TargetBarPatch
 				__result = true;
 				return false;
 
-			// ɥʬ״̬ - �Ƿ���ֹ��Ѫ
+			// 丧尸状态 - 是否阻止回血
 			case "CATUI_EntityIsRadiatedRegenBlock":
 				value = "false";
 				if (Target != null)
@@ -215,7 +215,7 @@ public class XUiC_TargetBarPatch
 				__result = true;
 				return false;
 
-			// ɥʬ״̬ - ��ֹ��Ѫ����ʱ
+			// 丧尸状态 - 阻止回血倒计时
 			case "CATUI_EntityRadiatedRegenBlockTimer":
 				value = "0";
 				if (Target != null)
@@ -229,7 +229,7 @@ public class XUiC_TargetBarPatch
 				__result = true;
 				return false;
 
-			// ɥʬ״̬ - buff�б�
+			// 丧尸状态 - buff列表
 			case "CATUI_EntityBuffList":
 				value = "";
 				if (Target != null)
@@ -248,7 +248,7 @@ public class XUiC_TargetBarPatch
 				}
 				__result = true;
 				return false;
-			// ɥʬ״̬ - buff�б�����ʱ
+			// 丧尸状态 - buff列表倒计时
 			case "CATUI_EntityBuffListTimer":
 				value = "";
 				if (Target != null)

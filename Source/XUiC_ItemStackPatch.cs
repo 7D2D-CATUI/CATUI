@@ -90,8 +90,8 @@ public class XUiC_ItemStackPatch
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(XUiC_ItemStack), "GetBindingValue")]
-    public static bool GetBindingValuePrefix(string _bindingName, ref string _value, ref bool __result, XUiC_ItemStack __instance)
+    [HarmonyPatch(typeof(XUiC_ItemStack), "GetBindingValueInternal")]
+    public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiC_ItemStack __instance)
     {
         switch (_bindingName)
         {
@@ -157,7 +157,7 @@ public class XUiC_ItemStackPatch
     // 去掉鼠标hover的icon缩放动画
     [HarmonyPostfix]
     [HarmonyPatch(typeof(XUiC_ItemStack), "AllowIconGrow", MethodType.Getter)]
-    public static void Postfix(ref bool __result)
+    public static void AllowIconGrowPostfix(ref bool __result)
     {
         __result = false;
     }

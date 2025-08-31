@@ -2,12 +2,12 @@ using HarmonyLib;
 using System.Collections.Generic;
 using UnityEngine;
 
-[HarmonyPatch(typeof(XUiC_RecipeTrackerWindow))]
+[HarmonyPatch]
 public class XUiC_RecipeTrackerWindowPatch
 {
-	[HarmonyPostfix]
-	[HarmonyPatch(typeof(XUiC_RecipeTrackerWindow), "GetBindingValue")]
-	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_RecipeTrackerWindow __instance)
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(XUiC_RecipeTrackerWindow), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string bindingName, ref string value, ref bool __result, XUiC_RecipeTrackerWindow __instance)
 	{
 		XUiC_RecipeTrackerIngredientsList ingredientList = __instance.ingredientList;
 		Recipe currentRecipe = __instance.currentRecipe;

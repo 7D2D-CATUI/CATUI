@@ -2,12 +2,12 @@ using HarmonyLib;
 using System.Collections.Generic;
 using UnityEngine;
 
-[HarmonyPatch(typeof(XUiC_RecipeTrackerIngredientEntry))]
+[HarmonyPatch]
 public class XUiC_RecipeTrackerIngredientEntryPatch
 {
-	[HarmonyPostfix]
-	[HarmonyPatch(typeof(XUiC_RecipeTrackerIngredientEntry), "GetBindingValue")]
-	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_RecipeTrackerIngredientEntry __instance)
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(XUiC_RecipeTrackerIngredientEntry), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string bindingName, ref string value, ref bool __result, XUiC_RecipeTrackerIngredientEntry __instance)
 	{
 		ItemStack ingredient = __instance.ingredient;
 		bool flag = ingredient != null;

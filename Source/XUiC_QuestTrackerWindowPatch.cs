@@ -2,12 +2,12 @@ using HarmonyLib;
 using System.Collections.Generic;
 using UnityEngine;
 
-[HarmonyPatch(typeof(XUiC_QuestTrackerWindow))]
+[HarmonyPatch]
 public class XUiC_QuestTrackerWindowPatch
 {
-	[HarmonyPostfix]
-	[HarmonyPatch(typeof(XUiC_QuestTrackerWindow), "GetBindingValue")]
-	public static bool Prefix(string bindingName, ref string value, ref bool __result, XUiC_QuestTrackerWindow __instance)
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(XUiC_QuestTrackerWindow), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(string bindingName, ref string value, ref bool __result, XUiC_QuestTrackerWindow __instance)
 	{
 		Quest currentQuest = __instance.currentQuest;
 		Challenges.Challenge currentChallenge = __instance.currentChallenge;
