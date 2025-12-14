@@ -7,5 +7,6 @@
 	<append xpath="//ruleset/window_group[@name='toolbelt']">
 		<window name="HUDLeftBottomStat" anchor="LeftBottom" />
 		<window name="HUDCenterBottomStat" anchor="CenterBottom" />
+		<window name="HUDCenterCenterStat" anchor="CenterCenter" />
 	</append>
 </CATUI>

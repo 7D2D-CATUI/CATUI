@@ -7,17 +7,14 @@ using System.Reflection;
 [HarmonyPatch]
 public class XUiC_ItemStackPatch
 {
-    private const string UI_CLICK_SOUND_PATH = "@:Sounds/UI/ui_menu_click.wav";
-    private static AudioClip _cachedClickSound;
     private const string ALLOW_CLICKLOCK_ATTR = "allow_clicklock";
     private static readonly HashSet<XUiC_ItemStack> _patchedInstances = new HashSet<XUiC_ItemStack>();
-    // 定义默认样式常量，提高可维护性
     private const string MODIFICATION_HIGHLIGHTED = "[04FE85]▇[-] ";
     private const string MODIFICATION_DEFAULT = "▇ ";
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(XUiC_ItemStack), "Init")]
-    public static void InitPostfixProxy(XUiC_ItemStack __instance)
+    public static void InitPostfix(XUiC_ItemStack __instance)
     {
 		if (_patchedInstances.Contains(__instance))
 			return;
@@ -60,33 +57,9 @@ public class XUiC_ItemStackPatch
                 vehicleContainer.UpdateLockedSlots(vehicleContainer.standardControls);
             }
 
-			// 播放点击音效
-			PlayClickSound();
-		};
-    }
-
-    private static void PlayClickSound()
-    {
-        // 播放缓存音效
-        if (_cachedClickSound != null)
-        {
-            Manager.PlayXUiSound(_cachedClickSound, .75f);
-            return;
-        }
-
-        // 加载音效，缓存并播放
-        LoadManager.LoadAsset<AudioClip>(UI_CLICK_SOUND_PATH, clip =>
-        {
-            if (clip != null)
-            {
-                _cachedClickSound = clip;
-                Manager.PlayXUiSound(clip, .75f);
-            }
-            else
-            {
-                Debug.LogError("<color=#FF0000>CATUI [AltClickPatch] Failed to load UI click sound</color>");
-            }
-        });
+            // 播放点击音效
+            __instance.xui.PlayMenuClickSound();
+        };
     }
 
     [HarmonyPrefix]
@@ -110,7 +83,7 @@ public class XUiC_ItemStackPatch
                 _value = "";
                 if (__instance?.itemStack?.itemValue == null)
                 {
-                    Debug.Log($"<color=#00FF00>__instance?.itemStack?.itemValue == null </color>");
+                    Debug.Log($"<color=#00FF00>[CATUI] CATUI_itemStackModifications __instance?.itemStack?.itemValue == null </color>");
                     __result = true;
                     return false;
                 }
@@ -134,7 +107,12 @@ public class XUiC_ItemStackPatch
                 System.Text.StringBuilder textBuilder = new System.Text.StringBuilder();
                 for (int i = 0; i < mods.Length; i++)
                 {
-                    if (mods[i] == null) continue;
+                    // 未安装过模组 mods[i] == null，直接设置空槽
+                    if (mods[i] == null)
+                    {
+                        textBuilder.Append(defaultStyle);
+                        continue;
+                    }
 
                     var itemClass = mods[i]?.ItemClass;
                     if (itemClass != null && !string.IsNullOrEmpty(itemClass?.GetItemName()))

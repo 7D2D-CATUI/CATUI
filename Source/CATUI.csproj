@@ -15,7 +15,9 @@
     <None Remove="Assembly-CSharp-Decompiled\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="FontManager.cs" />
     <Compile Remove="ShowSleepersCount3.cs" />
+    <Compile Remove="XUi_Harmony.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">

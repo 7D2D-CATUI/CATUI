@@ -97,6 +97,19 @@ public class XUiC_CompassWindowPatch
 				__result = true;
 				return false;
 
+			// 风暴持续真实时间 mm:ss eg. 2分 8秒
+			case "CATUI_stormDurationTimeReal":
+				value = "0";
+				if (hasLocalPlayer && biomeWeather != null && stormLevel > 0)
+				{
+					int stormRemaining = biomeWeather.stormWorldTime + biomeWeather.stormDuration - worldTime;
+					// 持续时间/时间流逝速度
+					int stormDurationTimeSec = (stormRemaining / GameStats.GetInt(EnumGameStats.TimeOfDayIncPerSec));
+					value = XUiM_PlayerBuffs.ConvertToTimeString(stormDurationTimeSec);
+				}
+				__result = true;
+				return false;
+
 			// 风暴持续时间 eg.3200
 			case "CATUI_stormDurationTime":
 				value = "0";

@@ -15,9 +15,8 @@
 		<style_entry name="CATUI_storm_Desert" value="[CATUI_yellow]" />
 		<style_entry name="CATUI_storm_Snow" value="[CATUI_blue]" />
 		<style_entry name="CATUI_storm_Wasteland" value="[CATUI_green]" />
-
-
     </append>
+	
     <set xpath="//style_entry[@name='hoverscale']/@value">1</set>
 
 	<remove xpath="/styles/style[@name='header.panel']"/>
@@ -105,7 +104,8 @@
 			<style_entry name="color" value="172, 51, 193,200" />
 		</style>
 	</append>
-		<!-- // 美化 字体高清 -->
+
+	<!-- // 美化 字体高清 -->
 	<append xpath="/styles/style[@type='label' and count(@*)=1]">
 		<style_entry name="crispness" value="OnDesktop" />
 	</append>
