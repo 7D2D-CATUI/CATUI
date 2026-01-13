@@ -40,6 +40,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = __instance.localPlayer.PlayerDisplayName;
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -62,26 +63,7 @@ public class XUiC_HUDStatBarPatch
 					{
 						_value = currentAmmoCount.ToString();
 					}
-				}
-				__result = true;
-				return false;
-
-			// 人物属性 - 最大生命值
-			case "CATUI_playerHealthMax":
-				_value = "100";
-				if (__instance.localPlayer != null)
-				{
-					_value = playerStatCurrentHealthMaxFormatter.Format((int)__instance.localPlayer.Stats.Health.Max).ToString();
-				}
-				__result = true;
-				return false;
-
-			// 人物属性 - 最大体力值
-			case "CATUI_playerStaminaMax":
-				_value = "100";
-				if (__instance.localPlayer != null)
-				{
-					_value = playerStatCurrentStaminaMaxFormatter.Format((int)__instance.localPlayer.Stats.Stamina.Max).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -92,6 +74,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = XUiM_Player.GetCurrentLife(__instance.localPlayer).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -102,6 +85,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = playerArmorRatingFormatter.Format((int)EffectManager.GetValue(PassiveEffects.PhysicalDamageResist, null, 0f, __instance.localPlayer)).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -123,6 +107,7 @@ public class XUiC_HUDStatBarPatch
 						>= 80 and < 100 => "5",
 						_ => "6"
 					};
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -133,6 +118,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = __instance.localPlayer.gameStage.ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -143,6 +129,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = __instance.localPlayer.GetLootStage(0f, 0f).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -153,6 +140,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = __instance.localPlayer.QuestJournal.GetCurrentFactionTier(1).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -163,6 +151,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = __instance.localPlayer.QuestJournal.GetQuestFactionPoints(1).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -174,6 +163,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					int currentFactionTier = __instance.localPlayer.QuestJournal.GetCurrentFactionTier(1);
 					_value = __instance.localPlayer.QuestJournal.GetQuestFactionMax(1, currentFactionTier).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -184,6 +174,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = XUiM_Player.GetKMTraveled(__instance.localPlayer).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -194,6 +185,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = XUiM_Player.GetZombieKills(__instance.localPlayer).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -204,6 +196,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = XUiM_Player.GetCoreTemp(__instance.localPlayer).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -222,6 +215,7 @@ public class XUiC_HUDStatBarPatch
 						>= 100f => "255,0,0",
 						_ => "255,255,255"
 					};
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -232,6 +226,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = XUiM_Player.GetOutsideTemp(__instance.localPlayer).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -250,6 +245,7 @@ public class XUiC_HUDStatBarPatch
 						>= 100f => "255,0,0",
 						_ => "255,255,255"
 					};
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -264,6 +260,7 @@ public class XUiC_HUDStatBarPatch
 					{
 						_value = _ping > 1000 ? ">1000" : _ping.ToString();
 					}
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -295,6 +292,7 @@ public class XUiC_HUDStatBarPatch
 							_value = PoorColor;
 						}
 					}
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -309,6 +307,7 @@ public class XUiC_HUDStatBarPatch
 					{
 						_value = "true";
 					}
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -320,7 +319,8 @@ public class XUiC_HUDStatBarPatch
                 {
                     float num = EffectManager.GetValue(PassiveEffects.Mobility, null, 0f, __instance.localPlayer, null, XUiM_Player.GetPlayer().generalTags, calcEquipment: true, calcHoldingItem: true, calcProgression: true, calcBuffs: true, calcChallenges: true, 1, useMods: true, _useDurability: true) * 100f;
                     _value = ((int)num).ToString();
-                }
+					__instance.IsDirty = true;
+				}
                 __result = true;
 				return false;
 			// 人物属性 - 移动速度等级
@@ -339,7 +339,8 @@ public class XUiC_HUDStatBarPatch
                         >= 110 and < 120 => "5",
                         _ => "6"
                     };
-                }
+					__instance.IsDirty = true;
+				}
                 __result = true;
 				return false;
 
@@ -350,6 +351,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					float num = (float)EffectManager.GetValue(PassiveEffects.RunSpeed, null, 0f, __instance.localPlayer) * 100f;
 					_value = ((int)num).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -361,6 +363,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					float num = (float)EffectManager.GetValue(PassiveEffects.BarteringBuying, null, 0f, __instance.localPlayer) * 100f;
 					_value = ((int)num).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -372,6 +375,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					float num = (float)EffectManager.GetValue(PassiveEffects.BarteringSelling, null, 0f, __instance.localPlayer) * 100f;
 					_value = ((int)num).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -388,6 +392,7 @@ public class XUiC_HUDStatBarPatch
 					if (itemClass != null) {
 						_value = itemClass.GetIconName();
 					}
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -405,6 +410,7 @@ public class XUiC_HUDStatBarPatch
 					{
 						_value = itemClass.GetLocalizedItemName();
 					}
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -422,6 +428,7 @@ public class XUiC_HUDStatBarPatch
 						Color32 v = QualityInfo.GetQualityColor(itemValue.Quality);
 						_value = rgbaColorFormatter.Format(v); ;
 					}
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -449,6 +456,7 @@ public class XUiC_HUDStatBarPatch
 							_value = (itemStack.itemValue.MaxUseTimes - itemStack.itemValue.UseTimes).ToString("F0");
 						}
 					}
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -475,6 +483,7 @@ public class XUiC_HUDStatBarPatch
 							_value = itemStack.itemValue.MaxUseTimes.ToString("F0");
 						}
 					}
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -496,6 +505,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = __instance.localPlayer.Progression.SkillPoints.ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -506,6 +516,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = playerEntityPenetrationCountFormatter.Format((float)EffectManager.GetValue(PassiveEffects.EntityPenetrationCount, null, 0f, __instance.localPlayer));
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -516,6 +527,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null)
 				{
 					_value = __instance.vehicle.GetMapIcon();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -526,6 +538,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					float currentSpeed = Mathf.Abs(__instance.vehicle.GetVehicle().CurrentForwardVelocity + 0.001f);
 					_value = currentSpeed < 0.01f ? "0" : currentSpeed.ToString("F2");
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -548,6 +561,7 @@ public class XUiC_HUDStatBarPatch
 					// 计算当前速度百分比
 					float SpeedPercent = currentSpeed / MaxSpeed;
 					_value = SpeedPercent < 0.01f ? "0" : SpeedPercent.ToString("F3");
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -558,6 +572,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					float currentSpeed = Mathf.Abs(__instance.vehicle.GetVehicle().CurrentForwardVelocity + 0.001f);
 					_value = currentSpeed < 0.01f ? "0" : (currentSpeed * 3.6f).ToString("F1");
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -567,6 +582,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null)
 				{
 					_value = __instance.vehicle.GetVehicle().VelocityMaxForward.ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -582,6 +598,7 @@ public class XUiC_HUDStatBarPatch
 					// 引擎组件 加速系数
 					float MaxSpeedPer = __instance.vehicle.GetVehicle().EffectVelocityMaxPer;
 					_value = (hasEnginePart ? MaxTurboSpeed * MaxSpeedPer : MaxTurboSpeed).ToString("0.00");
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -591,6 +608,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null)
 				{
 					_value = __instance.vehicle.GetVehicle().CurrentIsBreak.ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -600,6 +618,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null && __instance.vehicle.GetVehicle().HasStorage())
 				{
 					_value = __instance.vehicle.bag.GetSlots().Length.ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -609,6 +628,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null && __instance.vehicle.GetVehicle().HasStorage())
 				{
 					_value = __instance.vehicle.bag.GetUsedSlotCount().ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -618,6 +638,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null)
 				{
 					_value = __instance.vehicle.GetVehicle().CanTurbo.ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -627,6 +648,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null)
 				{
 					_value = __instance.vehicle.GetVehicle().IsTurbo.ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -636,6 +658,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null)
 				{
 					_value = __instance.vehicle.GetVehicle().HasHorn().ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -645,6 +668,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null)
 				{
 					_value = __instance.vehicle.HasHeadlight().ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;
@@ -655,6 +679,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					//_value = (__instance.vehicle.GetVehicle().FindPart("headlight") as VPHeadlight)?.IsOn().ToString();
 					_value = (__instance.vehicle.IsHeadlightOn).ToString();
+					__instance.IsDirty = true;
 				}
 				__result = true;
 				return false;

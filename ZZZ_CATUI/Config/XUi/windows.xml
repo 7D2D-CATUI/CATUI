@@ -57,13 +57,13 @@
 					</rect>
 
 					<!-- 温度核心 -->
-					<rect name="CoreTemp" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="xuiBuffStatCoreTemp">
+					<!-- <rect name="CoreTemp" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="xuiBuffStatCoreTemp">
 						<sprite gradient_start="[darkestGrey]" gradient_end="[black]" sprite="catui_bg_state" style="CATUI.sprite.filled.prue" />
 						<rect pos="25, -20" pivot="center">
 							<sprite size="32,32" sprite="ui_game_symbol_temperature" globalopacity="false" color="{CATUI_coretempcolor}" pivot="center" />
 						</rect>
 						<label pos="0,-38" width="100%" font_size="14" color="[white]" text="{CATUI_coretemp}" style="CATUI.text.outline.black.1px" justify="center" />
-					</rect>
+					</rect> -->
 
 					<!-- 移动能力 -->
 					<rect name="Mobility" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="statMobility">
@@ -142,7 +142,7 @@
 					<!-- 购物优惠 -->
 					<CATUI_state_item name="BarteringBuying" controller="HUDStatBar" tooltip_key="statBarteringSellBuy" visible="{statvisible}" icon="ui_game_symbol_barter" text="+{CATUI_playerBarteringBuying}%" />
 					<!-- 温度室外 -->
-					<rect name="CoreTemp" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="xuiFeelsLike">
+					<rect name="OutsideTemp" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="xuiFeelsLike">
 						<sprite gradient_start="[darkestGrey]" gradient_end="[black]" sprite="catui_bg_state" style="CATUI.sprite.filled.prue" />
 						<rect pos="25, -20" pivot="center">
 							<sprite size="32,32" sprite="ui_game_symbol_temperature" globalopacity="false" color="{CATUI_outsidetempcolor}" pivot="center" />
@@ -151,8 +151,6 @@
 					</rect>
 					<!-- 奔跑速度 -->
 					<CATUI_state_item name="RunSpeed" controller="HUDStatBar" tooltip_key="statRunSpeed" visible="{statvisible}" icon="ui_game_symbol_run" text="+{CATUI_playerRunSpeed}%" />
-
-
 				</table>
 			</rect>
 		</window>
