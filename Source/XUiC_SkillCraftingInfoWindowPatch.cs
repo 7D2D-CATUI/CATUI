@@ -93,7 +93,7 @@ public class XUiC_SkillCraftingInfoWindowPatch
 			return false;
 		}
 
-        xUi.playerUI.windowManager.CloseIfOpen("looting");
+        xUi.playerUI.windowManager.Close("looting");
         List<XUiC_RecipeList> childrenByType = xUi.GetChildrenByType<XUiC_RecipeList>();
         XUiC_RecipeList xUiC_RecipeList = null;
         for (int i = 0; i < childrenByType.Count; i++)

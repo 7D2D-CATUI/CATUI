@@ -18,10 +18,12 @@ public class XUiC_PartyWindowPatch
 				// 单项高度
 				int entryHeight = 56;
 				_value = defaultHeight.ToString();
+				// 玩家实例
+				var player = __instance.xui.playerUI.entityPlayer;
                 // 组队
-                if (__instance.player != null && __instance.player.Party != null && __instance.player.Party.MemberList != null)
+                if (player != null && player.Party != null && player.Party.MemberList != null)
                 {
-                    int entryListCount = __instance.player.Party.MemberList.Count;
+                    int entryListCount = player.Party.MemberList.Count;
                     if (entryListCount > 0)
                     {
                         int PositionY = defaultHeight + (entryListCount - 1) * entryHeight;
@@ -29,9 +31,9 @@ public class XUiC_PartyWindowPatch
                     }
                 }
                 // 伙伴
-                else if (__instance.player != null && __instance.player.Party != null && __instance.player.Companions != null)
+                else if (player != null && player.Party != null && player.Companions != null)
                 {
-                    int entryListCount = __instance.player.Companions.Count;
+                    int entryListCount = player.Companions.Count;
                     if (entryListCount > 0)
                     {
                         int PositionY = defaultHeight + entryListCount * entryHeight;

@@ -695,7 +695,7 @@ public class XUiC_HUDStatBarPatch
 	{
 		if (__instance.vehicle != null)
 		{
-			__instance.RefreshBindings(_forceAll: true);
+			__instance.RefreshBindings();
 		}
 	}
 }

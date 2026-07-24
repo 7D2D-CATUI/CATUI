@@ -30,14 +30,14 @@ public class XUiC_ItemStackPatch
 			bool allowClicklock = false;
 			if (_sender.CustomAttributes.ContainsKey(ALLOW_CLICKLOCK_ATTR))
 			{
-				allowClicklock = StringParsers.ParseBool(_sender.CustomAttributes[ALLOW_CLICKLOCK_ATTR]);
+				allowClicklock = StringParsers.ParseBool(_sender.CustomAttributes[ALLOW_CLICKLOCK_ATTR].ToString());
 			}
 			if (!allowClicklock)
 				return;
 
 			var backpackWindow = __instance.xui.GetChildByType<XUiC_BackpackWindow>();
 			var lootWindow = __instance.xui.GetChildByType<XUiC_LootWindow>();
-			var vehicleContainer = __instance.xui.GetChildByType<XUiC_VehicleContainer>();
+			var vehicleContainer = __instance.xui.GetChildByType<XUiC_BagContainer>();
 
             __instance.UserLockedSlot = !__instance.UserLockedSlot;
             __instance.RefreshBindings();
@@ -66,6 +66,8 @@ public class XUiC_ItemStackPatch
     [HarmonyPatch(typeof(XUiC_ItemStack), "GetBindingValueInternal")]
     public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiC_ItemStack __instance)
     {
+        ItemValue itemValue = __instance.itemStack?.itemValue;
+        ItemClass itemClass = itemValue.ItemClass;
         switch (_bindingName)
         {
             // 给道具增加index
@@ -74,6 +76,80 @@ public class XUiC_ItemStackPatch
                 if (__instance?.SlotNumber != null)
                 {
                     _value = (__instance.SlotNumber + 1).ToString();
+                }
+                __result = true;
+                return false;
+
+            // 判断物品是否为全属性Boosted（传奇品质），排除潜行伤害属性
+            case "CATUI_itemBoosted":
+                _value = "false";
+                if (__instance?.itemStack?.itemValue == null)
+                {
+                    __result = true;
+                    return false;
+                }
+
+                if (itemValue.HasAnyBoostedStats())
+                {
+                    _value = "true";
+                }
+                __result = true;
+                return false;
+
+            // 判断物品是否为全属性Boosted（传奇品质）
+            case "CATUI_itemLegendary":
+                _value = "false";
+                if (__instance?.itemStack?.itemValue == null)
+                {
+                    __result = true;
+                    return false;
+                }
+
+                if (itemValue.Stats == null || itemValue.Stats.Length == 0)
+                {
+                    _value = "false";
+                }
+                else
+                {
+                    bool allBoosted = true;
+                    for (int i = 0; i < itemValue.Stats.Length; i++)
+                    {
+                        var stat = itemValue.Stats[i];
+                        // 如果有任何一个非排除属性没有被Boosted，则不是全Boosted
+                        if (!stat.isBoosted)
+                        {
+                            allBoosted = false;
+                            break;
+                        }
+                    }
+                    _value = allBoosted.ToString().ToLower();
+                }
+                __result = true;
+                return false;
+
+            // 调试用
+            case "CATUI_itemBoostList":
+                _value = "";
+                if (itemValue.Stats == null || itemValue.Stats.Length == 0)
+                {
+                    _value = "";
+                }
+                else
+                {
+                    string text = string.Empty;
+                    for (int i = 0; i < itemValue.Stats.Length; i++)
+                    {
+                        var stat = itemValue.Stats[i];
+                        text += stat.type;
+                        text += ": ";
+                        text += stat.isBoosted + " - ";
+                        text += stat.value;
+                        if (i < itemValue.Stats.Length - 1)
+                        {
+                            text += ", \n";
+                        }
+                    }
+                    _value = text;
                 }
                 __result = true;
                 return false;
@@ -89,12 +165,11 @@ public class XUiC_ItemStackPatch
                 }
 
                 // 取View上的属性
-                __instance.CustomAttributes.TryGetValue("mod_highlight", out string highlightStyle);
-                __instance.CustomAttributes.TryGetValue("mod_default", out string defaultStyle);
+                __instance.CustomAttributes.TryGetValue("mod_highlight", out var highlightStyle);
+                __instance.CustomAttributes.TryGetValue("mod_default", out var defaultStyle);
                 highlightStyle ??= MODIFICATION_HIGHLIGHTED;
                 defaultStyle ??= MODIFICATION_DEFAULT;
 
-                ItemValue itemValue = __instance.itemStack.itemValue;
                 ItemValue[] mods = itemValue.Modifications;
                 
                 // mods数组空值检查
@@ -114,8 +189,8 @@ public class XUiC_ItemStackPatch
                         continue;
                     }
 
-                    var itemClass = mods[i]?.ItemClass;
-                    if (itemClass != null && !string.IsNullOrEmpty(itemClass?.GetItemName()))
+                    var itemClass1 = mods[i]?.ItemClass;
+                    if (itemClass1 != null && !string.IsNullOrEmpty(itemClass1?.GetItemName()))
                     {
                         textBuilder.Append(highlightStyle);
                     }

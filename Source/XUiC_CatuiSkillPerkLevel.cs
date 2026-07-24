@@ -13,7 +13,7 @@ class XUiC_CATUI_Hover : XUiController
         base.Init();
 		CATUI_EL_hover_bg = (XUiV_Sprite)base.GetChildById("CATUI_EL_hover_bg").ViewComponent;
 	}
-	public override bool ParseAttribute(string _name, string _value, XUiController _parent)
+	public override bool ParseAttribute(string _name, string _value)
 	{
 		switch (_name)
 		{
@@ -24,7 +24,7 @@ class XUiC_CATUI_Hover : XUiController
 				hover_color = _value;
 				return true;
 			default:
-				return base.ParseAttribute(_name, _value, _parent);
+				return base.ParseAttribute(_name, _value);
 		}
 	}
 

@@ -1,16 +1,22 @@
 using HarmonyLib;
 using UnityEngine;
 using System.Collections.Generic;
+using Views;
 
 [HarmonyPatch]
 public class XUiViewPatch
 {
     private static readonly Dictionary<XUiView, float> elementScales = new Dictionary<XUiView, float>();
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(XUiView), "ParseAttribute")]
-    public static void ParseAttributePostfix(XUiView __instance, string _attribute, string _value)
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(XUiView), "ParseInitialAttributeValue")]
+    public static bool ParseInitialAttributeValuePrefix(XUiView __instance, string _attribute, string _value)
     {
+        if (_value.Contains("{"))
+        {
+            return true;
+        }
+
         if (_attribute == "transform_scale")
         {
             float scaleValue = 1f;
@@ -28,8 +34,11 @@ public class XUiViewPatch
             else
                 elementScales.Add(__instance, scaleValue);
 
-            __instance.IsDirty = true;
+            __instance.isDirty = true;
+            return false;
         }
+
+        return !ParseCatuiAttribute(__instance, _attribute, _value);
     }
 
     [HarmonyPostfix]
@@ -41,7 +50,7 @@ public class XUiViewPatch
 
     // Grid等组件需要UpdateData重新缩放
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(XUiView), "UpdateData")]
+    [HarmonyPatch(typeof(XUiView), "updateData")]
     public static void UpdateDataPostfix(XUiView __instance)
     {
         ApplyScale(__instance);
@@ -56,6 +65,17 @@ public class XUiViewPatch
             {
                 view.UiTransform.localScale = Vector3.one * scale;
             }
+        }
+    }
+
+    private static bool ParseCatuiAttribute(XUiView view, string attribute, string value)
+    {
+        switch (view)
+        {
+            case XUiV_AnimatedSprite animatedSprite:
+                return animatedSprite.ParseCatuiAttribute(attribute, value);
+            default:
+                return false;
         }
     }
 }

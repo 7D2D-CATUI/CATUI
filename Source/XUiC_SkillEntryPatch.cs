@@ -25,7 +25,7 @@ public class XUiC_SkillEntryPatch
 
 			// 当前等级 是否Buffed
 			case "CATUI_SkillEntryIsBuffed":
-				value = "fasle";
+				value = "false";
 				// 非技能书和制作技能
                 if (__instance.currentSkill != null && !(__instance.currentSkill.ProgressionClass.IsBookGroup || __instance.currentSkill.ProgressionClass.IsCrafting))
                 {
@@ -43,7 +43,7 @@ public class XUiC_SkillEntryPatch
 
 			// 当前skill 是否Nerfed
 			case "CATUI_SkillEntryIsNerfed":
-				value = "fasle";
+				value = "false";
 				// 非技能书和制作技能
 				if (__instance.currentSkill != null && !(__instance.currentSkill.ProgressionClass.IsBookGroup || __instance.currentSkill.ProgressionClass.IsCrafting))
 				{

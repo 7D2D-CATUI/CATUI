@@ -15,6 +15,7 @@ namespace Views
         protected int frameRate = 30;
 
         private bool resetAnimation = false;
+        private bool catuiInitialized;
 
         public string SpriteNamePrefix
         {
@@ -61,19 +62,19 @@ namespace Views
             }
         }
 
-        public XUiV_AnimatedSprite(string id) : base(id)
+        public XUiV_AnimatedSprite(XUi xui, string id) : base(xui, id)
         {
         }
 
-        public override void CreateComponents(GameObject go)
+        public override void createComponents(GameObject go)
         {
-            base.CreateComponents(go);
+            base.createComponents(go);
             go.AddComponent<UISpriteAnimation>();
         }
 
-        public override void UpdateData()
+        public override void updateData()
         {
-            if(animation == null && !initialized)
+            if(animation == null && !catuiInitialized)
             {
                 animation = uiTransform.GetComponent<UISpriteAnimation>();
                 Traverse.Create(animation).Field("mSnap").SetValue(false);
@@ -84,7 +85,7 @@ namespace Views
                 spriteName = sprite.spriteName;
             }
 
-            base.UpdateData();
+            base.updateData();
 
             animation.namePrefix = prefix;
             animation.framesPerSecond = frameRate;
@@ -96,9 +97,11 @@ namespace Views
                 animation.Play();
                 resetAnimation = false;
             }
+
+            catuiInitialized = true;
         }
 
-        public override bool ParseAttribute(string attribute, string value, XUiController parent)
+        public bool ParseCatuiAttribute(string attribute, string value)
         {
             if (attribute != null)
             {
@@ -114,7 +117,7 @@ namespace Views
                         FrameRate = int.Parse(value);
                         return true;
                     default:
-                        return base.ParseAttribute(attribute, value, parent);
+                        return false;
                 }
             }
             return false;

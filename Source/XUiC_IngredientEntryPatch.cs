@@ -87,7 +87,7 @@ public class XUiC_IngredientEntryPatch
 		}
 		btnInventoryRecipe.OnPress += (XUiController _sender, int _mouseButton) =>
 		{
-			__instance.xui.playerUI.windowManager.CloseIfOpen("looting");
+			__instance.xui.playerUI.windowManager.Close("looting");
             XUiC_RecipeList xUiC_RecipeList = __instance.xui.GetChildrenByType<XUiC_RecipeList>()
                 .Find(recipeList => recipeList.WindowGroup != null && recipeList.WindowGroup.isShowing);
             if (xUiC_RecipeList == null)
@@ -96,7 +96,7 @@ public class XUiC_IngredientEntryPatch
                 xUiC_RecipeList = __instance.xui.GetChildByType<XUiC_RecipeList>();
             }
 			xUiC_RecipeList.SetRecipeDataByItem(__instance.ingredient.itemValue.ItemClass.Id);
-			__instance.isDirty = true;
-        };
+			__instance.IsDirty = true;
+		};
     }
 }

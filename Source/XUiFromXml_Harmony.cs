@@ -15,63 +15,43 @@ public class XUiFromXmlPatch
     [HarmonyPatch("parseViewComponents")]
     public static bool parseByElementName(ref XUiView __result,
         XElement _node, XUiController _parent, XUiWindowGroup _windowGroup,
-        string nodeNameOverride = "", Dictionary<string, object> _controlParams = null)
+        string _nodeNameOverride = "", Dictionary<string, object> _templateParams = null)
     {
         string localName = _node.Name.LocalName;
         string id = localName;
 
-        if (nodeNameOverride == "" && _node.HasAttribute("name"))
+        if (_nodeNameOverride == "" && _node.HasAttribute("name"))
         {
             id = _node.GetAttribute("name");
         }
-        else if (nodeNameOverride != "")
+        else if (_nodeNameOverride != "")
         {
-            id = nodeNameOverride;
+            id = _nodeNameOverride;
         }
 
-        if (_controlParams != null)
+        if (_templateParams != null)
         {
-            XUiFromXmlReversePatch.parseControlParams(_node, _parent, _controlParams);
+            XUiFromXmlReversePatch.parseControlParams(_node, _parent, _templateParams);
         }
 
         XUiView view = null;
 
-        switch(localName)
+        switch (localName)
         {
             case "CATUI_animatedsprite":
-                view = new XUiV_AnimatedSprite(id);
+                view = new XUiV_AnimatedSprite(_windowGroup.xui, id);
                 break;
-            case "CATUI_videoplayer":
-                view = new XUiV_VideoPlayer(id);
-                break;
-            case "CATUI_scrollview":
-                view = new XUiV_ScrollViewContainer(id);
-                break;
-            case "CATUI_scrollbar":
-                view = new XUiV_ScrollBar(id);
-                view.xui = _windowGroup.xui;
-                XUiFromXmlReversePatch.setController(_node, view, _parent);
-                XUiFromXmlReversePatch.parseAttributes(_node, view, _parent, _controlParams);
-
-                view.Controller.WindowGroup = _windowGroup;
-                createScrollBarViewComponents(_node, view as XUiV_ScrollBar, _windowGroup, _controlParams);
-                __result = view;
-                return false;
         }
 
-        if(view != null)
+        if (view != null)
         {
-            view.xui = _windowGroup.xui;
-            XUiFromXmlReversePatch.setController(_node, view, _parent);
-            XUiFromXmlReversePatch.parseAttributes(_node, view, _parent, _controlParams);
-
-            view.Controller.WindowGroup = _windowGroup;
+            SetControllerAndParseAttributes(_node, view, _parent, _windowGroup, _templateParams);
 
             foreach (XElement childNode in _node.Elements())
             {
-                XUiFromXmlReversePatch.parseViewComponents(childNode, _windowGroup, view.Controller, _controlParams: _controlParams);
+                XUiFromXmlReversePatch.parseViewComponents(childNode, _windowGroup, view.Controller, _templateParams: _templateParams);
             }
-            
+
             __result = view;
 
             return false;
@@ -80,69 +60,12 @@ public class XUiFromXmlPatch
         return true;
     }
 
-    private static void createScrollBarViewComponents(XElement _node, XUiV_ScrollBar view, XUiWindowGroup _windowGroup, Dictionary<string, object> _controlParams = null)
+    private static void SetControllerAndParseAttributes(XElement node, XUiView view, XUiController parent, XUiWindowGroup windowGroup, Dictionary<string, object> controlParams)
     {
-        if (!view.HasXMLChildren)
-        {
-            return;
-        }
-
-        int childCount = _node.Elements().Count<XElement>();
-       
-
-        if (childCount > 2)
-        {
-            XUiFromXmlReversePatch.logForNode(LogType.Log, _node, "[XUi] XUiFromXml::parseByElementName: Invalid scrollbar child count. Must have zero to two child element.");
-        }
-        else
-        {
-            foreach (XElement child in _node.Elements())
-            {
-                ParseScrollBarViewComponents(child, view.Controller, _windowGroup, _controlParams: _controlParams);
-            }
-        }
-    }
-
-    private static void ParseScrollBarViewComponents(XElement node, XUiController parent, XUiWindowGroup windowGroup,
-        string nodeNameOverride = "", Dictionary<string, object> _controlParams = null)
-    {
-        string name = node.Name.LocalName;
-        string id = name;
-
-        if (nodeNameOverride == "" && node.HasAttribute("name"))
-        {
-            id = node.GetAttribute("name");
-        }
-        else if (nodeNameOverride != "")
-        {
-            id = nodeNameOverride;
-        }
-
-        if (_controlParams != null)
-        {
-            XUiFromXmlReversePatch.parseControlParams(node, parent, _controlParams);
-        }
-
-        XUiView view = null;
-
-        switch (name)
-        {
-            case "sprite":
-                view = new XUiC_Scrollbar_Sprite(id);
-                break;
-            case "button":
-                view = new XUiC_ScrollBar_Button(id);
-                break;
-        }
-
-        if (view != null)
-        {
-            view.xui = windowGroup.xui;
-            XUiFromXmlReversePatch.setController(node, view, parent);
-            XUiFromXmlReversePatch.parseAttributes(node, view, parent, _controlParams);
-
-            view.Controller.WindowGroup = windowGroup;
-        }
+        view.Controller = XUiFromXmlReversePatch.parseController(node, windowGroup.xui, windowGroup, parent);
+        view.SetDefaults(parent);
+        XUiFromXmlReversePatch.parseAttributes(node, view, controlParams);
+        view.SetPostParsingDefaults(parent);
     }
 }
 
@@ -152,34 +75,34 @@ public class XUiFromXmlReversePatch
     private const string TAG = "Error Reverse Patching XUiFromXML method: ";
 
     [HarmonyReversePatch]
-    [HarmonyPatch("parseControlParams")]
-    public static void parseControlParams(XElement _node, XUiController _parent, Dictionary<string, object> _controlParams)
+    [HarmonyPatch("parseParams")]
+    public static void parseControlParams(XElement _node, XUiController _parent, Dictionary<string, object> _templateParams)
     {
         // its a stub so it has no initial content
         throw new NotImplementedException(TAG + "parseControlParams");
     }
 
     [HarmonyReversePatch]
-    [HarmonyPatch("setController")]
-    public static void setController(XElement _node, XUiView _viewComponent, XUiController _parent)
-    {
-        // its a stub so it has no initial content
-        throw new NotImplementedException(TAG + "setController");
-    }
-
-    [HarmonyReversePatch]
     [HarmonyPatch("parseAttributes")]
-    public static void parseAttributes(XElement _node, XUiView _viewComponent, XUiController _parent,
-        Dictionary<string, object> _controlParams = null)
+    public static void parseAttributes(XElement _node, XUiView _viewComponent,
+        Dictionary<string, object> _templateParams = null)
     {
         // its a stub so it has no initial content
         throw new NotImplementedException(TAG + "parseAttributes");
     }
 
     [HarmonyReversePatch]
+    [HarmonyPatch("parseController")]
+    public static XUiController parseController(XElement _node, XUi _xui, XUiWindowGroup _windowGroup, XUiController _parent)
+    {
+        // its a stub so it has no initial content
+        throw new NotImplementedException(TAG + "parseController");
+    }
+
+    [HarmonyReversePatch]
     [HarmonyPatch("parseViewComponents")]
-    public static XUiView parseViewComponents(XElement _node, XUiWindowGroup _windowGroup, XUiController _parent = null, 
-        string nodeNameOverride = "", Dictionary<string, object> _controlParams = null)
+    public static XUiView parseViewComponents(XElement _node, XUiWindowGroup _windowGroup, XUiController _parent = null,
+        string _nodeNameOverride = "", Dictionary<string, object> _templateParams = null)
     {
         // its a stub so it has no initial content
         throw new NotImplementedException(TAG + "parseViewComponents");

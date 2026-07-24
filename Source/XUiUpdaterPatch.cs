@@ -24,7 +24,7 @@ public class XUiUpdaterPatch
             if (playerDrone != null)
             {
                 // 打开无人机背包
-                playerDrone.accessInventory(localPlayer);
+                playerDrone.openStorageWindow(localPlayer.playerUI);
             }
         }
 
@@ -47,7 +47,7 @@ public class XUiUpdaterPatch
             XUiC_ContainerStandardControls containerControls = null;
             XUiC_BackpackWindow backpackWindow = xui.GetChildByType<XUiC_BackpackWindow>();
             XUiC_LootWindow lootWindow = xui.GetChildByType<XUiC_LootWindow>();
-            XUiC_VehicleContainer vehicleContainer = xui.GetChildByType<XUiC_VehicleContainer>();
+            XUiC_BagContainer vehicleContainer = xui.GetChildByType<XUiC_BagContainer>();
             if (backpackWindow != null)
             {
                 containerControls = backpackWindow.GetChildByType<XUiC_ContainerStandardControls>();

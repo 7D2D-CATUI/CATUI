@@ -25,7 +25,7 @@ public class XUiC_SkillListPatch
 				continue;
 			}
 			ProgressionClass progressionClass2 = progressionClass.Parent;
-			// �޸ĵĲ���
+			// 修改的部分 
 			bool isDifferentClass = progressionClass2 != null && progressionClass2 != progressionClass;
 			bool condition1 = progressionClass.IsCrafting ||(progressionClass.IsSkill && progressionClass.Parent.Name == "LearnByUseName");
 			bool condition2 = text.EqualsCaseInsensitive(progressionClass.Parent.Name);

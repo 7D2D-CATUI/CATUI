@@ -62,9 +62,9 @@ public class XUiC_EquipmentStackPatch
 
 	[HarmonyPrefix]
 	[HarmonyPatch(typeof(XUiC_EquipmentStack), "Update")]
-	public static void Prefix(XUiController __instance, bool ___isDirty)
+	public static void Prefix(XUiC_EquipmentStack __instance)
 	{
-		if (___isDirty)
+		if (__instance.IsDirty)
 		{
 			__instance.RefreshBindings();
 		}

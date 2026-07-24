@@ -14,7 +14,7 @@ public class XUiC_CraftingInfoWindowPatch
     [HarmonyPostfix]
     public static void SetSelectedButtonByType_Postfix(XUiC_CraftingInfoWindow __instance)
     {
-        int currentTabType = (int)AccessTools.Field(typeof(XUiC_CraftingInfoWindow), "TabType").GetValue(__instance);
+        int currentTabType = (int)__instance.TabType;
         XUiController statButton = __instance.GetChildById("statButton");
         ((XUiV_Button)statButton.ViewComponent).Selected = currentTabType == TABTYPE_STAT;
     }
@@ -27,9 +27,9 @@ public class XUiC_CraftingInfoWindowPatch
         XUiController statButton = __instance.GetChildById("statButton");
         statButton.OnPress += (sender, mouseButton) =>
         {
-            AccessTools.Field(typeof(XUiC_CraftingInfoWindow), "TabType").SetValue(__instance, (object)TABTYPE_STAT);
-            AccessTools.Method(typeof(XUiC_CraftingInfoWindow), "SetSelectedButtonByType").Invoke(__instance, new object[] { (object)TABTYPE_STAT });
-            AccessTools.Field(typeof(XUiC_CraftingInfoWindow), "IsDirty").SetValue(__instance, true);
+            __instance.TabType = (XUiC_CraftingInfoWindow.TabTypes)TABTYPE_STAT;
+            __instance.SetSelectedButtonByType(__instance.TabType);
+            __instance.IsDirty = true;
         };
     }
 
