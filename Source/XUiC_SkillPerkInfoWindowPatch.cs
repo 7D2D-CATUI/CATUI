@@ -9,7 +9,7 @@ public class XUiC_SkillPerkInfoWindowPatch
 	{
 		switch (_bindingName)
 		{
-			// µ±Ç°µÈ¼¶ ¸¸¼¶¼¼ÄÜÃû³Æ£¬Ö»Õ¹Ê¾IsSkill
+			// å½“å‰ç­‰çº§ çˆ¶çº§æŠ€èƒ½åç§°ï¼Œåªå±•ç¤ºIsSkill
 			case "CATUI_SkillGroupName":
 				_value = "";
 				if (__instance.CurrentSkill != null)
@@ -22,7 +22,7 @@ public class XUiC_SkillPerkInfoWindowPatch
 				__result = true;
 				return false;
 
-			// µ±Ç°µÈ¼¶¼¼ÄÜ×´Ì¬
+			// å½“å‰ç­‰çº§æŠ€èƒ½çŠ¶æ€
 			case "CATUI_MaxSkillLevel":
 				_value = "0";
 				if (__instance.CurrentSkill != null)
@@ -36,7 +36,7 @@ public class XUiC_SkillPerkInfoWindowPatch
 		}
 	}
 
-	// ¼¼ÄÜÎª6µÄÊ±ºòÎŞ·¨·­Ò³µÄbugĞŞ¸´
+	// æŠ€èƒ½ä¸º6çš„æ—¶å€™æ— æ³•ç¿»é¡µçš„bugä¿®å¤
 	[HarmonyPrefix]
 	[HarmonyPatch(typeof(XUiC_SkillPerkInfoWindow), "SkillChanged")]
 	public static bool SkillChangedPrefix(XUiC_SkillPerkInfoWindow __instance)

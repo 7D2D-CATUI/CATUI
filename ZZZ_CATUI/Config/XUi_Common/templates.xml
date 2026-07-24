@@ -1,12 +1,4 @@
 ﻿<CATUI>
     <!-- // 美化 字体高清 -->
     <setattribute xpath="/templates//textfield" name="crispness">OnDesktop</setattribute>
-
-    <append xpath="/templates">
-        <catui.scrollbar.normal>
-            <scrollbar pos="${parentinnerwidth-16},0" width="16" depth="5">
-                <sprite name="thumb" depth="1" pos="10,-4" width="4" height="${parentinnerheight-6}" sprite="menu_empty" type="sliced" color="255, 255, 255, 255" fillcenter="true" on_press="true" on_scroll="true" gamepad_selectable="false" snap="false" />
-            </scrollbar>
-        </catui.scrollbar.normal>
-    </append>
 </CATUI>
