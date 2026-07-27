@@ -41,6 +41,9 @@ public class XUiFromXmlPatch
             case "CATUI_animatedsprite":
                 view = new XUiV_AnimatedSprite(_windowGroup.xui, id);
                 break;
+            case "CATUI_roundedtexture":
+                view = new XUiV_RoundedTexture(_windowGroup.xui, id);
+                break;
         }
 
         if (view != null)

@@ -683,6 +683,7 @@ public class XUiC_HUDStatBarPatch
 				}
 				__result = true;
 				return false;
+
 			default:
 				return true;
 		}

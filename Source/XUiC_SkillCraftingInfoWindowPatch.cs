@@ -4,6 +4,142 @@ using System.Collections.Generic;
 [HarmonyPatch]
 public class XUiC_SkillCraftingInfoWindowPatch
 {
+	// 递归设置所有子组件的滚动事件（参考XUiV_ScrollView.applyScrollEventToChildren）
+	private static void ApplyScrollEventToChildren(XUiController _controller)
+	{
+		if (_controller == null || _controller.ViewComponent == null)
+			return;
+		
+		_controller.ViewComponent.EventOnScroll = true;
+		foreach (XUiController child in _controller.Children)
+		{
+			ApplyScrollEventToChildren(child);
+		}
+	}
+
+	// 在Init方法中为levelEntry添加OnScroll事件绑定（参考XUiC_SkillPerkInfoWindow的实现）
+	[HarmonyPostfix]
+	[HarmonyPatch(typeof(XUiC_SkillCraftingInfoWindow), "Init")]
+	public static void Init_Postfix(XUiC_SkillCraftingInfoWindow __instance)
+	{
+		foreach (XUiC_SkillCraftingInfoEntry levelEntry in __instance.levelEntries)
+		{
+			// 递归设置所有子组件的滚动事件，确保鼠标悬停在任何子元素上都能触发滚动
+			ApplyScrollEventToChildren(levelEntry);
+			levelEntry.OnScroll += (XUiController _sender, float _delta) =>
+			{
+				if (_delta > 0f)
+				{
+					__instance.pager?.PageDown();
+				}
+				else
+				{
+					__instance.pager?.PageUp();
+				}
+			};
+		}
+	}
+
+	// 重构DisplayDataList：将每个DisplayData的UnlockDataList展开为独立的DisplayData
+	private static List<ProgressionClass.DisplayData> RebuildDisplayDataList(ProgressionClass progressionClass)
+	{
+		List<ProgressionClass.DisplayData> newDisplayDataList = new List<ProgressionClass.DisplayData>();
+		if (progressionClass != null && progressionClass.DisplayDataList != null)
+		{
+			for (int i = 0; i < progressionClass.DisplayDataList.Count; i++)
+			{
+				if (progressionClass.DisplayDataList[i].UnlockDataList != null)
+				{
+					for (int j = 0; j < progressionClass.DisplayDataList[i].UnlockDataList.Count; j++)
+					{
+						ProgressionClass.DisplayData originalDisplayData = progressionClass.DisplayDataList[i];
+						ProgressionClass.DisplayData.UnlockData unlockData = originalDisplayData.UnlockDataList[j];
+						ProgressionClass.DisplayData newDisplayData = new ProgressionClass.DisplayData();
+						newDisplayData.CustomHasQuality = originalDisplayData.CustomHasQuality;
+						newDisplayData.CustomIcon = originalDisplayData.CustomIcon;
+						newDisplayData.CustomIconTint = originalDisplayData.CustomIconTint;
+						newDisplayData.item = originalDisplayData.item;
+						newDisplayData.Owner = originalDisplayData.Owner;
+						newDisplayData.QualityStarts = originalDisplayData.QualityStarts;
+						newDisplayData.UnlockDataList = new List<ProgressionClass.DisplayData.UnlockData>();
+						newDisplayData.UnlockDataList.Add(unlockData);
+						newDisplayData.ItemName = unlockData.ItemName;
+						newDisplayDataList.Add(newDisplayData);
+					}
+				}
+			}
+		}
+		return newDisplayDataList;
+	}
+
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(XUiC_SkillCraftingInfoWindow), "GetBindingValueInternal")]
+	public static bool GetBindingValueInternalPrefix(ref string _value, string _bindingName, ref bool __result, XUiC_SkillCraftingInfoWindow __instance)
+	{
+		switch (_bindingName)
+		{
+			case "showPaging":
+				_value = "false";
+				if (__instance.CurrentSkill != null)
+				{
+					ProgressionClass progressionClass = __instance.CurrentSkill.ProgressionClass;
+					if (progressionClass != null && progressionClass.DisplayDataList != null)
+					{
+						int elementCount = 0;
+						for (int i = 0; i < progressionClass.DisplayDataList.Count; i++)
+						{
+							if (progressionClass.DisplayDataList[i].UnlockDataList != null)
+							{
+								elementCount += progressionClass.DisplayDataList[i].UnlockDataList.Count;
+							}
+						}
+						int skillsPerPage = __instance.levelEntries.Count - __instance.hiddenEntriesWithPaging;
+						_value = (elementCount > skillsPerPage).ToString();
+					}
+				}
+				__result = true;
+				return false;
+			default:
+				return true;
+		}
+	}
+
+	// 分页修复：基于实际的DisplayDataList数量计算页数
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(XUiC_SkillCraftingInfoWindow), "SkillChanged")]
+	public static bool SkillChangedPrefix(XUiC_SkillCraftingInfoWindow __instance)
+	{
+		var levelEntries = __instance.levelEntries;
+		int skillsPerPage = __instance.skillsPerPage;
+		var pager = __instance.pager;
+
+		if (pager == null || levelEntries == null)
+			return true;
+
+		if (__instance.CurrentSkill == null)
+		{
+			pager.SetLastPageByElementsAndPageLength(0, skillsPerPage);
+			pager.Reset();
+			__instance.IsDirty = true;
+			__instance.SelectedData = null;
+			__instance.SelectedEntry = null;
+			return false;
+		}
+
+		// 使用辅助方法重构DisplayDataList并获取实际数量
+		ProgressionClass progressionClass = __instance.CurrentSkill.ProgressionClass;
+		List<ProgressionClass.DisplayData> newDisplayDataList = RebuildDisplayDataList(progressionClass);
+		int elementCount = newDisplayDataList.Count;
+
+		pager.SetLastPageByElementsAndPageLength(elementCount, skillsPerPage);
+		pager.Reset();
+		__instance.IsDirty = true;
+		__instance.SelectedData = null;
+		__instance.SelectedEntry = null;
+
+		return false;
+	}
+
 	[HarmonyPrefix]
 	[HarmonyPatch(typeof(XUiC_SkillCraftingInfoWindow), "UpdateSkill")]
 	public static bool UpdateSkill_Prefix(XUiC_SkillCraftingInfoWindow __instance)
@@ -26,35 +162,8 @@ public class XUiC_SkillCraftingInfoWindowPatch
 		{
 			XUiC_SkillEntry entryForSkill = windowGroup.Controller.GetChildByType<XUiC_SkillList>().GetEntryForSkill(CurrentSkill);
 			{
-                // 重新构建 progressionClass.DisplayDataList
-                List<ProgressionClass.DisplayData> newDisplayDataList = new();
-                for (int i = 0; i < progressionClass.DisplayDataList.Count; i++)
-                {
-					// UnlockDataList为空说明没有需要解锁的物品，不执行
-					if (progressionClass.DisplayDataList[i].UnlockDataList != null)
-                    {
-						// 将UnlockDataList（分类下的解锁物品列表）数据设置到DisplayDataList上
-						for (int j = 0; j < progressionClass.DisplayDataList[i].UnlockDataList.Count; j++)
-						{
-							ProgressionClass.DisplayData originalDisplayData = progressionClass.DisplayDataList[i];
-							ProgressionClass.DisplayData.UnlockData unlockData = originalDisplayData.UnlockDataList[j];
-							// 新DisplayData赋值
-							ProgressionClass.DisplayData newDisplayData = new ProgressionClass.DisplayData();
-							newDisplayData.CustomHasQuality = originalDisplayData.CustomHasQuality;
-							newDisplayData.CustomIcon = originalDisplayData.CustomIcon;
-							newDisplayData.CustomIconTint = originalDisplayData.CustomIconTint;
-							newDisplayData.item = originalDisplayData.item;
-							newDisplayData.Owner = originalDisplayData.Owner;
-							newDisplayData.QualityStarts = originalDisplayData.QualityStarts;
-							// UnlockDataList只保留1条，避免混淆
-							newDisplayData.UnlockDataList = new List<ProgressionClass.DisplayData.UnlockData>();
-							newDisplayData.UnlockDataList.Add(unlockData);
-							// 将unlockData.ItemName设置为DisplayData.ItemName（基础数据，查询解锁等级icon等数据需要）
-							newDisplayData.ItemName = unlockData.ItemName;
-							newDisplayDataList.Add(newDisplayData);
-						}
-					}
-                }
+				// 使用辅助方法重构DisplayDataList
+				List<ProgressionClass.DisplayData> newDisplayDataList = RebuildDisplayDataList(progressionClass);
 
 				foreach (XUiC_SkillCraftingInfoEntry levelEntry in levelEntries)
 				{

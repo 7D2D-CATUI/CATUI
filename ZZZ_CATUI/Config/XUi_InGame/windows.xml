@@ -75,7 +75,7 @@
 				<rect width="168" height="31" name="item" visible="false" pivot="center" pos="0, 0" style="press" sound="[recipe_click]" on_hover="true">
 					<sprite depth="6" name="Decoration" width="3" height="30" pos="-81, 16" color="[transparent]" type="sliced"  />
 					<sprite depth="3" name="Background" pos="-81, 17" sprite="ui_game_popup" height="30" width="220" flip="Horizontally" color="[transparent]" />
-					<filledsprite depth="4" pos="-81,17" name="BarContent" color="0,0,0,0" size="100,34" pivot="Left" type="filled" />
+					<filledsprite depth="4" pos="-80,1" name="BarContent" color="0,0,0,0" size="190,30" pivot="Left" type="filled" />
 					<sprite depth="4" name="Icon" size="22,22" pos="-62,1" pivot="center" color="[transparent]" />
 					<label depth="6" name="TextName" pos="-46,0" width="160" font_size="20" color="[white]" justify="left" height="35" pivot="left" style="CATUI.text.shadow.black.1px" />
 					<label depth="6" name="TextContent" pos="114,0" font_size="20" color="222, 206, 163, 255" justify="left" height="35" pivot="left" style="CATUI.text.shadow.black.1px" />
@@ -271,11 +271,11 @@
 	<append xpath="/windows">
 		<window name="windowCompass" anchor="CenterTop" pos="-240,-9" width="480" height="43" controller="CompassWindow">
 			<!-- 罗盘 -->
-			<sprite depth="0" pos="24,0" width="434" height="43" sprite="catui_compass_bg"  type="sliced" color="0, 0, 0, 255" />
-			<texture depth="8" texture="@:Textures/UI/Compass/overlay-{compass_language}.png" pos="50, -8" width="380" height="27" color="[iconColor]" name="compassTexture3" rect_size="0.25,1" rect_offset="{#compass_rotation / 360 + 0.0625 - 0.125},0" />
+			<sprite depth="0" pos="24,0" width="434" height="43" sprite="catui_compass_bg"  type="sliced" color="0, 0, 0, 255" visible="{show_compass}" />
+			<texture depth="8" texture="@:Textures/UI/Compass/overlay-{compass_language}.png" pos="50, -8" width="380" height="27" color="[iconColor]" name="compassTexture3" rect_size="0.25,1" rect_offset="{#compass_rotation / 360 + 0.0625 - 0.125},0" visible="{show_compass}" />
 
 			<!-- 日期（存活天数） -->
-			<rect name="hud_day" pos="-112,0" rows="1" cols="1" width="142" height="43">
+			<rect name="hud_day" pos="-112,0" rows="1" cols="1" width="142" height="43" visible="{showtimecompass}">
 				<sprite depth="0" pos="0,0" width="142" height="43" sprite="catui_date_bg"  type="sliced" color="0, 0, 0, 255" />
 				<sprite depth="1" pos="0,0" width="142" height="43" sprite="catui_date_border"  type="sliced" color="255, 255, 255, 180" />
 				<sprite name="Icon" pos="34,-22" sprite="catui_icon_calendar" color="[white]" size="20,20" globalopacity="false" justify="center" pivot="center" />
@@ -283,11 +283,18 @@
 			</rect>
 
 			<!-- 时间 -->
-			<rect name="hud_time" pos="452,0" rows="1" cols="1" width="142" height="43">
+			<rect name="hud_time" pos="452,0" rows="1" cols="1" width="142" height="43" visible="{showtimecompass}">
 				<sprite depth="0" pos="0,0" width="142" height="43" sprite="catui_date_bg"  type="sliced" color="0, 0, 0, 255" flip="horizontally" />
 				<sprite depth="1" pos="0,0" width="142" height="43" sprite="catui_date_border"  type="sliced" color="255, 255, 255, 180" flip="horizontally" />
 				<sprite name="Icon" pos="28,-22" sprite="ui_game_symbol_clock" color="[white]" size="24,24" globalopacity="false" justify="center" pivot="center" />
 				<label depth="2" name="TextContent" pos="52,-11" width="133" height="30" text="{time}" font_size="24" color="[white]" justify="left" style="CATUI.text.shadow.black.1px" />
+			</rect>
+
+			<!-- 敌人警觉状态 -->
+			<rect depth="-1" name="hud_alert" pos="-122,-35" width="735" height="24" visible="{CATUI_playerAlert}">
+				<sprite pos="0,0" width="${parentinnerwidth}" height="${parentinnerheight}" sprite="catui_bg_stat_alert"  type="sliced" color="[red]">
+					<tween type="Alpha" start="1" end="0.6" enabled="{CATUI_playerAlert}" repeat="PingPong" duration="0.8" />
+				</sprite>
 			</rect>
 
 			<!-- 天气 -->
@@ -322,7 +329,7 @@
 							<!-- 下雾  -->
 							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay - day == 0 ? '255,0,0': '255,255,255'}" sprite="catui_icon_weather_foggy" globalopacity="false" visible="{#CATUI_currentWeather == 'Foggy'}" />
 							<!-- 血月 -->
-							<sprite pivot="center" size="40,40" color="[red]" sprite="catui_icon_moon_full" globalopacity="false" visible="{#CATUI_currentWeather == 'BloodMoon'}" />
+							<sprite pivot="center" size="26,26" color="[red]" sprite="catui_icon_moon_full" globalopacity="false" foregroundlayer="true" visible="{#CATUI_currentWeather == 'BloodMoon'}" />
 						</rect>
 					</rect>
 					<rect width="38">
@@ -340,7 +347,7 @@
 					</rect>
 				</table>
 				<!-- 风暴天气 -->
-				<rect pos="30,0" visible="{# CATUI_stormName != '' &amp;&amp; CATUI_stormFill != '0.000' }">
+				<rect pos="69,0" visible="{# CATUI_stormName != '' &amp;&amp; CATUI_stormFill != '0.000' }">
 					<rect pos="0,-7" width="280" height="26">
 						<!-- 1px 实线 风暴边框 颜色-->
 						<!-- <sprite depth="2" type="sliced" sprite="menu_empty" width="286" height="32" pos="-3,3" color="[CATUI_storm_Burnt]" globalopacity="false" fillcenter="false" visible="{# CATUI_stormName == 'Burnt' }" /> -->
@@ -443,19 +450,19 @@
 	<remove xpath="/windows/window[@name='HUDRightStatBars']/grid/rect[@stat_type='ActiveItem']" />
 	<append xpath="/windows/window[@name='HUDRightStatBars']">
 		<rect depth="-20" name="HUD_Ammo" pos="-220,110" width="300" height="200" controller="HUDStatBar" stat_type="ActiveItem" visible="{# CATUI_playerActiveItemName != 'meleeHandPlayer' and CATUI_playerActiveItemName != '' }">		
-			<sprite pos="-108,34" height="60" color="[black]" type="sliced" size="300,60" sprite="ui_game_text_body_back" flip="Both"/>
 			<!-- 武器名称 -->
 			<rect depth="1" pos="-108,-26" width="300" height="32">
-				<sprite pos="0,0" width="300" color="[black]" type="sliced" style="CATUI.sprite.filled.prue" />
-				<sprite pos="0,0" width="3" color="{CATUI_playerActiveItemDurabilityColor}" type="sliced" style="CATUI.sprite.filled.prue" />
-				<label depth="3" width="290" pos="153,-17" font_size="20" text="{CATUI_playerActiveItemName}" style="CATUI.text.shadow.black.1px" pivot="center" justify="left" />
+				<sprite pos="0,0" width="${parentinnerwidth}" height="${parentinnerheight}" color="[black]" type="sliced" sprite="catui_active_name" />
+				<sprite pos="0,0" width="3" height="${parentinnerheight}" color="{CATUI_playerActiveItemDurabilityColor}" type="sliced" style="CATUI.sprite.filled.prue" />
+				<label depth="3" width="290" pos="153,-17" font_size="18" text="{CATUI_playerActiveItemName}" style="CATUI.text.shadow.black.1px" pivot="center" justify="left" />
 			</rect>
 
 			<!-- 武器耐久度&模组 -->
-			<rect depth="1" pos="-108,-58" width="300" height="24" visible="{# CATUI_playerActiveItemUseTimesMax > 1 }">
-				<sprite width="62" color="[white]" type="sliced" style="CATUI.sprite.filled.prue" />
+			<rect depth="1" pos="-108,-59" width="300" height="24" visible="{# CATUI_playerActiveItemUseTimesMax > 1 }">
+				<!-- <sprite width="292" color="[darkestGrey]" type="sliced" sprite="catui_active_mods" /> -->
+				<sprite width="92" color="[white]" type="sliced" sprite="catui_active_durability" />
 				<sprite pos="4,-3" sprite="catui_icon_repair" color="[black]" size="18,18" foregroundlayer="true" />
-				<label pos="44,-13" width="34" font_size="20" text="{CATUI_playerActiveItemUseTimesResidue}" color="[black]" style="CATUI.text.shadow.black.1px" effect_color="0,0,0,180" pivot="center" justify="left" />
+				<label pos="49,-13" width="44" font_size="20" text="{CATUI_playerActiveItemUseTimesResidue}" color="[black]" style="CATUI.text.shadow.black.1px" effect_color="0,0,0,180" pivot="center" justify="left" />
 				<!-- todo：武器模组  -->
 			</rect>
 
@@ -463,22 +470,23 @@
 			<sprite depth="2" pos="83,35" atlas="ItemIconAtlas" sprite="{CATUI_playerActiveItemIcon}" size="120,120" globalopacity="false" foregroundlayer="true" />
 
 			<!-- 武器弹药 -->
-			<table depth="3" pos="-108,20" width="200" cols="4" padding="0,0" hide_inactive="true" always_reposition="true" visible="{# CATUI_playerActiveItemIcon != staticon }">
+			<sprite pos="-108,27" width="190" height="52" color="[darkestGrey]" type="sliced" sprite="catui_active_ammo_max" visible="{# CATUI_playerActiveItemIcon != staticon }" />
+			<table depth="3" pos="-100,20" width="200" cols="4" padding="0,0" hide_inactive="true" always_reposition="true" visible="{# CATUI_playerActiveItemIcon != staticon }">
 				<label pos="0,0" overflow="resizefreely" justify="right" font_size="46" text="{statcurrent} " style="CATUI.text.shadow.black.1px" />
 				<rect width="16">
 					<sprite color="[transparent]" />
-					<label pos="0,-15" font_size="26" color="200,200,200" text="/" style="CATUI.text.shadow.black.1px" />
+					<label pos="0,-15" font_size="26" color="[lightestGrey]" text="/" style="CATUI.text.shadow.black.1px" />
 				</rect>
 				<rect width="72">
 					<sprite color="[transparent]" />
-					<label pos="0,-16" width="72" font_size="26" color="200,200,200" text="{CATUI_AmmoMax}" style="CATUI.text.shadow.black.1px" />
-				</rect>
-				<!-- 弹药种类 -->
-				<rect width="36">
-					<sprite color="[transparent]" />
-					<sprite name="Icon" pos="0,-6" atlas="{staticonatlas}" sprite="{staticon}" size="36,36" color="{staticoncolor}" foregroundlayer="true" />
+					<label pos="0,-16" width="72" font_size="26" color="[lightestGrey]" text="{CATUI_AmmoMax}" style="CATUI.text.shadow.black.1px" />
 				</rect>
 			</table>
+			<!-- 弹药种类 -->
+			<rect pos="28,26" visible="{# CATUI_playerActiveItemIcon != staticon }">
+				<sprite pos="0,-3" width="50" height="46" color="255,255,255,32" type="sliced" sprite="catui_active_ammo" />
+				<sprite name="Icon" pos="10,-10" atlas="{staticonatlas}" sprite="{staticon}" size="32,32" color="{staticoncolor}" foregroundlayer="true" />
+			</rect>
 		</rect>
 		
 		<!-- 载具HUD -->
@@ -619,20 +627,20 @@
 
 				<!-- 中线位置 -->
 				<rect name="Food" pos="417, 32" width="82" height="68"  controller="HUDStatBar" stat_type="Food" tooltip_key="xuiFood" visible="{statvisible}">
-					<sprite depth="1" pos="0,-63" size="60,80" color="54,54,54" sprite="catui_stat_food_bar_bg" rotation="90" />
-					<sprite depth="2" pos="0,-63" size="60,80" color="54,54,54" sprite="catui_stat_food_bar_bg" rotation="90" visible="{# Round(statfill, 1) &lt; 0.3 }">
+					<sprite depth="1" pos="12,-112" size="100,100" sprite="catui_stat_food_bar" color="54,54,54" style="CATUI.sprite.filled.prue" foregroundlayer="true" rotation="100" />
+					<sprite depth="2" pos="12,-112" size="100,100" sprite="catui_stat_food_bar" color="54,54,54" style="CATUI.sprite.filled.prue" foregroundlayer="true" rotation="100" visible="{# Round(statfill, 1) &lt; 0.3 }">
 						<tween type="Color" start="54,54,54" end="192,0,0,255" enabled="{# Round(statfill, 1) &lt; 0.3 ? 'true' : 'false' }" repeat="PingPong" duration="0.8" />
 					</sprite>
-					<sprite depth="3" type="filled" pos="0,-63" size="60,80" sprite="catui_stat_food_bar_bg" color="255, 193, 7,225" fill="{statfill}" style="CATUI.sprite.filled.prue" filldirection="Radial90" foregroundlayer="true" rotation="90" fillInvert="true" />
+					<sprite depth="3" type="filled" pos="12,-112" size="100,100" sprite="catui_stat_food_bar" color="255, 193, 7,225" fill="{# Round(statfill * 0.37, 3)}" filldirection="Radial360" foregroundlayer="true" rotation="100" fillInvert="true" />
 					<sprite atlas="{staticonatlas|once}" sprite="catui_icon_food" color="255,255,255,180" globalopacity="false" size="22,22" pos="40,-33" justify="center" pivot="center" />
 					<label pos="-7,-50" width="62" font_size="14" color="[white]" text="{statcurrentwithmax}" style="CATUI.text.outline.black.1px" justify="right" />
 				</rect>
 				<rect name="Water" pos="507, 33" width="82" height="68" controller="HUDStatBar" stat_type="Water" tooltip_key="xuiWater" visible="{statvisible}">
-					<sprite depth="1" pos="0,0" size="82,68" color="54,54,54" sprite="catui_stat_water_bar_bg" />
-					<sprite depth="2" pos="0,0" size="82,68" color="54,54,54" sprite="catui_stat_water_bar_bg" visible="{# Round(statfill, 1) &lt; 0.3 }">
+					<sprite depth="1" pos="85,-14" size="100,100" sprite="catui_stat_water_bar" color="54,54,54" foregroundlayer="true" rotation="-100" />
+					<sprite depth="1" pos="85,-14" size="100,100" sprite="catui_stat_water_bar" color="54,54,54" foregroundlayer="true" rotation="-100" >
 						<tween type="Color" start="54,54,54" end="192,0,0,255" enabled="{# Round(statfill, 1) &lt; 0.3 }" repeat="PingPong" duration="0.8" />
 					</sprite>
-					<sprite depth="3" type="filled" pos="0,0" size="82,68" sprite="catui_stat_water_bar_bg" color="46,129,234,225" fill="{statfill}" style="CATUI.sprite.filled.prue" filldirection="Radial90" foregroundlayer="true" />
+					<sprite depth="3" type="filled" pos="85,-14" size="100,100" sprite="catui_stat_water_bar" color="46,129,234,225" fill="{# Round(statfill * 0.37, 3)}" filldirection="Radial360" foregroundlayer="true" rotation="-100" />
 					<sprite atlas="{staticonatlas|once}" sprite="catui_icon_water" color="255,255,255,180" globalopacity="false" size="22,22" pos="36,-33" justify="center" pivot="center" />
 					<label pos="20,-50" width="62" font_size="14" color="[white]" text="{statcurrentwithmax}" style="CATUI.text.outline.black.1px" justify="left" />
 				</rect>
@@ -690,7 +698,7 @@
 			<!-- 角标 -->
 			<sprite depth="12" name="itemtypeicon" width="32" height="32" sprite="ui_game_symbol_{itemtypeicon}" pos="4,-8" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 			<!-- 角标 - 物品品质 -->
-			<CATUI_quality_item depth="12" pos="124, -98" width="30" height="30" font_size="20" visible="{hasdurability}" color="{durabilitycolor}" durabilitytext="{durabilitytext}" tooltip_key="xuiQuality" />
+			<CATUI_quality_item depth="12" pos="124, -98" transform_scale="1" visible="{hasdurability}" color="{durabilitycolor}" durabilitytext="{durabilitytext}" tooltip_key="xuiQuality" />
 			<!-- 耐久 进度条 -->
 			<!-- <sprite depth="8" name="durabilityBackground" pos="1, -119" width="145" height="10" type="sliced" color="[darkGrey]" style="CATUI.sprite.filled.prue" globalopacity="false" visible="{hasdurability}" />
 			<sprite depth="8" name="durabilityBar" pos="1, -119" width="145" height="10" type="filled" color="255, 255, 255, 255" fill="{durabilityfill}" style="CATUI.sprite.filled.prue" globalopacity="false" foregroundlayer="true" visible="{hasdurability}" />
@@ -757,7 +765,7 @@
 			<sprite depth="12" name="itemPreview" width="110" height="110" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" pos="74,-58" pivot="center" foregroundlayer="true"/>
 			<sprite depth="8" name="itemtypeicon" width="32" height="32" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 			<!-- 品质 icon -->
-			<CATUI_quality_item depth="12" pos="74, -122" width="30" height="30" font_size="20" visible="{hasdurability}" color="{durabilitycolor}" durabilitytext="{durabilitytext}" tooltip_key="xuiQuality" />
+			<CATUI_quality_item depth="12" pos="74, -122" transform_scale="1" visible="{hasdurability}" color="{durabilitycolor}" durabilitytext="{durabilitytext}" tooltip_key="xuiQuality" />
 			<!-- 品质 - 选择按钮 -->
 			<grid depth="11" rows="1" cols="2" pos="39, -122" height="24" cell_width="70" cell_height="24" visible="{hasdurability}">
 				<rect width="70" name="subtractQualityButton" style="hover, press" sound="[paging_click]" justify="center" pivot="center" sound_play_on_hover="[default_hover]" enabled="{enablesubtractquality}">
@@ -890,8 +898,6 @@
 	<!-- 删除耐久进度条 -->
 	<remove xpath="/windows/window[@name='windowAssemble']/rect[@name='header']/sprite[@pos!='5,-5']"/>
 
-	<!-- 载具栏位 改用item_stack，通过transform_scale调整格子大小（67/75=0.893） -->
-
 	<!-- 商人库存 -->
 	<!-- 删除原版表头 -->
 	<remove xpath="/windows/window[@name='windowTrader']/rect[@name='content']/rect[@name='tableHeader']"/>
@@ -900,16 +906,17 @@
 	<!-- 5x5 128格子 -->
 	<set xpath="/windows/window[@name='windowTrader']/@height">820</set>
 	<set xpath="/windows/window[@name='windowTrader']/rect[@name='content']/@height">760</set>
+
 	<!-- 商品区背景 -->
 	<insertAfter xpath="/windows/window[@name='windowTrader']/rect[@name='content']/rect[@name='searchControls']">
-		<rect name="traderItemsBackground" depth="4" pos="0,-98" width="645" height="640">
-			<sprite name="background" depth="2" pos="0,0" width="645" height="640" color="[black]" type="sliced" />
+		<rect name="traderItemsBackground" depth="4" pos="0,-97" width="645" height="646">
+			<sprite name="background" depth="2" pos="0,0" width="${parentinnerheight}" height="${parentinnerheight}" color="[black]" type="sliced" />
 		</rect>
 	</insertAfter>
 	<!-- 商品 grid -->
 	<insertAfter xpath="/windows/window[@name='windowTrader']/rect[@name='content']/rect[@name='traderItemsBackground']">
-		<grid name="items" depth="10" rows="5" cols="5" pos="4,-98" width="640" height="640" cell_width="128" cell_height="128" repeat_content="true" controller="TraderItemList">
-			<trader_item name="0"/>
+		<grid name="items" depth="10" rows="4" cols="5" pos="6,-104" width="640" height="640" cell_width="128" cell_height="160" repeat_content="true" controller="TraderItemList">
+			<trader_item name="0" />
 		</grid>
 	</insertAfter>
 
@@ -931,13 +938,18 @@
 			<rect name="categoryHeader" pos="6,-3" width="644" height="43">
 				<sprite depth="2" name="backgroundMain" sprite="menu_empty3px" pos="-3,0" width="647" height="46" color="[black]" type="sliced" fillcenter="false" />
 				<sprite depth="1" name="background"  color="[mediumGrey]" type="sliced" />
-				<rect depth="1" pos="6,-3" width="640" height="37">
-					<grid controller="CategoryList" name="categories" pos="20,-20" rows="1" cols="100" cell_width="43" cell_height="43" hide_inactive="true" repeat_content="true">
-						<category_icon />
-					</grid>
+				<rect depth="1" pos="6,-3" width="640" height="37" on_scroll="true">
+					<scrollbar pos="-6,-${parentinnerheight}" height="2" depth="5">
+						<sprite name="thumb" depth="1" pos="0,0" width="${parentinnerwidth}" height="2" sprite="menu_empty" type="sliced" color="[white]" fillcenter="true" on_press="true" on_scroll="true" gamepad_selectable="false" snap="false" />
+					</scrollbar>
+					<scrollview pos="0,0" movement="Horizontal" width="${parentinnerwidth-10}" clippingsoftness="15,0">
+						<grid controller="CategoryList" name="categories" pos="20,-20" rows="1" cols="100" cell_width="43" cell_height="43" hide_inactive="true" repeat_content="true">
+							<category_icon />
+						</grid>
+					</scrollview>
 				</rect>
-				<rect depth="2" pos="540,-2" width="104" height="43" visible="{paging_visible}">
-					<pager name="pager" pos="4,-6" contents_parent="windowSkillList"/>
+				<rect depth="2" pos="240,-691" width="400" height="43" visible="{paging_visible}">
+					<CATUI_pager name="pager" pos="4,-6" contents_parent="windowSkillList"/>
 				</rect>
 			</rect>
 
@@ -981,10 +993,9 @@
 					</grid>
 				</rect>
 
-				<rect name="pagerBox" depth="3" width="647" height="36" pos="0,-729" visible="{showPaging}">
-					<sprite name="backgroundMain" sprite="menu_empty3px" color="[black]" type="sliced" />
-					<rect pos="524,0" width="104" height="43" disableautobackground="true">
-						<pager name="pager" pos="16,-2" contents_parent="content" />
+				<rect name="pagerBox" depth="3" width="647" height="36" pos="0,-691" visible="{showPaging}">
+					<rect pos="240,0" width="104" height="43" disableautobackground="true">
+						<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
 					</rect>
 				</rect>
 			</rect>
@@ -1019,15 +1030,14 @@
 
 				<rect name="tableBox" depth="1" pos="0,-279" width="647" height="450" gamepad_selectable="false" snap="false">
 					<sprite depth="1" name="backgroundMain" height="451" style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
-					<grid rows="5" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="86" hide_inactive="true" repeat_content="true">
-						<skill_perk_level controller="SkillPerkLevel" width="640" height="86" />
+					<grid rows="5" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="80" hide_inactive="true" repeat_content="true">
+						<skill_perk_level controller="SkillPerkLevel" width="${parentinnerwidth}" height="${parentinnerheight}" />
 					</grid>
 				</rect>
 
-				<rect name="pagerBox" depth="3" width="647" height="43" pos="0,-729" visible="{showPaging}">
-					<sprite style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
-					<rect pos="524,0" width="104" height="43" disableautobackground="true">
-						<pager name="pager" pos="16,-2" contents_parent="content" />
+				<rect name="pagerBox" depth="3" width="647" height="43" pos="0,-691" visible="{showPaging}">
+					<rect pos="240,0" width="104" height="43" disableautobackground="true">
+						<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
 					</rect>
 				</rect>
 			</rect>
@@ -1066,10 +1076,9 @@
 					</grid>
 				</rect>
 
-				<rect name="pagerBox" depth="3" width="647" height="36" pos="0,-729" visible="{showPaging}">
-					<sprite name="backgroundMain" sprite="menu_empty3px" color="[black]" type="sliced" />
-					<rect pos="524,0" width="104" height="43" disableautobackground="true">
-						<pager name="pager" pos="16,-2" contents_parent="content" />
+				<rect name="pagerBox" depth="3" width="647" height="36" pos="0,-691" visible="{showPaging}">
+					<rect pos="240,0" width="104" height="43" disableautobackground="true">
+						<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
 					</rect>
 				</rect>
 			</rect>
@@ -1187,11 +1196,17 @@
 					</grid>
 				</rect>
 
-				<rect name="tableBox" depth="1" pos="0,-98" width="647" height="632" on_scroll="true" gamepad_selectable="false" snap="false">
+				<rect name="tableBox" depth="1" pos="0,-98" width="647" height="632" gamepad_selectable="false" snap="false">
 					<sprite depth="1" style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
-					<grid rows="50" cols="8" pos="0,-7" width="644" cell_width="80" cell_height="80" always_reposition="true" hide_inactive="true" repeat_content="true">
-						<skill_crafting_entry width="${parentinnerwidth}" height="${parentinnerheight}" />
+					<grid rows="6" cols="7" pos="12,-12" width="644" cell_width="90" cell_height="90" hide_inactive="true" repeat_content="true">
+						<skill_crafting_entry />
 					</grid>
+				</rect>
+
+				<rect name="pagerBox" depth="3" width="647" height="43" pos="0,-691" visible="{showPaging}">
+					<rect pos="240,0" width="104" height="43" disableautobackground="true">
+						<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
+					</rect>
 				</rect>
 			</rect>
 		</window>

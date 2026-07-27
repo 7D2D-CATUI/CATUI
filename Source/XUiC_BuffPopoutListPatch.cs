@@ -26,7 +26,8 @@ public class XUiC_BuffPopoutListPatch
 				UILabel textName = lastItem.Item.transform.Find("TextName").GetComponent<UILabel>();
 				if (textName != null && _notification.Buff != null)
 				{
-					textName.text = _notification.Buff.BuffClass.LocalizedName;
+					// 使用BindingsManager.ReplaceCVars解析LocalizedName中的{cvar(...)}占位符
+					textName.text = BindingsManager.ReplaceCVars(_notification.Buff.BuffClass.LocalizedName);
 				}
 				UISprite decoration = lastItem.Item.transform.Find("Decoration").GetComponent<UISprite>();
 				if (decoration != null)
@@ -35,6 +36,26 @@ public class XUiC_BuffPopoutListPatch
 				}
 			}
 			UpdateBuffPositions(__instance);
+		}
+	}
+
+	[HarmonyPostfix]
+	[HarmonyPatch(typeof(XUiC_BuffPopoutList), "Update")]
+	public static void UpdatePostfix(XUiC_BuffPopoutList __instance)
+	{
+		if (__instance.items != null && __instance.items.Count > 0)
+		{
+			foreach (var data in __instance.items)
+			{
+				if (data.Notification != null && data.Notification.Buff != null && !data.Notification.Buff.Paused)
+				{
+					UILabel textName = data.Item.transform.Find("TextName").GetComponent<UILabel>();
+					if (textName != null)
+					{
+						textName.text = BindingsManager.ReplaceCVars(data.Notification.Buff.BuffClass.LocalizedName);
+					}
+				}
+			}
 		}
 	}
 

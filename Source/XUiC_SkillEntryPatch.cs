@@ -11,27 +11,27 @@ public class XUiC_SkillEntryPatch
 	{
 		switch (bindingName)
 		{
-			// ¸´Ğ´ µ±Ç°skill rowstatecolor
+			// å¤å†™ å½“å‰skill rowstatecolor
 			case "rowstatecolor":
 				value = (__instance.IsSelected ? "160,160,160,255" : (__instance.IsHovered ? __instance.hoverColor : __instance.rowColor));
 				__result = true;
 				return false;
 
-			// µ±Ç°skill ÊÇ·ñDisabled
+			// å½“å‰skill æ˜¯å¦Disabled
 			case "CATUI_SkillEntryDisabled":
 				value = ((__instance.currentSkill == null) ? "true" : ((__instance.currentSkill.CalculatedMaxLevel(__instance.xui.playerUI.entityPlayer) == 0) ? "true" : "false"));
 				__result = true;
 				return false;
 
-			// µ±Ç°µÈ¼¶ ÊÇ·ñBuffed
+			// å½“å‰ç­‰çº§ æ˜¯å¦Buffed
 			case "CATUI_SkillEntryIsBuffed":
 				value = "false";
-				// ·Ç¼¼ÄÜÊéºÍÖÆ×÷¼¼ÄÜ
+				// éæŠ€èƒ½ä¹¦å’Œåˆ¶ä½œæŠ€èƒ½
                 if (__instance.currentSkill != null && !(__instance.currentSkill.ProgressionClass.IsBookGroup || __instance.currentSkill.ProgressionClass.IsCrafting))
                 {
-					// µ±Ç°¼¼ÄÜµÈ¼¶(+×°±¸ºóÊıÖµ)
+					// å½“å‰æŠ€èƒ½ç­‰çº§(+è£…å¤‡åæ•°å€¼)
 					int calculatedLevel = __instance.currentSkill.CalculatedLevel(__instance.xui.playerUI.entityPlayer);
-					// Êµ¼Ê¼¼ÄÜµÈ¼¶
+					// å®é™…æŠ€èƒ½ç­‰çº§
 					int Level = __instance.currentSkill.Level;
 					if (calculatedLevel > Level) {
 						value = "true";
@@ -41,15 +41,15 @@ public class XUiC_SkillEntryPatch
 				__result = true;
 				return false;
 
-			// µ±Ç°skill ÊÇ·ñNerfed
+			// å½“å‰skill æ˜¯å¦Nerfed
 			case "CATUI_SkillEntryIsNerfed":
 				value = "false";
-				// ·Ç¼¼ÄÜÊéºÍÖÆ×÷¼¼ÄÜ
+				// éæŠ€èƒ½ä¹¦å’Œåˆ¶ä½œæŠ€èƒ½
 				if (__instance.currentSkill != null && !(__instance.currentSkill.ProgressionClass.IsBookGroup || __instance.currentSkill.ProgressionClass.IsCrafting))
 				{
-					// µ±Ç°¼¼ÄÜµÈ¼¶(+×°±¸ºóÊıÖµ)
+					// å½“å‰æŠ€èƒ½ç­‰çº§(+è£…å¤‡åæ•°å€¼)
 					int calculatedLevel = __instance.currentSkill.CalculatedLevel(__instance.xui.playerUI.entityPlayer);
-					// Êµ¼Ê¼¼ÄÜµÈ¼¶
+					// å®é™…æŠ€èƒ½ç­‰çº§
 					int Level = __instance.currentSkill.Level;
 					if (calculatedLevel < Level)
 					{
@@ -59,7 +59,7 @@ public class XUiC_SkillEntryPatch
 				__result = true;
 				return false;	
 
-			// µ±Ç°skill groupÏÂperkÊıÁ¿
+			// å½“å‰skill groupä¸‹perkæ•°é‡
 			case "CATUI_GroupEntryCount":
 				value = "0";
 				if (__instance.Skill != null && __instance.Skill.ProgressionClass.Parent != null)
@@ -77,7 +77,7 @@ public class XUiC_SkillEntryPatch
 				__result = true;
 				return false;
 
-			// ¼¼ÄÜ·Ö×éÀàĞÍ skill=ÆÕÍ¨¼¼ÄÜ£¬book=¼¼ÄÜÊé/ÊÕ¼¯Æ·£¬craft=ÖÆ×÷¼¼ÄÜ
+			// æŠ€èƒ½åˆ†ç»„ç±»å‹ skill=æ™®é€šæŠ€èƒ½ï¼Œbook=æŠ€èƒ½ä¹¦/æ”¶é›†å“ï¼Œcraft=åˆ¶ä½œæŠ€èƒ½
 			case "CATUI_GroupType":
 				value = "skill";
 				if (__instance.currentSkill != null)
@@ -94,7 +94,7 @@ public class XUiC_SkillEntryPatch
 				__result = true;
 				return false;
 
-			// ¼¼ÄÜ·Ö×éÍ¼±ê
+			// æŠ€èƒ½åˆ†ç»„å›¾æ ‡
 			case "CATUI_GroupIcon":
 				value = "";
 				if (__instance.Skill != null && __instance.Skill.ProgressionClass.Parent != null)
@@ -104,7 +104,7 @@ public class XUiC_SkillEntryPatch
 				__result = true;
 				return false;
 
-			// ¼¼ÄÜÀàĞÍ attribute=Íæ¼ÒÊôĞÔ£¬skill=¼¼ÄÜÀàĞÍ£¨¼¼ÄÜÊéºÍÖÆ×÷¼¼ÄÜÀàÄ¿ÏÂ=perk£©£¬perk=ÌØĞÔ
+			// æŠ€èƒ½ç±»å‹ attribute=ç©å®¶å±æ€§ï¼Œskill=æŠ€èƒ½ç±»å‹ï¼ˆæŠ€èƒ½ä¹¦å’Œåˆ¶ä½œæŠ€èƒ½ç±»ç›®ä¸‹=perkï¼‰ï¼Œperk=ç‰¹æ€§
 			case "CATUI_GroupEntryType":
 				value = "skill";
 				if (__instance.currentSkill != null)
@@ -122,12 +122,12 @@ public class XUiC_SkillEntryPatch
 				__result = true;
 				return false;
 
-			// ¼¼ÄÜ µ±Ç°µÈ¼¶
+			// æŠ€èƒ½ å½“å‰ç­‰çº§
 			case "CATUI_GroupEntryLevel":
 				value = "0";
 				if (__instance.currentSkill != null)
 				{
-					// ¼¼ÄÜÊé
+					// æŠ€èƒ½ä¹¦
 					if (__instance.currentSkill.ProgressionClass.IsBookGroup) {
 						int num = 0;
 						int num2 = 0;
@@ -142,7 +142,7 @@ public class XUiC_SkillEntryPatch
 						num2 = Mathf.Min(num2, num - 1);
 						value = num2.ToString();
 					}
-					// ÖÆ×÷¼¼ÄÜ/¼¼ÄÜ
+					// åˆ¶ä½œæŠ€èƒ½/æŠ€èƒ½
 					else
 					{
 						value = __instance.currentSkill.CalculatedLevel(__instance.xui.playerUI.entityPlayer).ToString();
@@ -151,12 +151,12 @@ public class XUiC_SkillEntryPatch
 				__result = true;
 				return false;
 
-			// ¼¼ÄÜ ×î´óµÈ¼¶
+			// æŠ€èƒ½ æœ€å¤§ç­‰çº§
 			case "CATUI_GroupEntryLevelMax":
 				value = "0";
 				if (__instance.currentSkill != null)
 				{
-					// ¼¼ÄÜÊé
+					// æŠ€èƒ½ä¹¦
 					if (__instance.currentSkill.ProgressionClass.IsBookGroup)
 					{
 						int num = 0;
@@ -166,7 +166,7 @@ public class XUiC_SkillEntryPatch
 						}
 						value = (num - 1).ToString();
 					}
-					// ÖÆ×÷¼¼ÄÜ/¼¼ÄÜ
+					// åˆ¶ä½œæŠ€èƒ½/æŠ€èƒ½
 					else
 					{
 						value = __instance.currentSkill.ProgressionClass.MaxLevel.ToString();
@@ -175,12 +175,12 @@ public class XUiC_SkillEntryPatch
 				__result = true;
 				return false;
 
-			// ¼¼ÄÜ °Ù·Ö±È½ø¶ÈFill
+			// æŠ€èƒ½ ç™¾åˆ†æ¯”è¿›åº¦Fill
 			case "CATUI_GroupEntryLevelFill":
 				value = "0";
 				if (__instance.currentSkill != null)
 				{
-					// ¼¼ÄÜÊé
+					// æŠ€èƒ½ä¹¦
 					if (__instance.currentSkill.ProgressionClass.IsBookGroup)
 					{
 						float num = 0;
@@ -197,12 +197,12 @@ public class XUiC_SkillEntryPatch
 						float levelPercent = num2 / (num - 1);
 						value = levelPercent < 0.01f ? "0" : levelPercent.ToString("F2");
 					}
-					// ÖÆ×÷¼¼ÄÜ/¼¼ÄÜ
+					// åˆ¶ä½œæŠ€èƒ½/æŠ€èƒ½
 					else
 					{
 						float Level = __instance.currentSkill.CalculatedLevel(__instance.xui.playerUI.entityPlayer);
 						float MaxLevel = __instance.currentSkill.ProgressionClass.MaxLevel;
-						// MaxLevelÔÚÄ³Ğ©Ä£×éÄÚ»á³öÏÖÎª0µÄÇé¿ö
+						// MaxLevelåœ¨æŸäº›æ¨¡ç»„å†…ä¼šå‡ºç°ä¸º0çš„æƒ…å†µ
 						if (MaxLevel == 0) {
 							value = "1";
 						} else {

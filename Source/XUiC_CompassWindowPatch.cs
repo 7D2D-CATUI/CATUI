@@ -31,6 +31,17 @@ public class XUiC_CompassWindowPatch
 
 		switch (bindingName)
 		{
+			// 人物属性 - 是否被敌人警觉
+			case "CATUI_playerAlert":
+				value = "false";
+				if (__instance.localPlayer != null)
+				{
+					value = __instance.localPlayer.Stealth.alertEnemy.ToString();
+					__instance.IsDirty = true;
+				}
+				__result = true;
+				return false;
+
 			// 下次血月时间（对比总天数的第几天）
 			case "CATUI_nextBloodMoonDay":
 				value = "7";

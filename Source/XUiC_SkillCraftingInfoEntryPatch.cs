@@ -7,6 +7,22 @@ using UnityEngine.Scripting;
 [HarmonyPatch]
 public class XUiC_SkillCraftingInfoEntryPatch
 {
+    // 存储IsHovered状态（因为XUiC_SkillCraftingInfoEntry没有这个属性）
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<XUiC_SkillCraftingInfoEntry, bool> hoveredStates = new System.Collections.Concurrent.ConcurrentDictionary<XUiC_SkillCraftingInfoEntry, bool>();
+
+    // 补丁父类XUiController的OnHovered方法，监听XUiC_SkillCraftingInfoEntry的hover事件
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(XUiController), "OnHovered")]
+    public static void OnHovered_Postfix(XUiController __instance, bool _isOver)
+    {
+        XUiC_SkillCraftingInfoEntry entry = __instance as XUiC_SkillCraftingInfoEntry;
+        if (entry != null)
+        {
+            hoveredStates[entry] = _isOver;
+            entry.IsDirty = true;
+        }
+    }
+
     [HarmonyPrefix]
 	[HarmonyPatch(typeof(XUiC_SkillCraftingInfoEntry), "GetBindingValueInternal")]
 	public static bool Prefix(string _bindingName, ref string _value, ref bool __result, XUiC_SkillCraftingInfoEntry __instance)
@@ -74,6 +90,12 @@ public class XUiC_SkillCraftingInfoEntryPatch
                         _value = percent < 0.01f ? "0" : percent.ToString("F3");
                     }
                 }
+                __result = true;
+                return false;
+
+            // 是否处于hover状态（用于边框高亮）
+            case "CATUI_isHovered":
+                _value = hoveredStates.TryGetValue(__instance, out bool isHovered) ? isHovered.ToString() : "false";
                 __result = true;
                 return false;
 
