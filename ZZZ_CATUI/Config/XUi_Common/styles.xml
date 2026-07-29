@@ -19,22 +19,10 @@
 	
     <set xpath="//style_entry[@name='hoverscale']/@value">1</set>
 
-	<remove xpath="/styles/style[@name='header.panel']"/>
+	<setattribute xpath="/styles/style[@name='itemStack']/style_entry[@name='width']" name="value">74</setattribute>
+	<setattribute xpath="/styles/style[@name='itemStack']/style_entry[@name='height']" name="value">74</setattribute>
 	<!-- CATUI style -->
 	<append xpath="styles">
-		<style name="header.panel" type="panel">
-			<style_entry name="name" value="header"/>
-			<style_entry name="height" value="43"/>
-			<style_entry name="depth" value="1"/>
-			<style_entry name="backgroundspritename" value="ui_game_panel_header"/>
-		</style>
-
-		<style name="header.panel" type="rect">
-			<style_entry name="name" value="header"/>
-			<style_entry name="height" value="43"/>
-			<style_entry name="depth" value="1"/>
-		</style>
-
 		<!-- 纯色背景 Bugfix：sprite type="filled" 边缘会变成半透明，需要使用一个纯色背景掩盖 -->
 		<style name="CATUI.sprite.filled.prue">
 			<style_entry name="sprite" value="catui_background_prue" />

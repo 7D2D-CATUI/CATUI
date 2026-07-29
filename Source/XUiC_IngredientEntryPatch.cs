@@ -15,43 +15,6 @@ public class XUiC_IngredientEntryPatch
 		bool flag = __instance.ingredient != null;
 		switch (bindingName)
 		{
-			// 是否满足素材数量要求
-			case "CATUI_HasComplete":
-				int havecount;
-				value = "false";
-				XUiC_WorkstationMaterialInputGrid childByType3 = __instance.windowGroup.Controller.GetChildByType<XUiC_WorkstationMaterialInputGrid>();
-				if (!flag) {
-					__result = true;
-					return false;
-				}
-				if (childByType3 != null)
-				{
-					if (__instance.materialBased)
-					{
-						havecount = childByType3.GetWeight(__instance.material);
-					}
-					else
-					{
-						havecount = __instance.xui.PlayerInventory.GetItemCount(__instance.ingredient.itemValue);
-					}
-				}
-				else
-				{
-					XUiC_WorkstationInputGrid childByType4 = __instance.windowGroup.Controller.GetChildByType<XUiC_WorkstationInputGrid>();
-					if (childByType4 != null)
-					{
-						havecount = childByType4.GetItemCount(__instance.ingredient.itemValue);
-					}
-					else
-					{
-						havecount = __instance.xui.PlayerInventory.GetItemCount(__instance.ingredient.itemValue);
-					}
-				}
-				int needcount = __instance.ingredient.count * __instance.craftCountControl.Count;
-				value = (!(havecount < needcount)).ToString();
-				__result = true;
-				return false;
-
 			// 素材是否有配方
 			case "CATUI_InventoryHasRecipe":
 				value = "false";
@@ -98,5 +61,16 @@ public class XUiC_IngredientEntryPatch
 			xUiC_RecipeList.SetRecipeDataByItem(__instance.ingredient.itemValue.ItemClass.Id);
 			__instance.IsDirty = true;
 		};
+    }
+
+    // 清理已销毁的实例
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(XUiController), "OnClose")]
+    public static void OnClosePostfix(XUiController __instance)
+    {
+        if (__instance is XUiC_IngredientEntry entry)
+        {
+            _patchedInstances.Remove(entry);
+        }
     }
 }

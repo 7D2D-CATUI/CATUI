@@ -28,12 +28,7 @@ public class XUiViewPatch
             if (scaleValue > 3f) // 最大缩放为300%
                 scaleValue = 3f;
 
-            // 存储缩放值
-            if (elementScales.ContainsKey(__instance))
-                elementScales[__instance] = scaleValue;
-            else
-                elementScales.Add(__instance, scaleValue);
-
+            elementScales[__instance] = scaleValue;
             __instance.isDirty = true;
             return false;
         }
@@ -45,18 +40,37 @@ public class XUiViewPatch
     [HarmonyPatch(typeof(XUiView), "InitView")]
     public static void InitViewPostfix(XUiView __instance)
     {
+        if (elementScales.Count == 0) return;
         ApplyScale(__instance);
     }
 
-    // Grid等组件需要UpdateData重新缩放
     [HarmonyPostfix]
     [HarmonyPatch(typeof(XUiView), "updateData")]
     public static void UpdateDataPostfix(XUiView __instance)
     {
+        if (elementScales.Count == 0) return;
         ApplyScale(__instance);
     }
 
-    // 缩放方法
+    // 通过OnClose清理已销毁的视图
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(XUiController), "OnClose")]
+    public static void OnClosePostfix(XUiController __instance)
+    {
+        var keysToRemove = new List<XUiView>();
+        foreach (var kvp in elementScales)
+        {
+            if (kvp.Key.Controller == __instance)
+            {
+                keysToRemove.Add(kvp.Key);
+            }
+        }
+        foreach (var key in keysToRemove)
+        {
+            elementScales.Remove(key);
+        }
+    }
+
     private static void ApplyScale(XUiView view)
     {
         if (elementScales.TryGetValue(view, out float scale))

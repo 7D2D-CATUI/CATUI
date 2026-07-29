@@ -13,6 +13,7 @@ namespace Views
         protected string prefix;
         protected bool loop = true;
         protected int frameRate = 30;
+        protected new bool enabled = true;  // 动画启用开关，默认启用
 
         private bool resetAnimation = false;
         private bool catuiInitialized;
@@ -62,6 +63,25 @@ namespace Views
             }
         }
 
+        /// <summary>
+        /// 动画启用开关
+        /// true: 播放动画
+        /// false: 暂停动画
+        /// </summary>
+        public new bool Enabled
+        {
+            get { return enabled; }
+            set
+            {
+                if(enabled != value)
+                {
+                    enabled = value;
+                    isDirty = true;
+                    UpdateAnimationState();
+                }
+            }
+        }
+
         public XUiV_AnimatedSprite(XUi xui, string id) : base(xui, id)
         {
         }
@@ -94,11 +114,36 @@ namespace Views
             if (resetAnimation)
             {
                 animation.ResetToBeginning();
-                animation.Play();
                 resetAnimation = false;
             }
 
+            // 根据启用状态控制动画
+            UpdateAnimationState();
+
             catuiInitialized = true;
+        }
+
+        /// <summary>
+        /// 更新动画状态（启用/暂停）
+        /// </summary>
+        private void UpdateAnimationState()
+        {
+            if (animation == null) return;
+
+            if (enabled)
+            {
+                if (!animation.isPlaying)
+                {
+                    animation.Play();
+                }
+            }
+            else
+            {
+                if (animation.isPlaying)
+                {
+                    animation.Pause();
+                }
+            }
         }
 
         public bool ParseCatuiAttribute(string attribute, string value)
@@ -116,6 +161,9 @@ namespace Views
                     case "framerate":
                         FrameRate = int.Parse(value);
                         return true;
+                    case "enabled":
+                        Enabled = StringParsers.ParseBool(value);
+                        return true;
                     default:
                         return false;
                 }
@@ -123,19 +171,52 @@ namespace Views
             return false;
         }
 
+        /// <summary>
+        /// 启用动画
+        /// </summary>
         public void PlayAnimation()
         {
-            animation.Play();
+            enabled = true;
+            if (animation != null)
+            {
+                animation.Play();
+            }
         }
 
+        /// <summary>
+        /// 暂停动画
+        /// </summary>
         public void PauseAnimation()
         {
-            animation.Pause();
+            enabled = false;
+            if (animation != null && animation.isPlaying)
+            {
+                animation.Pause();
+            }
         }
 
+        /// <summary>
+        /// 重置动画到开始帧
+        /// </summary>
         public void ResetAnimation()
         {
-            animation.ResetToBeginning();
+            if (animation != null)
+            {
+                animation.ResetToBeginning();
+                if (enabled)
+                {
+                    animation.Play();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 供外部调用设置动画状态
+        /// </summary>
+        /// <param name="isEnabled">是否启用</param>
+        public void SetAnimationEnabled(bool isEnabled)
+        {
+            Enabled = isEnabled;
         }
     }
 }

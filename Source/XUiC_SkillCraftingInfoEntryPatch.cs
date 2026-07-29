@@ -23,6 +23,17 @@ public class XUiC_SkillCraftingInfoEntryPatch
         }
     }
 
+    // 清理已销毁的实例
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(XUiController), "OnClose")]
+    public static void OnClosePostfix(XUiController __instance)
+    {
+        if (__instance is XUiC_SkillCraftingInfoEntry entry)
+        {
+            hoveredStates.TryRemove(entry, out _);
+        }
+    }
+
     [HarmonyPrefix]
 	[HarmonyPatch(typeof(XUiC_SkillCraftingInfoEntry), "GetBindingValueInternal")]
 	public static bool Prefix(string _bindingName, ref string _value, ref bool __result, XUiC_SkillCraftingInfoEntry __instance)

@@ -10,12 +10,17 @@ public class XUiC_EquipmentStackPatch
 	[PublicizedFrom(EAccessModifier.Private)]
 	public static CachedStringFormatterFloat durabilityFillFormatter = new();
 
+	[PublicizedFrom(EAccessModifier.Private)]
+	public static CachedStringFormatterFloat durabilityRemoveFillFormatter = new();
+
 	[HarmonyPrefix]
 	[HarmonyPatch(typeof(XUiController), "GetBindingValueInternal")]
 
 	public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiController __instance)
 	{
-		XUiC_EquipmentStack itemStack = __instance as XUiC_EquipmentStack;
+		if (__instance is not XUiC_EquipmentStack itemStack)
+			return true;
+
 		switch (_bindingName)
 		{
 			case "CATUI_durabilityColor":
@@ -30,9 +35,18 @@ public class XUiC_EquipmentStackPatch
 
 			case "CATUI_durabilityFill":
 				_value = "0";
+				if (itemStack != null)
+				{
+					_value = itemStack?.itemValue == null ? "0.0" : itemStack.itemValue.MaxUseTimes == 0 ? "1" : durabilityFillFormatter.Format((float)(itemStack.itemValue.MaxUseTimes - itemStack.itemValue.UseTimes) / itemStack.itemValue.MaxUseTimesUI);
+				}
+				__result = true;
+				return false;
+
+			case "CATUI_durabilityRemoveFill":
+				_value = "1";
 				if (itemStack != null && itemStack.itemValue != null)
 				{
-					_value = durabilityFillFormatter.Format(itemStack.itemValue.PercentUsesLeft);
+					_value = durabilityRemoveFillFormatter.Format(itemStack.itemValue.MaxDurabilityModifier);
 				}
 				__result = true;
 				return false;

@@ -39,27 +39,38 @@ public class XUiC_ItemStackPatch
 			var lootWindow = __instance.xui.GetChildByType<XUiC_LootWindow>();
 			var vehicleContainer = __instance.xui.GetChildByType<XUiC_BagContainer>();
 
-            __instance.UserLockedSlot = !__instance.UserLockedSlot;
-            __instance.RefreshBindings();
+			__instance.UserLockedSlot = !__instance.UserLockedSlot;
+			__instance.RefreshBindings();
 
-            // 背包 更新栏位锁状态
-            if (_sender.Parent.ToString() == "XUiC_Backpack") {
-                backpackWindow.UpdateLockedSlots(backpackWindow.standardControls);
-            }
-            // 箱子 容器窗口是否打开 更新栏位锁状态 2.2+
-            else if (_sender.Parent.ToString() == "XUiC_LootContainer" && lootWindow.IsOpen)
-            {
-                lootWindow.UpdateLockedSlots(lootWindow.standardControls);
-            }
-            // 载具 容器窗口是否打开 更新栏位锁状态 2.2+
-            else if (_sender.Parent.ToString() == "XUiController" && vehicleContainer.IsOpen)
-            {
-                vehicleContainer.UpdateLockedSlots(vehicleContainer.standardControls);
-            }
+			// 背包 更新栏位锁状态
+			if (_sender.Parent.ToString() == "XUiC_Backpack") {
+				backpackWindow.UpdateLockedSlots(backpackWindow.standardControls);
+			}
+			// 箱子 容器窗口是否打开 更新栏位锁状态 2.2+
+			else if (_sender.Parent.ToString() == "XUiC_LootContainer" && lootWindow.IsOpen)
+			{
+				lootWindow.UpdateLockedSlots(lootWindow.standardControls);
+			}
+			// 载具 容器窗口是否打开 更新栏位锁状态 2.2+
+			else if (_sender.Parent.ToString() == "XUiController" && vehicleContainer.IsOpen)
+			{
+				vehicleContainer.UpdateLockedSlots(vehicleContainer.standardControls);
+			}
 
-            // 播放点击音效
-            __instance.xui.PlayMenuClickSound();
-        };
+			// 播放点击音效
+			__instance.xui.PlayMenuClickSound();
+		};
+    }
+
+    // 清理已销毁的实例
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(XUiController), "OnClose")]
+    public static void OnClosePostfix(XUiController __instance)
+    {
+        if (__instance is XUiC_ItemStack stack)
+        {
+            _patchedInstances.Remove(stack);
+        }
     }
 
     [HarmonyPrefix]
