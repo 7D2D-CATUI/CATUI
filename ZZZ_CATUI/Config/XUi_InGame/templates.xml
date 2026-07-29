@@ -74,8 +74,9 @@
 					<sprite depth="3" pos="51,-50" width="100" height="100" sprite="catui_bg_skill_icon" color="[black_threequarters_alpha]" type="sliced" pivot="center" />
 					<!-- 素材icon -->
 					<sprite depth="4" pos="51,-50" name="icon" size="56,56" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" pivot="center" foregroundlayer="true" />
-					<!-- 素材数量 -->
-					<label depth="5" name="needCount" pos="51,-118" width="110" height="30" font_size="22" color="[labelColor]" justify="center" pivot="center" text="{# havecount &gt;= needcount ? '[43CF7C]' + havecount + '[-]' : '[FF5252]' + havecount + '[-]' }/{needcount}" style="CATUI.text.shadow.black.1px" />
+					<!-- 素材数量，havecount和needcount有可能取到空值，先判断是否为空，然后再比大小 -->
+					<label depth="5" name="needCount" pos="51,-118" width="110" height="30" font_size="22" color="[labelColor]" justify="center" pivot="center" text="{# (havecount != '' ? Floor(havecount) &gt;= (needcount != '' ? Floor(needcount) : 0 )  : false) ? '[43CF7C]' + havecount + '[-]' : '[FF5252]' + havecount + '[-]' }/{needcount}" style="CATUI.text.shadow.black.1px" />
+					<!-- 素材名称 -->
 					<label depth="6" name="itemname" pos="51,-90" width="110" height="30" font_size="14" color="[labelColor]" justify="center" pivot="center" text="{itemname}" style="CATUI.text.shadow.black.1px" />
 					<!-- 素材配方 -->
 					<button name="btnInventoryRecipe" depth="7" pos="88, -18" style="press, hover" size="26,26" pivot="center" tooltip="{itemname} {# localization('lblContextActionRecipes') }" defaultcolor="[black_threequarters_alpha]" hoverscale="1.0" hovercolor="[black]" visible="{CATUI_InventoryHasRecipe}" sound_play_on_hover="[default_hover]">
