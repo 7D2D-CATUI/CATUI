@@ -12,6 +12,17 @@ public class XUiC_TargetBarPatch
 		EntityAlive Target = __instance.Target;
 		switch (bindingName)
 		{
+			// 丧尸血量百分比（0-1），瞬时值，与 fill 绑定最终显示值一致（*1.01）
+			case "CATUI_fillCurrent":
+				value = "0";
+				if (Target != null && Target.IsAlive())
+				{
+					float healthPercent = (float)Target.Health / (float)Target.GetMaxHealth();
+					value = (healthPercent * 1.02f).ToString("F7");
+				}
+				__result = true;
+				return false;
+
 			// 获取丧尸类型
 			case "CATUI_EntityType":
 				value = "normal";
@@ -115,15 +126,15 @@ public class XUiC_TargetBarPatch
                 value = "";
                 if (Target != null)
                 {
-					BuffValue buff = Target.Buffs.GetBuff("buffInjuryBleeding");
-					if (buff != null) {
+                    BuffValue buff = Target.Buffs.GetBuff("buffInjuryBleeding");
+                    if (buff != null) {
 						float Timer = Target.Buffs.GetCustomVar(buff.BuffClass.DisplayValueCVar);
 						if (Timer > 0f)
 						{
 							value = Timer.ToString();
 						}
-					}
-				}
+                    }
+                }
 				__result = true;
                 return false;
 
@@ -141,8 +152,8 @@ public class XUiC_TargetBarPatch
                 value = "";
                 if (Target != null)
                 {
-					EntityClass entityClass = EntityClass.list[Target.entityClass];
-					bool IsCharged = entityClass.Tags.Test_Bit(FastTags<TagGroup.Global>.GetBit("charged"));
+                    EntityClass entityClass = EntityClass.list[Target.entityClass];
+                    bool IsCharged = entityClass.Tags.Test_Bit(FastTags<TagGroup.Global>.GetBit("charged"));
 					BuffValue buff = Target.Buffs.GetBuff("buffShocked");
 					if (buff != null)
 					{
@@ -172,16 +183,16 @@ public class XUiC_TargetBarPatch
                 value = "";
                 if (Target != null)
                 {
-					BuffValue buff = Target.Buffs.GetBuff("buffIsOnFire");
-					if (buff != null)
-					{
+                    BuffValue buff = Target.Buffs.GetBuff("buffIsOnFire");
+                    if (buff != null)
+                    {
 						float timer = Target.Buffs.GetCustomVar(buff.BuffClass.DisplayValueCVar);
 						// BUG: 燃烧箭&燃烧弩箭 会出现倒计时为0的情况(buffBurningFlamingArrow), 不知道啥原因
 						if (timer > 0f) {
 							value = Mathf.CeilToInt(timer).ToString();
 						}
-					}
-				}
+                    }
+                }
                 __result = true;
                 return false;
 

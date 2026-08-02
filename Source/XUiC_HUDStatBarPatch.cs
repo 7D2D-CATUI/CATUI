@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 [HarmonyPatch]
 public class XUiC_HUDStatBarPatch
@@ -52,6 +53,52 @@ public class XUiC_HUDStatBarPatch
 	private static int _cachedFactionPoints;
 	private static int _cachedFactionMax;
 	private static bool _questCached;
+
+	// 限频刷新 - 每个实例每 10 帧最多触发一次 IsDirty，绑定值变化时按 ~10fps 刷新界面，避免每帧刷新
+	private const int DirtyThrottleFrames = 10;
+
+	// 按实例记录上次限频触发帧。
+	// 注意：HUD 上存在多个独立 HUDStatBar 实例（LevelNum/GameStage/SkillPoints/…），
+	// 若用全局共享帧号，每 10 帧只会标记到第一个实例，其余实例绑定值变化时不会刷新。
+	// ConditionalWeakTable 不持有实例强引用，实例销毁后状态自动回收。
+	private static readonly ConditionalWeakTable<XUiC_HUDStatBar, LastDirtyState> _dirtyStates = new ConditionalWeakTable<XUiC_HUDStatBar, LastDirtyState>();
+
+	private sealed class LastDirtyState
+	{
+		public int lastDirtyFrame = int.MinValue;
+	}
+
+	// 限频标记 IsDirty：该实例距上次标记达到 10 帧才触发，避免频繁刷新
+	[PublicizedFrom(EAccessModifier.Private)]
+	private static void MarkDirtyThrottled(XUiC_HUDStatBar instance)
+	{
+		if (instance == null)
+		{
+			return;
+		}
+		int frame = Time.frameCount;
+		LastDirtyState state = _dirtyStates.GetOrCreateValue(instance);
+		if (frame - state.lastDirtyFrame >= DirtyThrottleFrames)
+		{
+			state.lastDirtyFrame = frame;
+			instance.IsDirty = true;
+		}
+	}
+
+	// 限频轮询兜底：原版 stat 无变化时 hasChanged() 为 false，RefreshBindings 不会执行，
+	// 自定义绑定值变化便无法刷新；这里按实例每 10 帧标记一次 IsDirty，
+	// 保证每个 HUDStatBar 实例的 GetBindingValueInternal 都被定期调用、绑定值持续刷新
+	[HarmonyPostfix]
+	[HarmonyPatch(typeof(XUiC_HUDStatBar), "Update")]
+	[PublicizedFrom(EAccessModifier.Private)]
+	private static void UpdatePostfix(XUiC_HUDStatBar __instance)
+	{
+		if (__instance == null || __instance.IsDirty)
+		{
+			return;
+		}
+		MarkDirtyThrottled(__instance);
+	}
 
 	private static void EnsureCacheFrame()
 	{
@@ -156,6 +203,8 @@ public class XUiC_HUDStatBarPatch
 	public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiC_HUDStatBar __instance)
 	{
 		EnsureCacheFrame();
+		// 统一限频：所有绑定（含未单独调用的只读绑定，如 CATUI_playerSkillPointsAvailable）每次执行都尝试限频刷新
+		MarkDirtyThrottled(__instance);
 
 		switch (_bindingName)
 		{
@@ -187,7 +236,7 @@ public class XUiC_HUDStatBarPatch
 					{
 						_value = currentAmmoCount.ToString();
 					}
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -198,7 +247,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = XUiM_Player.GetCurrentLife(__instance.localPlayer).ToString();
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -210,7 +259,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					float resist = GetPhysicalDamageResist(__instance.localPlayer);
 					_value = playerArmorRatingFormatter.Format((int)resist);
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -231,7 +280,7 @@ public class XUiC_HUDStatBarPatch
 						>= 80 and < 100 => "5",
 						_ => "6"
 					};
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -274,7 +323,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					EnsureQuestCache(__instance.localPlayer);
 					_value = _cachedFactionPoints.ToString();
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -316,7 +365,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = XUiM_Player.GetCoreTemp(__instance.localPlayer).ToString();
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -335,7 +384,7 @@ public class XUiC_HUDStatBarPatch
 						>= 100f => "255,0,0",
 						_ => "255,255,255"
 					};
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -346,7 +395,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = XUiM_Player.GetOutsideTemp(__instance.localPlayer).ToString();
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -365,7 +414,7 @@ public class XUiC_HUDStatBarPatch
 						>= 100f => "255,0,0",
 						_ => "255,255,255"
 					};
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -380,7 +429,7 @@ public class XUiC_HUDStatBarPatch
 					{
 						_value = _ping > 1000 ? ">1000" : _ping.ToString();
 					}
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -409,7 +458,7 @@ public class XUiC_HUDStatBarPatch
 							_value = PoorColor;
 						}
 					}
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -424,7 +473,7 @@ public class XUiC_HUDStatBarPatch
 					{
 						_value = "true";
 					}
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -436,7 +485,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					float num = GetMobility(__instance.localPlayer) * 100f;
 					_value = ((int)num).ToString();
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -457,7 +506,7 @@ public class XUiC_HUDStatBarPatch
 						>= 110 and < 120 => "5",
 						_ => "6"
 					};
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -469,7 +518,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					float num = GetRunSpeed(__instance.localPlayer) * 100f;
 					_value = ((int)num).ToString();
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -542,7 +591,7 @@ public class XUiC_HUDStatBarPatch
 						Color32 color = QualityInfo.GetQualityColor(itemValue.Quality);
 						_value = rgbaColorFormatter.Format(color);
 					}
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -570,7 +619,7 @@ public class XUiC_HUDStatBarPatch
 							_value = (itemStack.itemValue.MaxUseTimes - itemStack.itemValue.UseTimes).ToString("F0");
 						}
 					}
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -598,7 +647,7 @@ public class XUiC_HUDStatBarPatch
 							_value = itemStack.itemValue.MaxUseTimes.ToString("F0");
 						}
 					}
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -619,7 +668,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					_value = playerEntityPenetrationCountFormatter.Format(GetEntityPenetrationCount(__instance.localPlayer));
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -642,7 +691,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					float currentSpeed = Mathf.Abs(v.CurrentForwardVelocity + 0.001f);
 					_value = currentSpeed < 0.01f ? "0" : currentSpeed.ToString("F2");
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -660,7 +709,7 @@ public class XUiC_HUDStatBarPatch
 					float currentSpeed = Mathf.Abs(vf.CurrentForwardVelocity + 0.001f);
 					float SpeedPercent = currentSpeed / MaxSpeed;
 					_value = SpeedPercent < 0.01f ? "0" : SpeedPercent.ToString("F3");
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -673,7 +722,7 @@ public class XUiC_HUDStatBarPatch
 				{
 					float currentSpeed = Mathf.Abs(vk.CurrentForwardVelocity + 0.001f);
 					_value = currentSpeed < 0.01f ? "0" : (currentSpeed * 3.6f).ToString("F1");
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -710,7 +759,7 @@ public class XUiC_HUDStatBarPatch
 				if (vb != null)
 				{
 					_value = vb.CurrentIsBreak.ToString();
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -731,7 +780,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null && __instance.vehicle.GetVehicle().HasStorage())
 				{
 					_value = __instance.vehicle.bag.GetUsedSlotCount().ToString();
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -754,7 +803,7 @@ public class XUiC_HUDStatBarPatch
 				if (vt != null)
 				{
 					_value = vt.IsTurbo.ToString();
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;
@@ -786,7 +835,7 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.vehicle != null)
 				{
 					_value = __instance.vehicle.IsHeadlightOn.ToString();
-					__instance.IsDirty = true;
+					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
 				return false;

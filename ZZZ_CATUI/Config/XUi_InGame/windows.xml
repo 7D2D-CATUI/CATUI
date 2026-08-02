@@ -17,7 +17,7 @@
 			</rect>
 
 			<rect name="Stat" pos="18, -76" width="500">
-				<table rows="1" cols="10" padding="5,0" hide_inactive="true">
+				<table rows="1" cols="20" padding="5,0" always_reposition="true" hide_inactive="true">
 					<!-- 游戏等级 -->
 					<CATUI_state_item width="50" height="50" name="GameStage" controller="HUDStatBar" tooltip_key="xuiGameStage" visible="{statvisible}" icon="server_history" text="{CATUI_playerGameStage}" />
 					<!-- 搜刮等级 -->
@@ -73,8 +73,8 @@
 			<!-- Buff列表 -->
 			<rect name="BuffPopoutList" pos="105,-160" controller="BuffPopoutList">
 				<rect width="168" height="31" name="item" visible="false" pivot="center" pos="0, 0" style="press" sound="[recipe_click]" on_hover="true">
-					<sprite depth="6" name="Decoration" width="3" height="30" pos="-81, 16" color="[transparent]" type="sliced"  />
-					<sprite depth="3" name="Background" pos="-81, 17" sprite="ui_game_popup" height="30" width="220" flip="Horizontally" color="[transparent]" />
+					<sprite depth="6" pos="-79, 16" name="Decoration" width="3" height="28" sprite="catui_buff_list_decoration"  color="[transparent]" type="sliced"  />
+					<sprite depth="3" name="Background" pos="-81, 17" sprite="catui_buff_list_bg" height="30" width="220" color="54,54,54" />
 					<filledsprite depth="4" pos="-80,1" name="BarContent" color="0,0,0,0" size="190,30" pivot="Left" type="filled" />
 					<sprite depth="4" name="Icon" size="22,22" pos="-62,1" pivot="center" color="[transparent]" />
 					<label depth="6" name="TextName" pos="-46,0" width="160" font_size="20" color="[white]" justify="left" height="35" pivot="left" style="CATUI.text.shadow.black.1px" />
@@ -291,14 +291,14 @@
 			</rect>
 
 			<!-- 敌人警觉状态 -->
-			<rect depth="-1" name="hud_alert" pos="-122,-35" width="735" height="24" visible="{CATUI_playerAlert}">
-				<sprite pos="0,0" width="${parentinnerwidth}" height="${parentinnerheight}" sprite="catui_bg_stat_alert"  type="sliced" color="[red]">
+			<rect depth="-1" name="hud_alert" pos="-122,-35" width="735" height="24" visible="{CATUI_playerAlert and show_compass}">
+				<sprite pos="0,0" width="${parentinnerwidth}" height="${parentinnerheight}" sprite="catui_bg_stat_alert"  type="sliced" color="[red]" visible="{CATUI_playerAlert}">
 					<tween type="Alpha" start="1" end="0.6" enabled="{CATUI_playerAlert}" repeat="PingPong" duration="0.8" />
 				</sprite>
 			</rect>
 
 			<!-- 天气 -->
-			<rect name="hud_weather" pos="32,-39" width="200">
+			<rect name="hud_weather" pos="32,-39" width="200" visible="{show_compass}">
 				<sprite depth="0" pos="18,-11" width="382" height="17" sprite="catui_weather_bg"  type="sliced" color="255, 255, 255, 255" />
 				<!-- 普通天气 -->
 				<table name="hud_weather_table" depth="2" pos="0,0" rows="1" cols="7" padding="8,0" hide_inactive="true" always_reposition="true" visible="{# !(CATUI_stormName != '' &amp;&amp; CATUI_stormFill != '0.000') }">
@@ -346,6 +346,9 @@
 						<sprite pos="15,-20" pivot="center" size="20,20" color="255, 255, 255" sprite="catui_icon_moon_full" globalopacity="false" foregroundlayer="true" visible="{# CATUI_nextBloodMoonDay - day == 3 }" />
 					</rect>
 				</table>
+
+				<!-- <video pos="-2,40" width="422" height="90" uri="@modfolder(CATUI):StreamingAssets/Video/780d8aea66d619426e76ea74dc1a90cc60eac04e.webm" loop="true" videoaspect="Stretch" chromakey="true" keycolor="0,0,0" tolerance="0.01" smoothing="0.05" foregroundlayer="true" /> -->
+
 				<!-- 风暴天气 -->
 				<rect pos="69,0" visible="{# CATUI_stormName != '' &amp;&amp; CATUI_stormFill != '0.000' }">
 					<rect pos="0,-7" width="280" height="26">
@@ -367,7 +370,7 @@
 					</rect>
 
 				</rect>
-			</rect>
+			</rect> 
 		</window>
 	</append>
 
@@ -390,8 +393,9 @@
 					<sprite type="sliced" style="CATUI.level.color.5" visible="{# CATUI_EntityType == 'boss' }" />
 				</rect>
 				<sprite depth="3" color="[darkestGrey]" type="sliced" />
-				<filledsprite depth="4" name="BarContent" type="filled" color="187,45,59,255" fill="{fill}" />
+				<filledsprite depth="4" name="BarContent" type="filled" color="255,255,255,255" fill="{fill}" />
 				<filledsprite depth="4" pos="0, -25" height="2" name="BarContent" type="filled" color="255,255,255,75" fill="{fill}" />
+				<filledsprite depth="4" name="BarContent" type="filled" color="187,45,59,255" fill="{CATUI_fillCurrent}" foregroundlayer="true" />
 				<label depth="5" pos="250, 18" name="TextContent" font_size="24" color="[white]" justify="center" pivot="center" text="{name}" style="CATUI.text.shadow.black.1px" />
 				<label depth="5" width="400" name="TextContent" pos="250,-14" font_size="21" color="[white]" justify="center" pivot="center" text="{currentwithmax}" />
 				<!-- buff -->
@@ -703,11 +707,11 @@
 			<!-- <sprite depth="8" name="durabilityBackground" pos="1, -119" width="145" height="10" type="sliced" color="[darkGrey]" style="CATUI.sprite.filled.prue" globalopacity="false" visible="{hasdurability}" />
 			<sprite depth="8" name="durabilityBar" pos="1, -119" width="145" height="10" type="filled" color="255, 255, 255, 255" fill="{durabilityfill}" style="CATUI.sprite.filled.prue" globalopacity="false" foregroundlayer="true" visible="{hasdurability}" />
 			 -->
-			<sprite depth="4" name="durabilityBackground" height="10" width="145" color="185,0,0,255" type="sliced" pos="1, -119" visible="{# hasdurability and CATUI_ItemUseTimesMax != '1'}"/>
-			<filledsprite depth="5" name="removedurabilityBar" height="10" width="145" color="48,48,48,255" type="filled" pos="1, -119" fill="{removeddurabilityfill}" fillspritepad="true" globalopacitymod="0" visible="{# hasdurability and CATUI_ItemUseTimesMax != '1'}" />
-			<filledsprite depth="8" name="durabilityBar" height="10" width="145" color="[white]" type="filled" pos="1, -119" fill="{durabilityfill}" fillspritepad="true" visible="{# hasdurability and CATUI_ItemUseTimesMax != '1'}" />
+			<sprite depth="4" name="durabilityBackground" height="10" width="145" color="185,0,0,255" type="sliced" pos="1, -119" visible="{# hasdurability and defined('CATUI_ItemUseTimesMax') and CATUI_ItemUseTimesMax != '1'}"/>
+			<filledsprite depth="5" name="removedurabilityBar" height="10" width="145" color="48,48,48,255" type="filled" pos="1, -119" fill="{removeddurabilityfill}" fillspritepad="true" globalopacitymod="0" visible="{# hasdurability and defined('CATUI_ItemUseTimesMax') and CATUI_ItemUseTimesMax != '1'}" />
+			<filledsprite depth="8" name="durabilityBar" height="10" width="145" color="[white]" type="filled" pos="1, -119" fill="{durabilityfill}" fillspritepad="true" visible="{# hasdurability and defined('CATUI_ItemUseTimesMax') and CATUI_ItemUseTimesMax != '1'}" />
 			<!-- 耐久 百分比 -->
-			<label name="itemUseTimes" depth="12" pos="3,-108" width="145" height="32" text="{CATUI_ItemUseTimesResidue}/{CATUI_ItemUseTimesMax}" font_size="22" justify="left" style="CATUI.text.outline.black.1px" visible="{# hasdurability and CATUI_ItemUseTimesMax != '1'}" />			
+			<label name="itemUseTimes" depth="12" pos="3,-108" width="145" height="32" text="{CATUI_ItemUseTimesResidue}/{CATUI_ItemUseTimesMax}" font_size="22" justify="left" style="CATUI.text.outline.black.1px" visible="{# hasdurability and defined('CATUI_ItemUseTimesMax') and CATUI_ItemUseTimesMax != '1'}" />
 			<!-- 数量(有品质不显示) -->
 			<label name="durability" depth="12" pos="-3,-103" width="145" height="32" text="{durabilitytext}" font_size="28" justify="right" style="CATUI.text.shadow.black.1px" visible="{# !hasdurability }" />
 		</rect>
@@ -1010,7 +1014,6 @@
 				<headerbg />
 				<sprite pos="4,-5" depth="2" name="windowIcon" style="icon32px" sprite="ui_game_symbol_skills"/>
 				<label width="600" style="header.name" text="{groupname}" />
-				<label pos="635, -11" depth="2" width="300" height="28" text="{CATUI_SkillGroupName}" font_size="26" justify="right" pivot="topright"/>
 			</rect>
 			<rect name="content" pos="0,-46" height="647" depth="1">
 				<sprite depth="4" pos="0,0" name="backgroundMain" sprite="menu_empty3px" height="100" color="[black]" type="sliced" fillcenter="false" />

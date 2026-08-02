@@ -94,6 +94,48 @@ public class XUiC_SkillEntryPatch
 				__result = true;
 				return false;
 
+			// 二级技能项颜色条：IsSkill 且有子技能才着色，同组内所有 IsSkill 兄弟计序，取不到用白色
+			case "CATUI_GroupEntryColor":
+				value = GetSkillGroupColor((__instance.currentSkill != null) ? __instance.currentSkill.ProgressionClass : null);
+				__result = true;
+				return false;
+
+			// 三级技能角标：父级(二级技能)的颜色
+			case "CATUI_ParentEntryColor":
+				value = "255,255,255,255";
+				if (__instance.currentSkill != null && __instance.currentSkill.ProgressionClass != null
+					&& __instance.currentSkill.ProgressionClass.IsPerk
+					&& __instance.currentSkill.ProgressionClass.Parent != null)
+				{
+					value = GetSkillGroupColor(__instance.currentSkill.ProgressionClass.Parent);
+				}
+				__result = true;
+				return false;
+
+			// 三级技能角标：父级(二级技能)的图标
+			case "CATUI_ParentEntryIcon":
+				value = "";
+				if (__instance.currentSkill != null && __instance.currentSkill.ProgressionClass != null
+					&& __instance.currentSkill.ProgressionClass.IsPerk
+					&& __instance.currentSkill.ProgressionClass.Parent != null)
+				{
+					value = __instance.currentSkill.ProgressionClass.Parent.Icon ?? "";
+				}
+				__result = true;
+				return false;
+
+			// 三级技能角标：父级(二级技能)的名称
+			case "CATUI_ParentEntryName":
+				value = "";
+				if (__instance.currentSkill != null && __instance.currentSkill.ProgressionClass != null
+					&& __instance.currentSkill.ProgressionClass.IsPerk
+					&& __instance.currentSkill.ProgressionClass.Parent != null)
+				{
+					value = Localization.Get(__instance.currentSkill.ProgressionClass.Parent.NameKey);
+				}
+				__result = true;
+				return false;
+
 			// 技能分组图标
 			case "CATUI_GroupIcon":
 				value = "";
@@ -217,5 +259,38 @@ public class XUiC_SkillEntryPatch
 			default:
 				return true;
 		}
+	}
+
+	// 二级技能颜色：同组(同一属性)内所有 IsSkill 兄弟计序，循环取 TrackedFriendColors，取不到用白色
+	private static string GetSkillGroupColor(ProgressionClass groupClass)
+	{
+		if (groupClass == null || !groupClass.IsSkill || groupClass.Children.Count == 0)
+		{
+			return "255,255,255,255";
+		}
+		ProgressionClass parent = groupClass.Parent;
+		if (parent == null || parent.Children == null)
+		{
+			return "255,255,255,255";
+		}
+		int idx = 0;
+		foreach (ProgressionClass child in parent.Children)
+		{
+			if (!child.IsSkill)
+			{
+				continue;
+			}
+			if (child == groupClass)
+			{
+				if (Constants.TrackedFriendColors.Length > 0)
+				{
+					Color32 color = Constants.TrackedFriendColors[idx % Constants.TrackedFriendColors.Length];
+					return string.Format("{0},{1},{2},{3}", color.r, color.g, color.b, color.a);
+				}
+				return "255,255,255,255";
+			}
+			idx++;
+		}
+		return "255,255,255,255";
 	}
 }
