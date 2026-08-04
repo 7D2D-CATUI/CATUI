@@ -13,9 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 
 using HarmonyLib;
-using Quartz;
 using Quartz.Managers;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,8 +42,8 @@ public static class XUiPatch
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch("LoadAsync")]
-    public static IEnumerator LoadAsync(IEnumerator __result, XUi __instance, List<string> windowGroupSubset = null)
+    [HarmonyPatch("loadAsync")]
+    public static IEnumerator LoadAsync(IEnumerator __result, XUi __instance)
     {
         Dictionary<string, XUiFromXml.StyleData> styles = XUiFromXml.styles;
         yield return FontManager.LoadFonts(__instance);

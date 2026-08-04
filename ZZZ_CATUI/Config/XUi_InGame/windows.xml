@@ -141,9 +141,9 @@
 				<rect name="input" depth="2" pos="0,-218" height="32" createuiwidget="true">
 					<!-- <label name="toLabel" pos="10,-19" width="80" height="22" pivot="left" justify="left" font_size="20" color="[white]" text_key="xuiChatTo" /> -->
 					<combobox name="cbxTarget" type="ComboBoxList`1[XUiC_Chat+ChatTarget]" value_max="party" pos="48, -6" width="300" height="22" font_size="20" />
-					<textfield name="txtInput" backgroundcolor="[transparent]" depth="2" pos="6,-34" width="388" height="26" pivot="topleft" justify="left" overflow="resizeheight" character_limit="300" font_size="20" max_line_count="3" crispness="Never" focus_on_open="true" open_vk_on_open="false" ignore_up_down_keys="true" />
+					<textfield name="txtInput" backgroundcolor="[black]" depth="2" pos="6,-34" width="388" height="26" pivot="topleft" justify="left" overflow="resizeheight" character_limit="300" font_size="20" max_line_count="3" crispness="Never" focus_on_open="true" open_vk_on_open="false" ignore_up_down_keys="true" color="[white]" />
 					<!-- 输入框背景 -->
-					<sprite depth="8" name="border" sprite="menu_empty2px" color="[black_threequarters_alpha]" type="sliced" anchor_left="frame,0,0" anchor_right="frame,1,0" anchor_top="input,1,0" anchor_bottom="text,0,-6" globalopacity="false" />
+					<sprite depth="1" name="border" sprite="menu_empty2px" color="[black_threequarters_alpha]" type="sliced" anchor_left="frame,0,0" anchor_right="frame,1,0" anchor_top="input,1,0" anchor_bottom="text,0,-6" globalopacity="false" />
 				</rect>
 				<!-- 聊天窗口背景 -->
 				<sprite depth="8" name="border" sprite="menu_empty2px" color="[black_threequarters_alpha]" type="sliced" anchor_left="frame,0,0" anchor_right="frame,1,0" anchor_top="frame,1,0" anchor_bottom="text,0,-6" globalopacity="false" />
@@ -393,9 +393,9 @@
 					<sprite type="sliced" style="CATUI.level.color.5" visible="{# CATUI_EntityType == 'boss' }" />
 				</rect>
 				<sprite depth="3" color="[darkestGrey]" type="sliced" />
-				<filledsprite depth="4" name="BarContent" type="filled" color="255,255,255,255" fill="{fill}" />
-				<filledsprite depth="4" pos="0, -25" height="2" name="BarContent" type="filled" color="255,255,255,75" fill="{fill}" />
-				<filledsprite depth="4" name="BarContent" type="filled" color="187,45,59,255" fill="{CATUI_fillCurrent}" foregroundlayer="true" />
+				<filledsprite depth="4"  name="BarContent" type="filled" color="255,255,255,255" fill="{fill}" style="CATUI.sprite.filled.prue" />
+				<filledsprite depth="4" pos="0, -25" height="2" name="BarContent" type="filled" color="255,255,255,75" fill="{CATUI_fillCurrent}" style="CATUI.sprite.filled.prue" />
+				<filledsprite depth="4" name="BarContent" type="filled" color="187,45,59,255" fill="{CATUI_fillCurrent}" foregroundlayer="true" style="CATUI.sprite.filled.prue" />
 				<label depth="5" pos="250, 18" name="TextContent" font_size="24" color="[white]" justify="center" pivot="center" text="{name}" style="CATUI.text.shadow.black.1px" />
 				<label depth="5" width="400" name="TextContent" pos="250,-14" font_size="21" color="[white]" justify="center" pivot="center" text="{currentwithmax}" />
 				<!-- buff -->
@@ -475,21 +475,21 @@
 
 			<!-- 武器弹药 -->
 			<sprite pos="-108,27" width="190" height="52" color="[darkestGrey]" type="sliced" sprite="catui_active_ammo_max" visible="{# CATUI_playerActiveItemIcon != staticon }" />
-			<table depth="3" pos="-100,20" width="200" cols="4" padding="0,0" hide_inactive="true" always_reposition="true" visible="{# CATUI_playerActiveItemIcon != staticon }">
-				<label pos="0,0" overflow="resizefreely" justify="right" font_size="46" text="{statcurrent} " style="CATUI.text.shadow.black.1px" />
+			<table depth="3" pos="-100,24" width="200" cols="4" padding="0,0" hide_inactive="true" always_reposition="true" visible="{# CATUI_playerActiveItemIcon != staticon }">
+				<label height="45" overflow="resizefreely" justify="right" font_size="52" text="{statcurrent}" font_face="FederationHull" pivot="bottom" style="CATUI.text.shadow.black.1px" />
 				<rect width="16">
 					<sprite color="[transparent]" />
-					<label pos="0,-15" font_size="26" color="[lightestGrey]" text="/" style="CATUI.text.shadow.black.1px" />
+					<label pos="0,-19" font_size="26" color="[lightestGrey]" text=" /" style="CATUI.text.shadow.black.1px" />
 				</rect>
 				<rect width="72">
 					<sprite color="[transparent]" />
-					<label pos="0,-16" width="72" font_size="26" color="[lightestGrey]" text="{CATUI_AmmoMax}" style="CATUI.text.shadow.black.1px" />
+					<label width="52" height="45" font_size="26" color="[lightestGrey]" text="{CATUI_AmmoMax}" font_face="FederationHull" pivot="bottom" style="CATUI.text.shadow.black.1px" />
 				</rect>
 			</table>
 			<!-- 弹药种类 -->
-			<rect pos="28,26" visible="{# CATUI_playerActiveItemIcon != staticon }">
+			<rect pos="28,27" visible="{# CATUI_playerActiveItemIcon != staticon }">
 				<sprite pos="0,-3" width="50" height="46" color="255,255,255,32" type="sliced" sprite="catui_active_ammo" />
-				<sprite name="Icon" pos="10,-10" atlas="{staticonatlas}" sprite="{staticon}" size="32,32" color="{staticoncolor}" foregroundlayer="true" />
+				<sprite name="Icon" pos="10,-11" atlas="{staticonatlas}" sprite="{staticon}" size="32,32" color="{staticoncolor}" foregroundlayer="true" />
 			</rect>
 		</rect>
 		
@@ -885,11 +885,11 @@
 	<!-- 组队界面 -->
 	<remove xpath="/windows/window[@name='windowGroupBars']"/>
 	<append xpath="/windows">
-		<window name="windowGroupBars" controller="PartyWindow" depth="-20" pos="25, {CATUI_PartyWindowPositionY}" anchor="LeftBottom">
-			<sprite pos="0, 40" name="voiceStatus" style="icon32px" sprite="catui_icon_mic" visible="{# partyvisible and voicevisible}" color="{# voiceactive ? '255,255,255,255' : '128,128,128,255' }" />
+		<window name="windowGroupBars" controller="PartyWindow" depth="-20" pos="25, {CATUI_PartyWindowPositionY}" anchor="LeftBottom" default_PartyWindowPositionY="74" entry_height="56">
+			<sprite pos="0, 40" name="voiceStatus" style="icon32px" sprite="catui_icon_mic" visible="{voicevisible}" color="{# voiceactive ? '255,255,255,255' : '128,128,128,255' }" />
 			<!-- 玩家组队 -->
-			<grid name="hud" rows="7" cols="1" cell_width="224" cell_height="56" side="left" repeat_content="true" controller="PartyEntryList">
-				<party_entry width="224" height="40" />
+			<grid name="hud" rows="7" cols="1" cell_width="268" cell_height="56" side="left" repeat_content="true" controller="PartyEntryList">
+				<party_entry width="268" height="40" />
 			</grid>
 			<!-- NPC伙伴 -->
 			<grid name="hud" rows="7" cols="1" cell_width="224" cell_height="56" side="left" repeat_content="true" controller="CompanionEntryList">
@@ -959,8 +959,8 @@
 
 			<rect name="categoryContent">
 				<sprite depth="1" name="backgroundMain" pos="3,-48" height="685" sprite="menu_empty3px" color="[black]" type="sliced" />
-				<grid depth="2" pos="10,-52" name="skills" rows="5" cols="5" cell_width="128" cell_height="128" controller="SkillList"  repeat_content="true">
-					<skill_entry name="0" width="128" height="128" />
+				<grid depth="2" pos="11,-52" name="skills" rows="5" cols="6" cell_width="106" cell_height="128" controller="SkillList"  repeat_content="true">
+					<skill_entry name="0" width="100" height="128" />
 				</grid>
 			</rect>
 		</rect>

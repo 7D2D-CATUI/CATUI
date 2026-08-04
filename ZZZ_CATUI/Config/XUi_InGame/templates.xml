@@ -143,7 +143,7 @@
 		<item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false" show_favorites="false" show_slotnum="false" allow_clicklock="true" transform_scale="1" cell_size="[itemStack:width]">
 			<rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="${cell_size}" height="${cell_size}" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}" visible="{# !defined('container_slots') or (int(${repeat_i}) &lt; int(container_slots)) }" show_slotnum="${show_slotnum}" allow_clicklock="${allow_clicklock}" mod_highlight="[04FE85]▇[-]" mod_default="[A6A6A6]▇[-]" transform_scale="${transform_scale}">
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
-				<sprite depth="5" name="background" sprite="menu_empty2px" width="${2+cell_size}" height="${2+cell_size}" pos="-1,1" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,150' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
+				<sprite depth="5" name="background" sprite="menu_empty3px" width="${2+cell_size}" height="${2+cell_size}" pos="-1,1" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,150' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
 
 				<!-- 背景 - 底色 -->
 				<sprite depth="2" name="highlightOverlay" color="25,25,25,255" type="sliced" globalopacity="true" width="${cell_size}" height="${cell_size}" />
@@ -315,19 +315,29 @@
 	<remove xpath="/templates/companion_entry" />
 	<append xpath="/templates">
 		<party_entry>
-			<rect width="${width}" height="${height}" controller="PartyEntry" visible="{partyvisible}" default_health_color="255,255,255,255" twitch_health_color="100,65,165,255">
-				<sprite pos="-3, 3" width="${Floor(width) + 6}" height="${Floor(height) + 6}" color="[darkestGrey]" style="CATUI.sprite.filled.prue" />
+			<rect pos="50,0" width="${width}" height="${height}" controller="PartyEntry"  default_health_color="255,255,255,255" twitch_health_color="100,65,165,255" visible="{partyvisible}">
+				<sprite pos="-3, 3" width="${Floor(width) + 60}" height="${Floor(height) + 6}" color="[darkestGrey]" style="CATUI.sprite.filled.prue" />
+				<!-- 队友 颜色 -->
+				<sprite pos="1, 0" width="4" color="{arrowcolor}" sprite="catui_buff_list_decoration" />
+				<!-- 队友 头像 -->
+				<rect pos="8, 0" width="40" height="40">
+					<!-- 头像占位：黑色底 -->
+					<sprite pos="0, 0" width="40" height="40" gradient_start="[darkestGrey]" gradient_end="[black]" sprite="catui_bg_state" />
+					<!-- 头像占位：队伍序号 -->
+					<label name="avatarFallbackIdx" pos="20, -21" width="40" height="40" font_size="36" color="{arrowcolor}" style="CATUI.text.shadow.black.1px" text="{CATUI_PartyIndex}" justify="center" pivot="center" />
+					<!-- Steam 头像 -->
+					<texture name="avatar" pos="0, 0" width="40" height="40" visible="false" />
+				</rect>
 				<!-- 队友 名称 -->
-				<label name="TextContent" pos="75, -11" font_size="20" color="{arrowcolor}" justify="left" pivot="center" text="{name}" height="26" width="150" style="CATUI.text.shadow.black.1px" />
+				<label name="TextContent" pos="127, -13" font_size="18" color="[white]" justify="left" pivot="center" text="{name}" height="26" width="150" style="CATUI.text.shadow.black.1px" />
 				<!-- 队友 血条 -->
-				<rect width="${Floor(width) - 50}" height="16" pos="0, -24">
+				<rect width="${Floor(width) - 50}" height="14" pos="52, -26">
 					<sprite name="BarHealthModifiedMax" sprite="catui_stat_background_bar" type="filled" color="[black]" fill="{healthmodifiedmax}" globalopacity="false" />
 					<sprite name="PlayerBarHealth" sprite="catui_stat_background_bar" type="filled" color="{# healthfill &lt; 0.4 ? '255,0,0' : (healthfill &lt; 0.6 ? '255, 195, 0' : '255,255,255') }" fill="{# Round(healthfill, 3) }" style="CATUI.sprite.filled.prue" globalopacity="false" />
 				</rect>
-				<!-- 队友 颜色 -->
-				<sprite pos="${Floor(width) - 48}, 0" width="4" color="{arrowcolor}" style="CATUI.sprite.filled.prue" />
+
 				<!-- 队友 方位 -->
-				<rect width="50" height="${height}" pos="${Floor(width) - 44}, 0">
+				<rect width="50" height="${height}" pos="${Floor(width)+8}, 0">
 					<!-- 队友方向 -->
 					<rect pos="23, -14" pivot="center">
 						<sprite name="arrowContent" size="22,22" sprite="ui_game_symbol_map_player_arrow" pivot="center" color="{arrowcolor}" visible="{showarrow}" />
@@ -337,9 +347,9 @@
 				</rect>
 
 				<!-- 队友 状态 -->
-				<table cols="5" pos="228,4" padding="1,1" hide_inactive="true" always_reposition="true">
+				<table cols="5" pos="${Floor(width) + 58},4" padding="1,1" hide_inactive="true" always_reposition="true">
 					<!-- 状态2 -->
-					<rect width="26" height="26" visible="{# CATUI_Ping != '-1' }">
+					<rect width="26" height="26" visible="{# CATUI_Ping != '-1' }"> 
 						<sprite depth="2" color="[black]" type="sliced" />
 						<sprite depth="3" name="signal" pos="13,-13" color="{CATUI_PingColor}" pivot="center" size="22,22" sprite="catui_icon_signal" globalopacity="false" />
 						<!-- <label depth="4" pos="0,-13" width="100%" height="14" font_size="14" color="[gold]" text="{CATUI_Ping}" style="CATUI.text.outline.black.1px" justify="center" /> -->
@@ -424,69 +434,69 @@
 	<remove xpath="/templates/skill_entry" />
 	<append xpath="/templates">
 		<skill_entry>
-			<rect width="${Floor(width) - 6}" height="${Floor(height) - 6}" controller="SkillEntry" style="press, hover, scroll" enabled_color="[iconColor]" disabled_color="[disabledLabelColor]" row_color="[darkGrey]" hover_color="[mediumGrey]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" tooltip_key="{groupname}">
+			<rect width="${parentinnerwidth - 6}" height="${parentinnerheight - 6}" controller="SkillEntry" style="press, hover, scroll" enabled_color="[iconColor]" disabled_color="[disabledLabelColor]" row_color="[darkGrey]" hover_color="[mediumGrey]" sound="[recipe_click]" sound_play_on_hover="[default_hover]">
 				<!-- 不能删，controller对groupIcon和groupName做了处理，删除后会找不到元素报错 -->
-				<sprite name="groupIcon" sprite="{groupicon}" style="icon32px" color="{statuscolor}" foregroundlayer="true" visible="{#'false'}"/>
+				<sprite name="groupIcon" sprite="{groupicon}" style="icon32px" color="{statuscolor}" foregroundlayer="true" visible="{#'false'}" />
 				<label name="groupName" text="{groupname}" color="{statuscolor}" visible="{#'false'}" />
 
 				<!-- 二级技能 -->
-				<rect width="${parentinnerwidth}" height="${parentinnerheight}" visible="{# groupname != '' and CATUI_GroupEntryColor != '255,255,255,255'}">
+				<rect name="skill" width="${parentinnerwidth}" height="${parentinnerheight}" visible="{# groupname != '' and CATUI_GroupEntryColor != '255,255,255,255'}">
 					<!-- 选中状态，hover状态 -->
-					<sprite pos="24,-3" width="${parentinnerwidth-24}" height="${parentinnerheight-3}" color="{rowstatecolor}" sprite="{rowstatesprite}" type="sliced" />
+					<sprite pos="14,-2" width="${parentinnerwidth-14}" height="${parentinnerheight-2}" color="[mediumGrey]" style="CATUI.sprite.filled.prue" type="sliced" />
 					<!-- 边框 -->
-					<sprite pos="24,-3" width="${parentinnerwidth-24}" height="${parentinnerheight-3}" name="border" color="255,255,255,36" type="sliced" fillcenter="false"/>
+					<sprite pos="14,-2" width="${parentinnerwidth-14}" height="${parentinnerheight-2}" name="border" sprite="menu_empty2px" color="255,255,255,36" type="sliced" fillcenter="false"/>
 
 					<!-- 二级技能项颜色条 -->
-					<sprite pos="24,0" width="${parentinnerwidth-24}" height="3" color="{CATUI_GroupEntryColor}" type="sliced" />
-					<sprite pos="0,0" width="25" height="${parentinnerheight}" sprite="catui_bg_skill_group" color="{CATUI_GroupEntryColor}" type="sliced" />
+					<sprite pos="14,0" width="${parentinnerwidth-14}" height="2" sprite="catui_bg_skill_perk" color="{CATUI_GroupEntryColor}" type="sliced" />
+					<sprite pos="0,0" width="15" height="${parentinnerheight}" sprite="catui_bg_skill_group" color="{CATUI_GroupEntryColor}" type="sliced" />
 
 					<!-- 普通技能图标：不要强制 ItemIconAtlas -->
-					<rect depth="2" pos="72,-52" width="100" height="100">
+					<rect depth="2" pos="${parentinnerwidth-43},-42" width="80" height="80">
 						<sprite sprite="catui_bg_skill_icon" color="0,0,0,150" type="sliced" pivot="center" globalopacity="false" />
-						<sprite depth="2" sprite="{groupicon}" style="icon32px" size="42,42" pos="0,0" pivot="center" foregroundlayer="true" />
+						<sprite depth="2" sprite="{groupicon}" style="icon32px" size="32,32" pos="0,0" pivot="center" foregroundlayer="true" />
 					</rect>
 
 					<!-- 技能名称 -->
-					<rect depth="3" pos="72,-95" width="${parentinnerwidth - 26}" height="24">
+					<rect depth="3" pos="${parentinnerwidth-43},-90" width="${parentinnerwidth - 16}" height="54">
 						<!-- <sprite pos="-${parentinnerwidth/2},${parentinnerheight/2}" width="${parentinnerwidth}" gradient_start="[black_threequarters_alpha]" gradient_end="[black]" type="sliced" /> -->
 						<label depth="2" width="${parentinnerwidth}" height="24" pivot="center" text="{groupname}" font_size="14" color="[white_quarter_alpha]" justify="center" />
 					</rect>
 				</rect>
 
-				<!-- 三级技能 -->
-				<rect width="${Floor(width) - 6}" height="${Floor(height) - 6}" visible="{# groupname != '' and CATUI_GroupEntryColor == '255,255,255,255'}">
+				<!-- 一级&三级技能 -->
+				<rect name="perk" width="${parentinnerwidth}" height="${parentinnerheight}" visible="{# groupname != '' and CATUI_GroupEntryColor == '255,255,255,255'}">
 					<!-- 三级技能角标：父级技能标识 -->
 					<rect depth="9" pos="0,0" width="${parentinnerwidth}" height="${parentinnerheight}" visible="{# CATUI_ParentEntryName != '' }">
-						<sprite pos="0,0" width="${parentinnerwidth}" height="3" color="{CATUI_ParentEntryColor}" type="sliced" />
+						<sprite pos="0,0" width="${parentinnerwidth}" height="2" color="{CATUI_ParentEntryColor}" sprite="catui_bg_skill_perk" type="sliced" />
 					</rect>
 
 					<!-- 边框 -->
-					<sprite depth="8" name="border" color="255,255,255,36" type="sliced" fillcenter="false"/>
+					<sprite depth="8" name="border" color="255,255,255,36" sprite="menu_empty2px" type="sliced" fillcenter="false" />
 					<!-- 选中状态，hover状态 -->
 					<sprite depth="1" color="{rowstatecolor}" sprite="{rowstatesprite}" type="sliced" />
 					<!-- 技能不可升级 Disabled -->
 					<sprite depth="2" color="255,255,255,140" sprite="catui_background_disabled_recipe" type="sliced" visible="{CATUI_SkillEntryDisabled}" />
 					<!-- 锁定技能 -->
 					<!-- <sprite pos="30,-19" sprite="ui_game_symbol_lock" visible="{islocked}" style="icon32px" pivot="center" color="{statuscolor}" foregroundlayer="true" /> -->
-					<rect depth="2" pos="62,-52" width="100" height="100">
+					<rect depth="2" pos="50,-48" width="82" height="82">
 						<!-- 技能进度条 - 背景 -->
 						<sprite sprite="catui_bg_skill" color="0,0,0,220" type="sliced" pivot="center" rotation="144" globalopacity="false" />
 						<!-- 技能进度条 - 速度 72=底部缺失的扇形角度，刻度=(360-72)/16=18；填充80%：0.8=(360-72)/360；-->
-						<sprite depth="2" sprite="catui_bg_skill_current" type="filled" fill="{# CATUI_GroupEntryLevelFill * 0.8 }" filldirection="Radial360" color="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? '67, 207, 124' : '255, 195, 0' }" fillinvert="true" globalopacity="false" pivot="center" rotation="144" visible="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax}" />
+						<sprite depth="2" sprite="catui_bg_skill_current" type="filled" fill="{# CATUI_GroupEntryLevelFill * 0.8 }" filldirection="Radial360" color="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? '67, 207, 124' : '255, 195, 0' }" fillinvert="true" globalopacity="false" pivot="center" rotation="144" visible="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax}" foregroundlayer="true" />
 						<!-- 技能进度条 - 学满 -->
 						<sprite sprite="catui_bg_skill_current" color="255, 195, 0" type="sliced" pivot="center" rotation="144" visible="{# CATUI_GroupEntryLevel == CATUI_GroupEntryLevelMax}" />
 						<!-- 技能进度条 - ICON背景 -->
-						<sprite sprite="catui_bg_skill_icon" color="0,0,0,150" type="sliced" pivot="center" globalopacity="false" />
+						<sprite sprite="catui_bg_skill_icon" width="${parentinnerwidth - 8}" height="${parentinnerheight - 8}" color="0,0,0,150" type="sliced" pivot="center" globalopacity="false" />
 						<!-- 普通技能图标：不要强制 ItemIconAtlas -->
-						<sprite depth="2" sprite="{groupicon}" style="icon32px" size="42,42" pos="0,0" pivot="center" color="{statuscolor}" foregroundlayer="true" visible="{# CATUI_GroupType != 'book' }" />
+						<sprite depth="2" sprite="{groupicon}" style="icon32px" size="36,36" pos="0,0" pivot="center" color="{statuscolor}" foregroundlayer="true" visible="{# CATUI_GroupType != 'book' }" />
 
 						<!-- 书籍类图标：如果确实来自 ItemIconAtlas，再单独使用 ItemIconAtlas -->
-						<sprite depth="2" atlas="ItemIconAtlas" sprite="{groupicon}" size="64,64" pos="0,2" pivot="center" color="{statuscolor}" foregroundlayer="true" visible="{# CATUI_GroupType == 'book' }" />
+						<sprite depth="2" atlas="ItemIconAtlas" sprite="{groupicon}" size="48,48" pos="0,2" pivot="center" color="{statuscolor}" foregroundlayer="true" visible="{# CATUI_GroupType == 'book' }" />
 					</rect>
 
-					<label depth="2" width="50" height="24" pos="62,-88" text="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? CATUI_GroupEntryLevel + '/' + CATUI_GroupEntryLevelMax : 'MAX' }" font_size="20" pivot="center" justify="center" color="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? statuscolor : '255, 195, 0'}" style="CATUI.text.shadow.black.1px" />
+					<label depth="2" width="50" height="24" pos="50,-84" text="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? CATUI_GroupEntryLevel + '/' + CATUI_GroupEntryLevelMax : 'MAX' }" font_size="18" pivot="center" justify="center" color="{# CATUI_GroupEntryLevel != CATUI_GroupEntryLevelMax ? statuscolor : '255, 195, 0'}" style="CATUI.text.shadow.black.1px" />
 
-					<rect depth="2" pos="100,-4">
+					<rect depth="2" pos="${parentinnerwidth - 20},-4">
 						<!-- Buffed -->
 						<sprite depth="2" sprite="catui_icon_level_up" size="20,20" color="67, 207, 124" foregroundlayer="true" visible="{# CATUI_SkillEntryIsBuffed == 'true' }" />
 						<!-- Nerfed -->
@@ -494,9 +504,9 @@
 					</rect>
 
 					<!-- 技能名称 -->
-					<rect depth="3" pos="60,-110" height="24">
-						<sprite pos="-60,13" gradient_start="[black_threequarters_alpha]" gradient_end="[black]" type="sliced" />
-						<label depth="2" width="${width}" height="24" pivot="center" text="{groupname}" font_size="14" color="{statuscolor}" justify="center" />
+					<rect depth="3" pos="${Floor(parentinnerwidth/2)},-110" height="24">
+						<sprite color="[darkestGrey]" type="sliced" pivot="center" justify="center" />
+						<label pos="0,-1" width="${parentinnerwidth}" height="24" pivot="center" text="{groupname}" font_size="14" color="{statuscolor}" justify="center" />
 					</rect>
 				</rect>
 			</rect>

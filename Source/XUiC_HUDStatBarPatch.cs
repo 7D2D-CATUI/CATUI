@@ -65,7 +65,7 @@ public class XUiC_HUDStatBarPatch
 
 	private sealed class LastDirtyState
 	{
-		public int lastDirtyFrame = int.MinValue;
+		public int lastDirtyFrame = -DirtyThrottleFrames;
 	}
 
 	// 限频标记 IsDirty：该实例距上次标记达到 10 帧才触发，避免频繁刷新

@@ -55,7 +55,7 @@ namespace Quartz.Managers
             }
 
             XUiFromXml.StyleData fontData;
-            if (XUiFromXml.styles.TryGetValue(styleKeyNGUIFonts, out fontData))
+            if (TryGetStyle(styleKeyNGUIFonts, out fontData))
             {
                 foreach (XUiFromXml.StyleEntryData fontEntry in fontData.StyleEntries.Values)
                 {
@@ -68,7 +68,7 @@ namespace Quartz.Managers
                 }
             }
 
-            if (XUiFromXml.styles.TryGetValue(styleKeyUnityFonts, out fontData))
+            if (TryGetStyle(styleKeyUnityFonts, out fontData))
             {
                 foreach (XUiFromXml.StyleEntryData fontEntry in fontData.StyleEntries.Values)
                 {
@@ -81,7 +81,7 @@ namespace Quartz.Managers
                 }
             }
 
-            if (XUiFromXml.styles.TryGetValue(styleKeyOSFonts, out fontData))
+            if (TryGetStyle(styleKeyOSFonts, out fontData))
             {
                 foreach (XUiFromXml.StyleEntryData fontEntry in fontData.StyleEntries.Values)
                 {
@@ -97,6 +97,19 @@ namespace Quartz.Managers
             Debug.Log("Loaded Fonts");
 
             yield break;
+        }
+
+        private static bool TryGetStyle(string key, out XUiFromXml.StyleData style)
+        {
+            if (XUiFromXml.styles.TryGetValue(key, out style))
+            {
+                return true;
+            }
+            if (XUiFromXml.styles.TryGetValue("." + key, out style))
+            {
+                return true;
+            }
+            return false;
         }
 
         public static bool LoadXUiFonts(XUi xui)

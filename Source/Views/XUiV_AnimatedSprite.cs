@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Views
 {
@@ -17,6 +18,9 @@ namespace Views
 
         private bool resetAnimation = false;
         private bool catuiInitialized;
+
+        // 静态缓存：atlas 名称 + prefix -> 排序后的帧名列表，避免每个实例重复扫描整个 atlas 并排序
+        private static readonly Dictionary<string, string[]> spriteFrameCache = new Dictionary<string, string[]>();
 
         public string SpriteNamePrefix
         {
@@ -89,17 +93,32 @@ namespace Views
         public override void createComponents(GameObject go)
         {
             base.createComponents(go);
-            go.AddComponent<UISpriteAnimation>();
+            // UISpriteAnimation 改为惰性创建，仅当动画真正启用时才挂载，
+            // 避免为每个栏位（含空栏位）都创建组件导致每帧 Update 开销
+        }
+
+        // 惰性创建动画组件，仅返回已存在的组件（未启用时保持 null）
+        private UISpriteAnimation EnsureAnimation()
+        {
+            if (animation == null && !catuiInitialized)
+            {
+                if (uiTransform == null)
+                {
+                    return null;
+                }
+                animation = uiTransform.GetComponent<UISpriteAnimation>();
+                if (animation == null)
+                {
+                    animation = uiTransform.gameObject.AddComponent<UISpriteAnimation>();
+                }
+                Traverse.Create(animation).Field("mSnap").SetValue(false);
+                catuiInitialized = true;
+            }
+            return animation;
         }
 
         public override void updateData()
         {
-            if(animation == null && !catuiInitialized)
-            {
-                animation = uiTransform.GetComponent<UISpriteAnimation>();
-                Traverse.Create(animation).Field("mSnap").SetValue(false);
-            }
-
             if (!string.IsNullOrEmpty(sprite.spriteName))
             {
                 spriteName = sprite.spriteName;
@@ -107,20 +126,30 @@ namespace Views
 
             base.updateData();
 
-            animation.namePrefix = prefix;
-            animation.framesPerSecond = frameRate;
-            animation.loop = loop;
+            // 未启用动画时不做任何组件配置，避免空栏位的开销
+            if (!enabled)
+            {
+                return;
+            }
+
+            UISpriteAnimation anim = EnsureAnimation();
+            if (anim == null)
+            {
+                return;
+            }
+
+            anim.namePrefix = prefix;
+            anim.framesPerSecond = frameRate;
+            anim.loop = loop;
 
             if (resetAnimation)
             {
-                animation.ResetToBeginning();
+                anim.ResetToBeginning();
                 resetAnimation = false;
             }
 
             // 根据启用状态控制动画
             UpdateAnimationState();
-
-            catuiInitialized = true;
         }
 
         /// <summary>
@@ -128,20 +157,24 @@ namespace Views
         /// </summary>
         private void UpdateAnimationState()
         {
-            if (animation == null) return;
+            UISpriteAnimation anim = animation;
+            if (anim == null)
+            {
+                return;
+            }
 
             if (enabled)
             {
-                if (!animation.isPlaying)
+                if (!anim.isPlaying)
                 {
-                    animation.Play();
+                    anim.Play();
                 }
             }
             else
             {
-                if (animation.isPlaying)
+                if (anim.isPlaying)
                 {
-                    animation.Pause();
+                    anim.Pause();
                 }
             }
         }
@@ -177,9 +210,10 @@ namespace Views
         public void PlayAnimation()
         {
             enabled = true;
-            if (animation != null)
+            UISpriteAnimation anim = EnsureAnimation();
+            if (anim != null)
             {
-                animation.Play();
+                anim.Play();
             }
         }
 
@@ -200,12 +234,13 @@ namespace Views
         /// </summary>
         public void ResetAnimation()
         {
-            if (animation != null)
+            UISpriteAnimation anim = EnsureAnimation();
+            if (anim != null)
             {
-                animation.ResetToBeginning();
+                anim.ResetToBeginning();
                 if (enabled)
                 {
-                    animation.Play();
+                    anim.Play();
                 }
             }
         }
@@ -213,10 +248,61 @@ namespace Views
         /// <summary>
         /// 供外部调用设置动画状态
         /// </summary>
-        /// <param name="isEnabled">是否启用</param>
         public void SetAnimationEnabled(bool isEnabled)
         {
             Enabled = isEnabled;
+        }
+    }
+
+    // 静态缓存 atlas 帧名列表，避免每个动画实例重复扫描 atlas.spriteList 并排序
+    [HarmonyPatch(typeof(UISpriteAnimation))]
+    public class UISpriteAnimationPatch
+    {
+        private static readonly Dictionary<string, string[]> spriteNameCache = new Dictionary<string, string[]>();
+
+        [HarmonyPrefix]
+        [HarmonyPatch("RebuildSpriteList")]
+        public static bool RebuildSpriteListPrefix(UISpriteAnimation __instance)
+        {
+            Traverse t = Traverse.Create(__instance);
+            UISprite mSprite = t.Field("mSprite").GetValue<UISprite>();
+            if (mSprite == null)
+            {
+                return true;
+            }
+            INGUIAtlas atlas = mSprite.atlas;
+            if (atlas == null)
+            {
+                return true;
+            }
+            string prefix = t.Field("mPrefix").GetValue<string>();
+            string key = atlas.Name + "|" + prefix;
+
+            string[] cached;
+            if (!spriteNameCache.TryGetValue(key, out cached))
+            {
+                List<string> names = new List<string>();
+                List<UISpriteData> spriteList = atlas.spriteList;
+                for (int i = 0; i < spriteList.Count; i++)
+                {
+                    UISpriteData data = spriteList[i];
+                    if (string.IsNullOrEmpty(prefix) || data.name.StartsWith(prefix))
+                    {
+                        names.Add(data.name);
+                    }
+                }
+                names.Sort();
+                cached = names.ToArray();
+                spriteNameCache[key] = cached;
+            }
+
+            List<string> mSpriteNames = t.Field("mSpriteNames").GetValue<List<string>>();
+            if (mSpriteNames != null)
+            {
+                mSpriteNames.Clear();
+                mSpriteNames.AddRange(cached);
+            }
+            return false;
         }
     }
 }

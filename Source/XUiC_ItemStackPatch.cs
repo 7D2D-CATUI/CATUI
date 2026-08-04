@@ -12,6 +12,17 @@ public class XUiC_ItemStackPatch
     private const string MODIFICATION_HIGHLIGHTED = "[04FE85]▇[-] ";
     private const string MODIFICATION_DEFAULT = "▇ ";
 
+    private class BindingCache
+    {
+        public ItemStack itemStack;
+        public bool boosted;
+        public bool legendary;
+        public string modifications;
+    }
+
+    // 绑定结果缓存：itemStack 引用变化即物品变化，引用比较廉价且准确
+    private static readonly Dictionary<XUiC_ItemStack, BindingCache> _bindingCache = new Dictionary<XUiC_ItemStack, BindingCache>();
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(XUiC_ItemStack), "Init")]
     public static void InitPostfix(XUiC_ItemStack __instance)
@@ -70,6 +81,7 @@ public class XUiC_ItemStackPatch
         if (__instance is XUiC_ItemStack stack)
         {
             _patchedInstances.Remove(stack);
+            _bindingCache.Remove(stack);
         }
     }
 
@@ -77,8 +89,6 @@ public class XUiC_ItemStackPatch
     [HarmonyPatch(typeof(XUiC_ItemStack), "GetBindingValueInternal")]
     public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiC_ItemStack __instance)
     {
-        ItemValue itemValue = __instance.itemStack?.itemValue;
-        ItemClass itemClass = itemValue.ItemClass;
         switch (_bindingName)
         {
             // 给道具增加index
@@ -91,71 +101,121 @@ public class XUiC_ItemStackPatch
                 __result = true;
                 return false;
 
-            // 判断物品是否为全属性Boosted（传奇品质），排除潜行伤害属性
+            // 缓存热路径绑定，避免每次刷新重复遍历 Stats/Modifications
             case "CATUI_itemBoosted":
-                _value = "false";
-                if (__instance?.itemStack?.itemValue == null)
-                {
-                    __result = true;
-                    return false;
-                }
-
-                if (itemValue.HasAnyBoostedStats())
-                {
-                    _value = "true";
-                }
-                __result = true;
-                return false;
-
-            // 判断物品是否为全属性Boosted（传奇品质）
             case "CATUI_itemLegendary":
-                _value = "false";
-                if (__instance?.itemStack?.itemValue == null)
+            case "CATUI_itemStackModifications":
+            {
+                ItemStack stack = __instance?.itemStack ?? ItemStack.Empty;
+                BindingCache cache;
+                if (!_bindingCache.TryGetValue(__instance, out cache) || cache.itemStack != stack)
                 {
-                    __result = true;
-                    return false;
+                    cache = new BindingCache();
+                    cache.itemStack = stack;
+
+                    bool isEmpty = stack.IsEmpty();
+                    cache.boosted = false;
+                    cache.legendary = false;
+                    cache.modifications = "";
+
+                    if (!isEmpty)
+                    {
+                        ItemValue itemValue = stack.itemValue;
+                        if (itemValue != null)
+                        {
+                            if (itemValue.HasAnyBoostedStats())
+                            {
+                                cache.boosted = true;
+                            }
+
+                            if (itemValue.Stats != null && itemValue.Stats.Length > 0)
+                            {
+                                bool allBoosted = true;
+                                for (int i = 0; i < itemValue.Stats.Length; i++)
+                                {
+                                    if (!itemValue.Stats[i].isBoosted)
+                                    {
+                                        allBoosted = false;
+                                        break;
+                                    }
+                                }
+                                cache.legendary = allBoosted;
+                            }
+
+                            // 模组插槽文本
+                            if (itemValue.Quality > 0 && itemValue.Modifications != null && itemValue.Modifications.Length > 0)
+                            {
+                                __instance.CustomAttributes.TryGetValue("mod_highlight", out var highlightStyle);
+                                __instance.CustomAttributes.TryGetValue("mod_default", out var defaultStyle);
+                                highlightStyle ??= MODIFICATION_HIGHLIGHTED;
+                                defaultStyle ??= MODIFICATION_DEFAULT;
+
+                                System.Text.StringBuilder textBuilder = new System.Text.StringBuilder();
+                                for (int i = 0; i < itemValue.Modifications.Length; i++)
+                                {
+                                    if (itemValue.Modifications[i] == null)
+                                    {
+                                        textBuilder.Append(defaultStyle);
+                                        continue;
+                                    }
+                                    var itemClass1 = itemValue.Modifications[i]?.ItemClass;
+                                    if (itemClass1 != null && !string.IsNullOrEmpty(itemClass1?.GetItemName()))
+                                    {
+                                        textBuilder.Append(highlightStyle);
+                                    }
+                                    else
+                                    {
+                                        textBuilder.Append(defaultStyle);
+                                    }
+                                }
+                                cache.modifications = textBuilder.ToString();
+                            }
+                        }
+                    }
+
+                    _bindingCache[__instance] = cache;
                 }
 
-                if (itemValue.Stats == null || itemValue.Stats.Length == 0)
+                if (_bindingName == "CATUI_itemBoosted")
                 {
-                    _value = "false";
+                    _value = cache.boosted.ToString().ToLower();
+                }
+                else if (_bindingName == "CATUI_itemLegendary")
+                {
+                    _value = cache.legendary.ToString().ToLower();
                 }
                 else
                 {
-                    bool allBoosted = true;
-                    for (int i = 0; i < itemValue.Stats.Length; i++)
-                    {
-                        var stat = itemValue.Stats[i];
-                        // 如果有任何一个非排除属性没有被Boosted，则不是全Boosted
-                        if (!stat.isBoosted)
-                        {
-                            allBoosted = false;
-                            break;
-                        }
-                    }
-                    _value = allBoosted.ToString().ToLower();
+                    _value = cache.modifications;
                 }
                 __result = true;
                 return false;
+            }
 
             // 调试用
             case "CATUI_itemBoostList":
                 _value = "";
-                if (itemValue.Stats == null || itemValue.Stats.Length == 0)
+                if (__instance?.itemStack?.itemValue == null)
+                {
+                    __result = true;
+                    return false;
+                }
+                ItemValue itemValue2 = __instance.itemStack.itemValue;
+                if (itemValue2.Stats == null || itemValue2.Stats.Length == 0)
                 {
                     _value = "";
                 }
                 else
                 {
                     string text = string.Empty;
-                    for (int i = 0; i < itemValue.Stats.Length; i++)
+                    for (int i = 0; i < itemValue2.Stats.Length; i++)
                     {
-                        var stat = itemValue.Stats[i];
+                        var stat = itemValue2.Stats[i];
                         text += stat.type;
                         text += ": ";
                         text += stat.isBoosted + " - ";
                         text += stat.value;
-                        if (i < itemValue.Stats.Length - 1)
+                        if (i < itemValue2.Stats.Length - 1)
                         {
                             text += ", \n";
                         }
@@ -165,54 +225,6 @@ public class XUiC_ItemStackPatch
                 __result = true;
                 return false;
 
-            // 道具插槽状态
-            case "CATUI_itemStackModifications":
-                _value = "";
-                if (__instance?.itemStack?.itemValue == null)
-                {
-                    Debug.Log($"<color=#00FF00>[CATUI] CATUI_itemStackModifications __instance?.itemStack?.itemValue == null </color>");
-                    __result = true;
-                    return false;
-                }
-
-                // 取View上的属性
-                __instance.CustomAttributes.TryGetValue("mod_highlight", out var highlightStyle);
-                __instance.CustomAttributes.TryGetValue("mod_default", out var defaultStyle);
-                highlightStyle ??= MODIFICATION_HIGHLIGHTED;
-                defaultStyle ??= MODIFICATION_DEFAULT;
-
-                ItemValue[] mods = itemValue.Modifications;
-                
-                // mods数组空值检查
-                if (itemValue.Quality <= 0 || mods == null || mods.Length == 0)
-                {
-                    __result = true;
-                    return false;
-                }
-
-                System.Text.StringBuilder textBuilder = new System.Text.StringBuilder();
-                for (int i = 0; i < mods.Length; i++)
-                {
-                    // 未安装过模组 mods[i] == null，直接设置空槽
-                    if (mods[i] == null)
-                    {
-                        textBuilder.Append(defaultStyle);
-                        continue;
-                    }
-
-                    var itemClass1 = mods[i]?.ItemClass;
-                    if (itemClass1 != null && !string.IsNullOrEmpty(itemClass1?.GetItemName()))
-                    {
-                        textBuilder.Append(highlightStyle);
-                    }
-                    else
-                    {
-                        textBuilder.Append(defaultStyle);
-                    }
-                }
-                _value = textBuilder.ToString();
-                __result = true;
-                return false;
             default:
                 return true;
         }

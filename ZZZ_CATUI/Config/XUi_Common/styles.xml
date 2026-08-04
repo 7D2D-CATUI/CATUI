@@ -107,4 +107,11 @@
 	<append xpath="/styles/style[@type='textlist' and count(@*)=1]">
 		<style_entry name="crispness" value="OnDesktop" />
 	</append>
+
+	<!-- 自定义字体：Fonts.UnityFonts（catui_fonts.unity3d 资源包，UIAtlases/Fonts 目录） -->
+	<append xpath="/styles">
+		<style name="Fonts.UnityFonts">
+			<style_entry name="FederationHull" value="#@modfolder(CATUI):UIAtlases/Fonts/catui_fonts.unity3d?FederationHull" />
+		</style>
+	</append>
 </CATUI>

@@ -1,12 +1,18 @@
 using HarmonyLib;
 using UnityEngine;
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Views;
 
 [HarmonyPatch]
 public class XUiViewPatch
 {
-    private static readonly Dictionary<XUiView, float> elementScales = new Dictionary<XUiView, float>();
+    // ConditionalWeakTable 在视图对象被 GC 时自动移除条目，无需在 OnClose 线性扫描清理
+    private class ScaleValue
+    {
+        public float value;
+    }
+
+    private static readonly ConditionalWeakTable<XUiView, ScaleValue> elementScales = new ConditionalWeakTable<XUiView, ScaleValue>();
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(XUiView), "ParseInitialAttributeValue")]
@@ -28,7 +34,13 @@ public class XUiViewPatch
             if (scaleValue > 3f) // 最大缩放为300%
                 scaleValue = 3f;
 
-            elementScales[__instance] = scaleValue;
+            ScaleValue holder;
+            if (!elementScales.TryGetValue(__instance, out holder))
+            {
+                holder = new ScaleValue();
+                elementScales.Add(__instance, holder);
+            }
+            holder.value = scaleValue;
             __instance.isDirty = true;
             return false;
         }
@@ -40,7 +52,6 @@ public class XUiViewPatch
     [HarmonyPatch(typeof(XUiView), "InitView")]
     public static void InitViewPostfix(XUiView __instance)
     {
-        if (elementScales.Count == 0) return;
         ApplyScale(__instance);
     }
 
@@ -48,37 +59,25 @@ public class XUiViewPatch
     [HarmonyPatch(typeof(XUiView), "updateData")]
     public static void UpdateDataPostfix(XUiView __instance)
     {
-        if (elementScales.Count == 0) return;
         ApplyScale(__instance);
-    }
-
-    // 通过OnClose清理已销毁的视图
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(XUiController), "OnClose")]
-    public static void OnClosePostfix(XUiController __instance)
-    {
-        var keysToRemove = new List<XUiView>();
-        foreach (var kvp in elementScales)
-        {
-            if (kvp.Key.Controller == __instance)
-            {
-                keysToRemove.Add(kvp.Key);
-            }
-        }
-        foreach (var key in keysToRemove)
-        {
-            elementScales.Remove(key);
-        }
     }
 
     private static void ApplyScale(XUiView view)
     {
-        if (elementScales.TryGetValue(view, out float scale))
+        ScaleValue holder;
+        if (!elementScales.TryGetValue(view, out holder))
         {
-            if (view.UiTransform != null)
-            {
-                view.UiTransform.localScale = Vector3.one * scale;
-            }
+            return;
+        }
+        if (view.UiTransform == null)
+        {
+            return;
+        }
+        float scale = holder.value;
+        Vector3 localScale = view.UiTransform.localScale;
+        if (localScale.x != scale || localScale.y != scale || localScale.z != scale)
+        {
+            view.UiTransform.localScale = Vector3.one * scale;
         }
     }
 
