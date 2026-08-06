@@ -10,13 +10,13 @@ FontManager 允许通过 `styles.xml` 定义自定义字体，并在界面 XML �
 
 | 文件 | 作用 |
 |------|------|
-| `Source/FontManager.cs` | `FontManager` 静态类，负责字体注册、加载与查询 |
-| `Source/XUi_Harmony.cs` | `XUiPatch` 类，通过 Harmony 将字体系统接入原版 XUi |
+| `Source/FontManager.cs` | `CATUIFontManager` 静态类，负责字体注册、加载与查询（类名 CATUI 专属，避免与其他 mod 冲突） |
+| `Source/XUi_Harmony.cs` | `XUiFontPatch` 类，通过 Harmony 将字体系统接入原版 XUi |
 
 集成方式：
 
-- **`GetUIFontByName` Prefix**：拦截 `XUi.GetUIFontByName(name)`，优先从 FontManager 注册表查找自定义字体；未命中时回退到原版 `ReferenceFont`。
-- **`loadAsync` Postfix**：在 XUi 加载 UI 前执行 `FontManager.LoadFonts(xui)` 协程，确保所有自定义字体先于界面解析完成加载。
+- **`GetUIFontByName` Prefix**：拦截 `XUi.GetUIFontByName(name)`，优先从 CATUIFontManager 注册表查找自定义字体；未命中时交由原版/其他 mod 处理（协作式，不覆盖他人结果）。
+- **`loadAsync` Postfix**：在 XUi 加载 UI 前执行 `CATUIFontManager.LoadFonts(xui)` 协程，确保所有自定义字体先于界面解析完成加载。
 
 ## 快速开始
 
@@ -133,14 +133,14 @@ FontManager 允许通过 `styles.xml` 定义自定义字体，并在界面 XML �
 
 查找顺序：
 
-1. FontManager 注册表（原版字体 + 自定义字体）。
-2. 未命中时回退到原版 `ReferenceFont`，并在日志中输出警告。
+1. CATUIFontManager 注册表（原版字体 + 自定义字体）。
+2. 未命中或字体不可用时，交由原版/其他 mod 处理（协作式，不强制覆盖）。
 
 ## 技术原理
 
 ### 加载流程
 
-1. `loadAsync` Postfix 在 XUi 加载界面之前启动 `FontManager.LoadFonts(xui)` 协程。
+1. `loadAsync` Postfix 在 XUi 加载界面之前启动 `CATUIFontManager.LoadFonts(xui)` 协程。
 2. 等待 `XUiFromXml.HasData()` 完成（样式数据已解析）。
 3. 注册 XUi 中所有原版 `NGUIFont`（按名称和 spriteName 两个键），并缓存 `ReferenceFont` 作为回退字体。
 4. 依次读取三个样式键：
@@ -148,13 +148,14 @@ FontManager 允许通过 `styles.xml` 定义自定义字体，并在界面 XML �
    - `Fonts.UnityFonts` → `LoadUnityFont(name, path)`
    - `Fonts.OSFonts` → `LoadOSInstalledFont(value)`
 5. 已注册的字体名跳过加载（避免重复）。
-6. 界面 XML 中 `font_face` 属性 → `XUiV_LabelBase` 调用 `XUi.GetUIFontByName` → 被 `GetUIFontByName` Prefix 接管，返回 FontManager 中的字体。
+6. 界面 XML 中 `font_face` 属性 → `XUiV_LabelBase` 调用 `XUi.GetUIFontByName` → 被 `GetUIFontByName` Prefix 接管，返回 CATUIFontManager 中的字体。
 
 ### 关键特性
 
 - **先于 UI 加载**：字体在界面解析前完成注册，XML 引用不会出现字体缺失。
 - **自动去重**：已注册的字体名不会重复加载。
-- **回退机制**：未知字体名自动回退原版 `ReferenceFont`，界面不崩溃。
+- **协作式回退**：未知/不可用字体名交由原版或其他 mod 处理，界面不崩溃，也不覆盖其他 mod 的字体解析结果。
+- **冲突规避**：类名 `CATUIFontManager`/`XUiFontPatch` 为 CATUI 专属，避免与 Quartz 等 mod 的同名类型冲突。
 - **多来源支持**：位图字体、动态字体、系统字体三种方式按需混用。
 
 ## 日志与排错
@@ -165,10 +166,10 @@ FontManager 允许通过 `styles.xml` 定义自定义字体，并在界面 XML �
 |---------|------|
 | `Loading Fonts` | 开始加载字体 |
 | `Loaded Fonts` | 字体加载完成 |
-| `FontManager Font: X loaded` | 自定义字体 X 加载成功 |
+| `CATUIFontManager Font: X loaded` | 自定义字体 X 加载成功 |
 | `Unable to load XUi Fonts` | 原版字体注册失败 |
 | `Unable to load Font: X` | 自定义字体 X 加载失败 |
-| `XUi font not found: X` | XML 引用了未注册的字体名，已回退原版字体 |
+| `CATUI font not found or unusable: X` | XML 引用了未注册/不可用的字体名，已交由原版处理 |
 
 ### 常见问题
 
@@ -186,7 +187,7 @@ FontManager 允许通过 `styles.xml` 定义自定义字体，并在界面 XML �
 - 确认字体已打包为 `.unity3d` 资源包并放到 mod 目录。
 - 确认 bundle 路径与 `?` 后的资产名正确（资产名 = 打包时文件名去扩展名）。
 - 确认字体注册名在 `Fonts.UnityFonts` 样式下定义。
-- 检查日志 `FontManager Font: X loaded` 是否输出。
+- 检查日志 `CATUIFontManager Font: X loaded` 是否输出。
 
 #### 3. 系统字体（中文等）无法显示
 

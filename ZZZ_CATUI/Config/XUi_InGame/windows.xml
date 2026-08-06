@@ -400,8 +400,8 @@
 				<label depth="5" width="400" name="TextContent" pos="250,-14" font_size="21" color="[white]" justify="center" pivot="center" text="{currentwithmax}" />
 				<!-- buff -->
 				<table pos="-4,-33" cols="20" padding="2,0" width="500" height="50" hide_inactive="true" always_reposition="true">
-					<!-- 护甲 -->
-					<CATUI_entity_buff_item width="26" height="26" buff_color="0, 255, 0" buff_icon="catui_icon_shield" buff_corner_text="" buff_icon_text="{CATUI_EntityArmorRating}" buff_timer="" visible="{# int(CATUI_EntityArmorRating) > 0}" />
+					<!-- 护甲（数值展示在角标/层数位置） -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="0, 255, 0" buff_icon="catui_icon_shield" buff_corner_text="{CATUI_EntityArmorRating}" buff_timer="" visible="{# int(CATUI_EntityArmorRating) > 0}" />
 
 					<!-- 睡眠 -->
 					<CATUI_entity_buff_item width="26" height="26" buff_color="255, 0, 0" buff_icon="catui_icon_sleep" buff_corner_text="" buff_icon_text="" buff_timer="" visible="{CATUI_EntityIsSleeping}" />
@@ -429,6 +429,57 @@
 
 					<!-- 流血 -->
 					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_deep_cuts" buff_corner_text="{CATUI_EntityBleedingCounter}" buff_icon_text="" buff_timer="{CATUI_EntityBleedingTimer}" visible="{CATUI_EntityIsBleeding}" />
+
+					<!-- 内出血 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_critical" buff_corner_text="" buff_timer="{CATUI_EntityInternalBleedingTimer}" visible="{CATUI_EntityIsInternalBleeding}" />
+
+					<!-- 脑震荡 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,128,0" buff_icon="ui_game_symbol_concussion" buff_corner_text="" buff_timer="{CATUI_EntityConcussedTimer}" visible="{CATUI_EntityIsConcussed}" />
+
+					<!-- 眩晕 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,128,0" buff_icon="ui_game_symbol_stunned" buff_corner_text="" buff_timer="{CATUI_EntityStunnedTimer}" visible="{CATUI_EntityIsStunned}" />
+
+					<!-- 击倒/倒地 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,128,0" buff_icon="ui_game_symbol_stunned" buff_corner_text="" buff_timer="{CATUI_EntityKnockedDownTimer}" visible="{CATUI_EntityIsKnockedDown}" />
+
+					<!-- 昏迷（KO） -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,128,0" buff_icon="ui_game_symbol_critical" buff_corner_text="" buff_timer="{CATUI_EntityUnconsciousTimer}" visible="{CATUI_EntityIsUnconscious}" />
+
+					<!-- 致残/跛行 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,128,0" buff_icon="ui_game_symbol_stunned" buff_corner_text="" buff_timer="{CATUI_EntityCrippledTimer}" visible="{CATUI_EntityIsCrippled}" />
+
+					<!-- 减速 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,128,0" buff_icon="ui_game_symbol_twitch_slow" buff_corner_text="" buff_timer="{CATUI_EntitySlowedTimer}" visible="{CATUI_EntityIsSlowed}" />
+
+					<!-- 腿部受伤 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,128,0" buff_icon="ui_game_symbol_brokenbone" buff_corner_text="" buff_timer="{CATUI_EntityLegInjuredTimer}" visible="{CATUI_EntityLegInjured}" />
+
+					<!-- 手臂受伤 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,128,0" buff_icon="ui_game_symbol_broken_arm" buff_corner_text="" buff_timer="{CATUI_EntityArmInjuredTimer}" visible="{CATUI_EntityArmInjured}" />
+
+					<!-- 电击 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_electric_power" buff_corner_text="" buff_timer="{CATUI_EntityShockedTimer}" visible="{CATUI_EntityIsShocked}" />
+
+					<!-- 着火 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_fire" buff_corner_text="" buff_timer="{CATUI_EntityOnFireTimer}" visible="{CATUI_EntityIsOnFire}" />
+
+					<!-- 辐射回复 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_radiation" buff_corner_text="" buff_timer="" visible="{CATUI_EntityIsRadiatedRegen}" />
+
+					<!-- 辐射回复阻断 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,255,0" buff_icon="ui_game_symbol_radiation" buff_corner_text="" buff_timer="{CATUI_EntityRadiatedRegenBlockTimer}" visible="{CATUI_EntityIsRadiatedRegenBlock}" />
+
+					<!-- 传奇 Boss -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="132,0,155" buff_icon="ui_game_symbol_skull" buff_corner_text="" buff_timer="" visible="{CATUI_EntityIsLegendary}" />
+
+					<!-- 狂暴 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,255,0" buff_icon="ui_game_symbol_berserker" buff_corner_text="" buff_timer="" visible="{CATUI_EntityIsBerserk}" />
+
+					<!-- 护甲撕裂 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,128,0" buff_icon="ui_game_symbol_armor_iron" buff_corner_text="{CATUI_EntityArmorShreddedCounter}" buff_timer="{CATUI_EntityArmorShreddedTimer}" visible="{CATUI_EntityIsArmorShredded}" />
+
+					<!-- 士气低落 -->
+					<CATUI_entity_buff_item width="26" height="26" buff_color="255,128,0" buff_icon="ui_game_symbol_sledge" buff_corner_text="" buff_timer="{CATUI_EntityCrippledMoraleTimer}" visible="{CATUI_EntityIsCrippledMorale}" />
 				</table>
 			</rect>
 			<rect name="targetHealthBarIsboss" pos="-267,-85" width="725" height="25" visible="{isboss}" >

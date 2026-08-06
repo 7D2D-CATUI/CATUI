@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    CATUI 配置文件（Gears 模组兼容格式）。
+
+    有 Gears 模组时：游戏内设置界面（Options -> Mods -> CATUI）会显示并控制此处的开关；
+    无 Gears 模组时：直接修改下方 value 值即可生效（On=开启，Off=关闭），重启游戏生效。
+
+    当前支持的开关：
+      CATUI_LocalLoadEnabled  联机配置叠加功能（默认 On）。
+        On  ：进入服务器时保留服务器配置并叠加本地 CATUI 补丁；服务器下发空/缺失时回退本地文件。
+        Off ：完全使用原版加载行为，不做任何叠加/回退。
+-->
+<ModSettings>
+	<Global>
+		<Tab name="General" displayKey="CATUI_ModSettingsGeneral" tooltipKey="CATUI_ModSettingsGeneralTooltip">
+			<Category name="General" displayKey="CATUI_ModSettingsCategory" tooltipKey="CATUI_ModSettingsCategoryTooltip">
+				<Switch name="CATUI_LocalLoadEnabled" displayKey="CATUI_LocalLoadEnabled" tooltipKey="CATUI_LocalLoadEnabledTooltip" value="On" defaultValue="On" leftValue="Off" rightValue="On" />
+			</Category>
+		</Tab>
+	</Global>
+</ModSettings>

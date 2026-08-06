@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2026/08/06 3.0.08 Update (7DTD 3.1)
+- `[新增]` 整合CATUI LOCAL LOAD到主代码，未来CATUI成为Client Side（客户端）模组，服务端不需额外安装CATUI；
+- `[新增]` LOCAL LOAD开关，支持手动修改ModSettings.xml参数配置，或者搭配Gears通过GUI修改配置（需要重启）；
+- `[修复]` Quartz兼容，看不到弹药数字问题；
+- `[优化]` 目标buff，逻辑重写，新增10项各种debuff，包括眩晕，减速，护甲撕裂等等；
+
 ### 2026/08/04 3.0.07 Update (7DTD 3.1)
 - `[新增]` 组队HUD，steam队友会展示头像，非steam玩家（或取不到头像）展示数字；
 - `[优化]` 增加了一些容错机制，避免在异常情况（加载顺序其他mod配置等）导致报错，影响游玩；

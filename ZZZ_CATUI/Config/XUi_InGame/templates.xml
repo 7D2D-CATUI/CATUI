@@ -51,13 +51,12 @@
 
 		<!-- 敌人buff - buff_color要用RGB  -->
 		<CATUI_entity_buff_item>
-			<rect width="${width}" height="${height}" visible="${visible}" buff_icon_text="0" buff_timer="" buff_corner_text="">
+			<rect width="${width}" height="${height}" visible="${visible}" buff_timer="" buff_corner_text="">
 				<sprite depth="1" pos="-2,2" width="${Floor(width) + 4}" height="${Floor(height) + 4}" color="${buff_color},75" style="CATUI.sprite.filled.prue" type="sliced" />
 				<sprite depth="2" color="[black]" type="sliced" />
 				<sprite depth="3" pos="13,-13" pivot="center" size="22,22" color="${buff_color}" sprite="${buff_icon}" globalopacity="false" />
 				<label depth="4" pos="${width-5}, -5" font_size="13" justify="right" pivot="center" text="${buff_corner_text}" overflow="resizefreely" parse_actions="true" color="[gold]" style="CATUI.text.outline.black.1px" visible="${buff_corner_text != ''}" />
-				<label depth="4" pos="13, -15" font_size="13" justify="center" pivot="center" text="${buff_icon_text}" style="CATUI.text.outline.black.1px" visible="${buff_icon_text != ''}" />
-				<label depth="4" pos="13, -30" font_size="14" justify="center" pivot="center" text="${buff_timer}" style="CATUI.text.shadow.black.1px" visible="${buff_timer != '0'}" />
+				<label depth="4" pos="13, -30" font_size="14" justify="center" pivot="center" text="${buff_timer}" style="CATUI.text.shadow.black.1px" />
 			</rect>
 		</CATUI_entity_buff_item>
 
