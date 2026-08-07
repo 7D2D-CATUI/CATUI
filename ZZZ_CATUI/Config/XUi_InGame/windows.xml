@@ -317,33 +317,35 @@
 							<!-- 背景 -->
 							<sprite pivot="center" size="40,40" color="[black]" sprite="catui_icon_hexagon_round" globalopacity="false"  />
 							<!-- 白天 -->
-							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay - day == 0 ? '255,0,0': '255,255,255'}" sprite="catui_icon_time_day" globalopacity="false" visible="{# (CATUI_currentWeather == 'Biome' or CATUI_currentWeather == 'None') and CATUI_isDaytime }" />
+							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay == 1 ? '255,0,0' : '255,255,255'}" sprite="catui_icon_time_day" globalopacity="false" visible="{# (CATUI_currentWeather == 'Biome' or CATUI_currentWeather == 'None') and CATUI_isDaytime }" />
 							<!-- 夜晚 -->
-							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay - day == 0 ? '255,0,0': '255,255,255'}" sprite="catui_icon_time_night" globalopacity="false" visible="{# (CATUI_currentWeather == 'Biome' or CATUI_currentWeather == 'None') and !CATUI_isDaytime }" />
+							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay == 1 ? '255,0,0' : '255,255,255'}" sprite="catui_icon_time_night" globalopacity="false" visible="{# (CATUI_currentWeather == 'Biome' or CATUI_currentWeather == 'None') and !CATUI_isDaytime }" />
 							<!-- 下雪 -->
-							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay - day == 0 ? '255,0,0': '255,255,255'}" sprite="catui_icon_weather_snowy" globalopacity="false" visible="{#CATUI_currentWeather == 'Snowy'}" />
+							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay == 1 ? '255,0,0' : '255,255,255'}" sprite="catui_icon_weather_snowy" globalopacity="false" visible="{#CATUI_currentWeather == 'Snowy'}" />
 							<!-- 雷阵雨 -->
-							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay - day == 0 ? '255,0,0': '255,255,255'}" sprite="catui_icon_weather_stormy" globalopacity="false" visible="{#CATUI_currentWeather == 'Stormy'}" />
+							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay == 1 ? '255,0,0' : '255,255,255'}" sprite="catui_icon_weather_stormy" globalopacity="false" visible="{#CATUI_currentWeather == 'Stormy'}" />
 							<!-- 下雨 -->
-							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay - day == 0 ? '255,0,0': '255,255,255'}" sprite="catui_icon_weather_rainy" globalopacity="false" visible="{#CATUI_currentWeather == 'Rainy'}" />
+							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay == 1 ? '255,0,0' : '255,255,255'}" sprite="catui_icon_weather_rainy" globalopacity="false" visible="{#CATUI_currentWeather == 'Rainy'}" />
 							<!-- 下雾  -->
-							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay - day == 0 ? '255,0,0': '255,255,255'}" sprite="catui_icon_weather_foggy" globalopacity="false" visible="{#CATUI_currentWeather == 'Foggy'}" />
-							<!-- 血月 -->
-							<sprite pivot="center" size="26,26" color="[red]" sprite="catui_icon_moon_full" globalopacity="false" foregroundlayer="true" visible="{#CATUI_currentWeather == 'BloodMoon'}" />
+							<sprite pivot="center" size="20,20" color="{# CATUI_nextBloodMoonDay == 1 ? '255,0,0' : '255,255,255'}" sprite="catui_icon_weather_foggy" globalopacity="false" visible="{#CATUI_currentWeather == 'Foggy'}" />
+							<!-- 血月icon -->
+							<sprite pivot="center" size="22,22" color="[white]" sprite="catui_icon_moon_full" globalopacity="false" foregroundlayer="true" visible="{#CATUI_currentWeather == 'BloodMoon'}" />
+							<!-- 血月进度环（22:00-04:00 刷怪进度 0-1） -->
+							<sprite pivot="center" size="24,24" color="[red]" sprite="catui_icon_moon_full" type="filled" fill="{# 1 - CATUI_bloodMoonProgress }" filldirection="Radial360" globalopacity="false" foregroundlayer="true" visible="{#CATUI_currentWeather == 'BloodMoon'}" />
 						</rect>
 					</rect>
 					<rect width="38">
 						<sprite color="[transparent]" />
-						<sprite pos="15,-20" pivot="center" size="20,20" color="255, 96, 96" sprite="catui_icon_moon_full" globalopacity="false" foregroundlayer="true" visible="{# CATUI_nextBloodMoonDay - day == 1 }" />
+						<sprite pos="15,-20" pivot="center" size="20,20" color="255, 96, 96" sprite="catui_icon_moon_full" globalopacity="false" foregroundlayer="true" visible="{# CATUI_nextBloodMoonDay == 2 }" />
 					</rect>
 					<rect width="38">
 						<sprite color="[transparent]" />
 						
-						<sprite pos="15,-20" pivot="center" size="20,20" color="255, 172, 172" sprite="catui_icon_moon_full" globalopacity="false" foregroundlayer="true" visible="{# CATUI_nextBloodMoonDay - day == 2 }" />
+						<sprite pos="15,-20" pivot="center" size="20,20" color="255, 172, 172" sprite="catui_icon_moon_full" globalopacity="false" foregroundlayer="true" visible="{# CATUI_nextBloodMoonDay == 3 }" />
 					</rect>
 					<rect width="38">
 						<sprite color="[transparent]" />
-						<sprite pos="15,-20" pivot="center" size="20,20" color="255, 255, 255" sprite="catui_icon_moon_full" globalopacity="false" foregroundlayer="true" visible="{# CATUI_nextBloodMoonDay - day == 3 }" />
+						<sprite pos="15,-20" pivot="center" size="20,20" color="255, 255, 255" sprite="catui_icon_moon_full" globalopacity="false" foregroundlayer="true" visible="{# CATUI_nextBloodMoonDay == 4 }" />
 					</rect>
 				</table>
 
@@ -406,26 +408,17 @@
 					<!-- 睡眠 -->
 					<CATUI_entity_buff_item width="26" height="26" buff_color="255, 0, 0" buff_icon="catui_icon_sleep" buff_corner_text="" buff_icon_text="" buff_timer="" visible="{CATUI_EntityIsSleeping}" />
 
-					<!-- 辐射回血 -->
+					<!-- 辐射回复 -->
 					<CATUI_entity_buff_item width="26" height="26" buff_color="0, 255, 0" buff_icon="ui_game_symbol_radiation" buff_corner_text="" buff_icon_text="" buff_timer="" visible="{# CATUI_EntityIsRadiatedRegen and !CATUI_EntityIsRadiatedRegenBlock}" />
 
-					<!-- 屏蔽辐射回血 -->
+					<!-- 辐射回复阻断 -->
 					<rect width="26" height="26" visible="{CATUI_EntityIsRadiatedRegenBlock}">
 						<sprite depth="1" pos="-2,2" width="30" height="30" color="255, 0, 0,75" style="CATUI.sprite.filled.prue" type="sliced" />
 						<sprite depth="2" color="[black]" type="sliced" />
 						<sprite depth="3" pos="13,-13" pivot="center" size="12,12" color="[green]" sprite="ui_game_symbol_radiation" globalopacity="false" />
 						<sprite depth="4" pos="13,-13" pivot="center" size="22,22" color="[red]" sprite="catui_icon_block" globalopacity="false" />
-						<label depth="4" pos="13, -30" font_size="14" justify="center" pivot="center" text="{CATUI_EntityRadiatedRegenBlockTimer}" style="CATUI.text.shadow.black.1px" visible="{# CATUI_EntityRadiatedRegenBlockTimer != '0' }" />
+						<label depth="4" pos="13, -30" font_size="14" justify="center" pivot="center" text="{CATUI_EntityRadiatedRegenBlockTimer}" style="CATUI.text.shadow.black.1px" />
 					</rect>
-
-					<!-- 致残 -->
-					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_stunned" buff_corner_text="" buff_icon_text="" buff_timer="" visible="{CATUI_EntityIsCrippled}" />
-
-					<!-- 电击 -->
-					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_electric_power" buff_corner_text="" buff_icon_text="" buff_timer="{CATUI_EntityShockedTimer}" visible="{CATUI_EntityIsShocked}" />
-
-					<!-- 着火 -->
-					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_fire" buff_corner_text="" buff_icon_text="" buff_timer="{CATUI_EntityOnFireTimer}" visible="{CATUI_EntityIsOnFire}" />
 
 					<!-- 流血 -->
 					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_deep_cuts" buff_corner_text="{CATUI_EntityBleedingCounter}" buff_icon_text="" buff_timer="{CATUI_EntityBleedingTimer}" visible="{CATUI_EntityIsBleeding}" />
@@ -462,12 +455,6 @@
 
 					<!-- 着火 -->
 					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_fire" buff_corner_text="" buff_timer="{CATUI_EntityOnFireTimer}" visible="{CATUI_EntityIsOnFire}" />
-
-					<!-- 辐射回复 -->
-					<CATUI_entity_buff_item width="26" height="26" buff_color="255,0,0" buff_icon="ui_game_symbol_radiation" buff_corner_text="" buff_timer="" visible="{CATUI_EntityIsRadiatedRegen}" />
-
-					<!-- 辐射回复阻断 -->
-					<CATUI_entity_buff_item width="26" height="26" buff_color="255,255,0" buff_icon="ui_game_symbol_radiation" buff_corner_text="" buff_timer="{CATUI_EntityRadiatedRegenBlockTimer}" visible="{CATUI_EntityIsRadiatedRegenBlock}" />
 
 					<!-- 传奇 Boss -->
 					<CATUI_entity_buff_item width="26" height="26" buff_color="132,0,155" buff_icon="ui_game_symbol_skull" buff_corner_text="" buff_timer="" visible="{CATUI_EntityIsLegendary}" />
@@ -526,15 +513,15 @@
 
 			<!-- 武器弹药 -->
 			<sprite pos="-108,27" width="190" height="52" color="[darkestGrey]" type="sliced" sprite="catui_active_ammo_max" visible="{# CATUI_playerActiveItemIcon != staticon }" />
-			<table depth="3" pos="-100,24" width="200" cols="4" padding="0,0" hide_inactive="true" always_reposition="true" visible="{# CATUI_playerActiveItemIcon != staticon }">
-				<label height="45" overflow="resizefreely" justify="right" font_size="52" text="{statcurrent}" font_face="FederationHull" pivot="bottom" style="CATUI.text.shadow.black.1px" />
+			<table depth="3" pos="-104,26" width="200" cols="4" padding="0,0" hide_inactive="true" always_reposition="true" visible="{# CATUI_playerActiveItemIcon != staticon }">
+				<label height="45" overflow="resizefreely" justify="right" font_size="52" text="{statcurrent}" font_face="catui_font_number" pivot="bottom" style="CATUI.text.shadow.black.1px" />
 				<rect width="16">
 					<sprite color="[transparent]" />
 					<label pos="0,-19" font_size="26" color="[lightestGrey]" text=" /" style="CATUI.text.shadow.black.1px" />
 				</rect>
 				<rect width="72">
 					<sprite color="[transparent]" />
-					<label width="52" height="45" font_size="26" color="[lightestGrey]" text="{CATUI_AmmoMax}" font_face="FederationHull" pivot="bottom" style="CATUI.text.shadow.black.1px" />
+					<label width="52" height="45" font_size="26" color="[lightestGrey]" text="{CATUI_AmmoMax}" font_face="catui_font_number" pivot="bottom" style="CATUI.text.shadow.black.1px" />
 				</rect>
 			</table>
 			<!-- 弹药种类 -->
@@ -553,8 +540,10 @@
 				<sprite sprite="catui_bg_speed_meter_bg" size="220,220" color="0,0,0,220" type="sliced" pivot="center" />
 				<!-- 仪表盘 - 背景 -->
 				<sprite sprite="catui_bg_speed_meter" size="200,200" color="[lightestGrey]" type="sliced" pivot="center" />
+				<!-- 仪表盘 - 涡轮区间；-->
+				<sprite sprite="catui_bg_speed_current" size="200,200" type="filled" fill="{# (1-CATUI_VehicleTurboRatio) * 0.8 }" filldirection="Radial360" color="168,48,30" fillinvert="true" globalopacity="false" foregroundlayer="true" pivot="center" rotation="-144" flip="Horizontally" fillInvert="false" />
 				<!-- 仪表盘 - 速度 72=底部缺失的扇形角度，刻度=(360-72)/16=18；填充80%：0.8=(360-72)/360；-->
-				<sprite sprite="catui_bg_speed_current" size="200,200" type="filled" fill="{# CATUI_VehicleCurrentSpeedFill * 0.8 }" filldirection="Radial360" color="[white]" fillinvert="true" globalopacity="false" pivot="center" rotation="144" />
+				<sprite sprite="catui_bg_speed_current" size="200,200" type="filled" fill="{# CATUI_VehicleCurrentSpeedFill * 0.8 }" filldirection="Radial360" color="[white]" fillinvert="true" globalopacity="false" foregroundlayer="true" pivot="center" rotation="144" />
 				<!-- 仪表盘 - 刹车 -->
 				<sprite sprite="catui_icon_brake" size="30,30" color="{# CATUI_VehicleIsBrake ? '255, 39, 38' : '160,160,160' }" type="sliced" pivot="center" pos="-36,-22" />
 				<sprite sprite="catui_bg_speed_brake" size="200,200" color="{# CATUI_VehicleIsBrake ? '255, 39, 38' : '160,160,160' }" type="sliced" pivot="center" />
@@ -562,17 +551,17 @@
 				<sprite sprite="catui_icon_turbo" size="30,30" color="{# CATUI_VehicleIsTurbo ? '67, 207, 124' : '160,160,160' }" type="sliced" pivot="center" pos="36,-22" />
 				<sprite sprite="catui_bg_speed_turbo" size="200,200" color="{# CATUI_VehicleIsTurbo ? '67, 207, 124' : '160,160,160' }" type="sliced" pivot="center" />
 				<!-- 仪表盘 - 当前速度 -->
-				<label pos="0,18" font_size="60" text="{CATUI_VehicleCurrentSpeedKPH}" width="200" height="100" pivot="center" justify="center" />
+				<label pos="0,18" font_size="60" text="{CATUI_VehicleCurrentSpeedKPH}" font_face="catui_font_number" width="200" height="100" pivot="center" justify="center" />
 				<!-- 仪表盘 - KPH单位 -->
 				<rect pos="0,60" width="40" height="24">
 					<sprite sprite="Button" color="0,0,0,200" type="sliced" pivot="center" />
 					<label pos="0,0" font_size="18" text="kmh" color="200,200,200" justify="center" pivot="center" />
 				</rect>
 				<!-- 载具耐久 -->
-				<rect pos="-216,72" width="220">
-					<sprite width="94" height="179" pos="0, 0" color="[black_threequarters_alpha]" style="CATUI.sprite.filled.prue" />
+				<rect pos="-200,72" width="220">
+					<sprite width="80" height="170" pos="0, 0" color="[black_threequarters_alpha]" style="CATUI.sprite.filled.prue" />
 					<!-- 载具状态 -->
-					<table pos="0,0" depth="2" cols="1" padding="5,5" hide_inactive="true" always_reposition="true">
+					<grid pos="5,-5" depth="2" cols="1" cell_width="55" cell_height="55" hide_inactive="true" always_reposition="true">
 						<!-- 库存 -->
 						<rect width="50" height="50" tooltip_key="xuiVehicleStorage">
 							<sprite sprite="catui_bg_state" gradient_start="[darkestGrey]" gradient_end="[black]" style="CATUI.sprite.filled.prue" />
@@ -599,28 +588,35 @@
 							</rect>
 							<label pos="0,-36" width="50" height="14" font_size="14" color="[gold]" text="{mapelevation}M" style="CATUI.text.outline.black.1px" justify="center" />
 						</rect>
-					</table>
+					</grid>
 					<!-- 载具耐久 -->
-					<rect pos="65, -5">
-						<rect pos="0, -169" width="169" height="24" rotation="90">
-							<sprite color="[black]" style="CATUI.sprite.filled.prue" />
-							<sprite type="filled" color="{# statfill &lt; 0.4 ? '255,0,0' : (statfill &lt; 0.6 ? '255, 195, 0' : '255,255,255') }" fill="{statfill}" style="CATUI.sprite.filled.prue" foregroundlayer="true" globalopacity="false" />							
+					<rect pos="60, -5">
+						<rect pos="0, -160" width="160" height="14" rotation="90">
+							<sprite depth="1" color="[black]" sprite="catui_stat_background_bar" style="CATUI.sprite.filled.prue" />
+							<sprite depth="2" color="[black]" sprite="catui_stat_background_bar" style="CATUI.sprite.filled.prue" visible="{# Round(statfill, 2) &lt; 0.3 }">
+								<tween type="Color" start="54,54,54" end="192,0,0" enabled="{# Round(statfill, 2) &lt; 0.3 ? 'true' : 'false' }" repeat="PingPong" duration="0.8" />
+							</sprite>
+							<sprite depth="3" type="filled" sprite="catui_stat_background_bar" color="255,255,255" fill="{statfill}" style="CATUI.sprite.filled.prue" foregroundlayer="true" globalopacity="false" />							
 						</rect>
-						<sprite pos="2,-147" sprite="catui_icon_repair" size="20,20" color="[black]" foregroundlayer="true" />
+						<sprite depth="4" pos="0,-144" sprite="catui_icon_repair" size="14,14" color="[black]" foregroundlayer="true" />
 					</rect>
 				</rect>
 			</rect>	
 			<!-- 油量 -->
 			<rect pos="370,-264"  width="90" height="9" controller="HUDStatBar" stat_type="VehicleFuel" visible="{statvisible}">
 				<!-- icon -->
-				<sprite atlas="{staticonatlas|once}" sprite="{staticon|once}" color="[lightestGrey]" size="22,22" pivot="center" pos="0,18" />
+				<sprite depth="1" atlas="{staticonatlas|once}" sprite="ui_game_symbol_gas" color="[lightestGrey]" size="22,22" pivot="center" pos="0,18" />
+				<sprite depth="2" atlas="{staticonatlas|once}" sprite="ui_game_symbol_gas" color="[lightestGrey]" size="22,22" pivot="center" pos="0,18" visible="{# Round(statfill, 1) &lt; 0.3 }">
+					<tween type="scale" start="1,1,1" end="2.0,2.0,1" enabled="{# Round(statfill, 1) &lt; 0.3 }" repeat="Loop" duration="0.8" play_forward="true" />
+					<tween type="Color" start="160,160,160" end="255,0,0,100" enabled="{# Round(statfill, 1) &lt; 0.3 }" repeat="Loop" duration="0.8" play_forward="true" />
+				</sprite>
 				<!-- 背景 -->
 				<sprite sprite="catui_bg_fuel_bg" color="[darkGrey]" pivot="center" />
 				<!-- 填充 -->
-				<sprite sprite="catui_bg_fuel_fill" type="filled" fill="{statfill}" color="[white]" globalopacity="false" pivot="center" />
+				<sprite sprite="catui_bg_fuel_fill" type="filled" fill="{statfill}" color="[white]" globalopacity="false" foregroundlayer="true" pivot="center" />
 				<!-- 边框 -->
 				<sprite sprite="catui_bg_fuel" color="[lightestGrey]" pivot="center" />
-				<label pos="0,-14" font_size="14" color="{# statfill &lt; 0.4 ? '255,0,0' : (statfill &lt; 0.6 ? '255, 195, 0' : '255,255,255') }" justify="center" pivot="center" text="{statcurrentwithmax}" height="20" />
+				<label pos="0,-14" font_size="14" color="255,255,255" justify="center" pivot="center" text="{statcurrentwithmax}" height="20" />
 			</rect>
 		</rect>
 	</append>
@@ -692,7 +688,7 @@
 				</rect>
 				<rect name="Water" pos="507, 33" width="82" height="68" controller="HUDStatBar" stat_type="Water" tooltip_key="xuiWater" visible="{statvisible}">
 					<sprite depth="1" pos="85,-14" size="100,100" sprite="catui_stat_water_bar" color="54,54,54" foregroundlayer="true" rotation="-100" />
-					<sprite depth="1" pos="85,-14" size="100,100" sprite="catui_stat_water_bar" color="54,54,54" foregroundlayer="true" rotation="-100" visible="{# Round(statfill, 2) &lt; 0.3 }">
+					<sprite depth="2" pos="85,-14" size="100,100" sprite="catui_stat_water_bar" color="54,54,54" foregroundlayer="true" rotation="-100" visible="{# Round(statfill, 2) &lt; 0.3 }">
 						<tween type="Color" start="54,54,54" end="192,0,0,255" enabled="{# Round(statfill, 2) &lt; 0.3 }" repeat="PingPong" duration="0.8" />
 					</sprite>
 					<sprite depth="3" type="filled" pos="85,-14" size="100,100" sprite="catui_stat_water_bar" color="46,129,234,225" fill="{# Round(statfill, 3) &lt; 0.001 ? 0 : Round(statfill * 0.37, 3) }" filldirection="Radial360" foregroundlayer="true" rotation="-100" />
@@ -1020,7 +1016,7 @@
 	<!-- 技能界面 右侧 属性详情 windowSkillAttributeInfo -->
 	<remove xpath="/windows/window[@name='windowSkillAttributeInfo']"/>
 	<append xpath="/windows">
-		<window name="windowSkillAttributeInfo" width="647" height="730" panel="Right" controller="SkillAttributeInfoWindow" cursor_area="true" hidden_entries_with_paging="2" >
+		<window name="windowSkillAttributeInfo" width="647" height="730" panel="Right" controller="SkillAttributeInfoWindow" cursor_area="true" hidden_entries_with_paging="0" >
 			<rect name="header" height="43" depth="1" backgroundspritename="ui_game_panel_header">
 				<headerbg />
 				<sprite pos="4,-5" depth="2" name="windowIcon" style="icon32px" sprite="ui_game_symbol_skills"/>
@@ -1043,8 +1039,8 @@
 
 				<rect name="tableBox" depth="1" pos="0,-279" width="647" height="450">
 					<sprite name="backgroundMain" height="451" sprite="menu_empty3px" color="[black]" type="sliced" />
-					<grid rows="5" cols="2" pos="0,-9" width="640" cell_width="320" cell_height="88" repeat_content="true" >
-						<skill_perk_level controller="SkillAttributeLevel" width="320" height="88" />
+					<grid rows="5" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="80" hide_inactive="true" repeat_content="true">
+						<skill_perk_level controller="SkillAttributeLevel" width="${parentinnerwidth}" height="${parentinnerheight}" />
 					</grid>
 				</rect>
 

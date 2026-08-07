@@ -9,9 +9,9 @@
 				<sprite type="filled" width="${inner_width}" color="54,54,54" fill="{#Round(statmodifiedmax, 2)}" sprite="catui_stat_health_bar_bg" globalopacity="false" fillInvert="false" />
 				<sprite type="filled" width="${inner_width}" fill="{#1 - Round(statmodifiedmax, 2)}" sprite="catui_stat_health_bar_disabled" foregroundlayer="true" fillInvert="true" />
 				<sprite type="filled" width="${inner_width}" fill="{statfill}" sprite="catui_stat_health_bar_enabled" foregroundlayer="true" fillInvert="false" />
-				<sprite name="Icon" pos="-20,-14" sprite="ui_game_symbol_add" color="[white]" size="20,20" globalopacity="false" justify="center" pivot="center" />
+				<sprite name="Icon" pos="-20,-14" sprite="ui_game_symbol_add" color="[white]" size="20,20" globalopacity="false" foregroundlayer="true" justify="center" pivot="center" />
 				<!-- 生命值小于0.3时显示警告图标 -->
-				<sprite name="Icon" pos="-20,-14" sprite="ui_game_symbol_add" color="[white]" size="20,20" globalopacity="false" justify="center" pivot="center" visible="{# Round(statfill, 1) &lt; 0.3 }">
+				<sprite name="Icon" pos="-20,-14" sprite="ui_game_symbol_add" color="[white]" size="20,20" globalopacity="false" foregroundlayer="true" justify="center" pivot="center" visible="{# Round(statfill, 1) &lt; 0.3 }">
 					<tween type="scale" start="1,1,1" end="2.5,2.5,1" enabled="{# Round(statfill, 1) &lt; 0.3 }" repeat="Loop" duration="0.8" play_forward="true" />
 					<tween type="Color" start="255,255,255" end="255,0,0,100" enabled="{# Round(statfill, 1) &lt; 0.3 }" repeat="Loop" duration="0.8" play_forward="true" />
 				</sprite>
@@ -23,7 +23,7 @@
 				<sprite type="filled" width="${inner_width}" color="54,54,54" fill="{#Round(statmodifiedmax, 2)}" sprite="catui_stat_stamina_bar_bg" globalopacity="false" fillInvert="true" />
 				<sprite type="filled" width="${inner_width}" fill="{#1 - Round(statmodifiedmax, 2)}" sprite="catui_stat_stamina_bar_disabled" foregroundlayer="true" fillInvert="false" />
 				<sprite type="filled" width="${inner_width}" fill="{statfill}" sprite="catui_stat_stamina_bar_enabled" foregroundlayer="true" fillInvert="true" />
-				<sprite name="Icon" pos="283,-14" sprite="ui_game_symbol_electric_power" color="[white]" size="20,20" globalopacity="false" justify="center" pivot="center" />
+				<sprite name="Icon" pos="283,-14" sprite="ui_game_symbol_electric_power" color="[white]" size="20,20" globalopacity="false" foregroundlayer="true" justify="center" pivot="center" />
 				<label pos="-16,-3" width="${inner_width}" font_size="22" color="[white]" text="{statcurrentwithmax}" style="CATUI.text.shadow.black.1px" justify="right" />
 			</rect>
 		</CATUI_stat_stamina_bar>
@@ -142,10 +142,10 @@
 		<item_stack controller="ItemStack" on_scroll="false" allow_dropping="true" prefix_id="false" show_favorites="false" show_slotnum="false" allow_clicklock="true" transform_scale="1" cell_size="[itemStack:width]">
 			<rect name="itemStackContent" controller="${controller}" style="itemStack, hover" collider_scale="1.0" width="${cell_size}" height="${cell_size}" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" show_favorites="${show_favorites}" tooltip="{tooltip}" enabled="{# !defined('userlockmode') or !userlockmode}" visible="{# !defined('container_slots') or (int(${repeat_i}) &lt; int(container_slots)) }" show_slotnum="${show_slotnum}" allow_clicklock="${allow_clicklock}" mod_highlight="[04FE85]▇[-]" mod_default="[A6A6A6]▇[-]" transform_scale="${transform_scale}">
 				<!-- 边框 - 物品的边框，区分多种状态的多种颜色,各种状态参见：XUiC_ItemStack -->
-				<sprite depth="5" name="background" sprite="menu_empty3px" width="${2+cell_size}" height="${2+cell_size}" pos="-1,1" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,150' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
+				<sprite depth="5" name="background" sprite="menu_empty3px" width="${4+cell_size}" height="${4+cell_size}" pos="-2,2" color="{# selectionbordercolor == '96,96,96,255' ? '96,96,96,150' : selectionbordercolor }" type="sliced" globalopacity="true" fillcenter="false" />
 
 				<!-- 背景 - 底色 -->
-				<sprite depth="2" name="highlightOverlay" color="25,25,25,255" type="sliced" globalopacity="true" width="${cell_size}" height="${cell_size}" />
+				<sprite depth="2" name="highlightOverlay" pos="-1,1" color="25,25,25,255" type="sliced" globalopacity="true" width="${2+cell_size}" height="${2+cell_size}" />
 
 				<!-- 方块助手材质背景（油漆刷子） -->
 				<texture depth="3" pos="2,-2" name="backgroundTexture" material="Materials/Transparent Colored" size="${-4+cell_size},${-4+cell_size}" globalopacity="true" />
@@ -179,7 +179,7 @@
 				<sprite depth="8" name="itemtypeicon" width="24" height="24" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 
 				<!-- 品质背景 -->
-				<sprite depth="2" width="${-4+cell_size}" height="${-4+cell_size}" color="{durabilitycolor}" pos="2,-2" type="sliced" sprite="Row Outline" globalopacity="false" visible="{hasdurability}" />
+				<sprite depth="2" width="${-4+cell_size}" height="${-4+cell_size}" color="{durabilitycolor}" pos="2,-2" type="sliced" sprite="Row Outline" globalopacity="false" foregroundlayer="true" visible="{hasdurability}" />
 
 				<!-- 耐久条 -->
 				<!-- 耐久条：永久损耗背景 -->
@@ -331,8 +331,11 @@
 				<label name="TextContent" pos="127, -13" font_size="18" color="[white]" justify="left" pivot="center" text="{name}" height="26" width="150" style="CATUI.text.shadow.black.1px" />
 				<!-- 队友 血条 -->
 				<rect width="${Floor(width) - 50}" height="14" pos="52, -26">
-					<sprite name="BarHealthModifiedMax" sprite="catui_stat_background_bar" type="filled" color="[black]" fill="{healthmodifiedmax}" globalopacity="false" />
-					<sprite name="PlayerBarHealth" sprite="catui_stat_background_bar" type="filled" color="{# healthfill &lt; 0.4 ? '255,0,0' : (healthfill &lt; 0.6 ? '255, 195, 0' : '255,255,255') }" fill="{# Round(healthfill, 3) }" style="CATUI.sprite.filled.prue" globalopacity="false" />
+					<sprite depth="1" name="BarHealthModifiedMax" sprite="catui_stat_background_bar" type="filled" color="[black]" fill="{healthmodifiedmax}" globalopacity="false" />
+					<sprite depth="2" name="BarHealthModifiedMax" sprite="catui_stat_background_bar" type="filled" color="[black]" fill="{healthmodifiedmax}" globalopacity="false" visible="{# Round(healthfill, 2) &lt; 0.3 }">
+						<tween type="Color" start="0,0,0" end="192,0,0,255" enabled="{# Round(healthfill, 2) &lt; 0.3 }" repeat="PingPong" duration="0.8" />
+					</sprite>
+					<sprite depth="3" name="PlayerBarHealth" sprite="catui_stat_background_bar" type="filled" color="[white]" fill="{# Round(healthfill, 3) }" style="CATUI.sprite.filled.prue" globalopacity="false" />
 				</rect>
 
 				<!-- 队友 方位 -->
@@ -536,8 +539,8 @@
 					<!-- 技能等级 -->
 					<rect depth="3" width="${Floor(height) - 6}" height="${Floor(height) - 6}" pivot="center">
 						<sprite depth="1" type="sliced" color="0,0,0,255" />
-						<sprite depth="2" pos="40, -40" sprite="{# CATUI_SkillStat == 'bought' ? 'catui_bg_skill_level_upped' : 'catui_bg_skill_level'}" size="60,60" pivot="center" color="{color_fg}" />
-						<label depth="3" pos="40, -43" text="{level}" color="{color_fg}" font_size="24" justify="center" pivot="center" />
+						<sprite depth="2" pos="37, -36" sprite="{# CATUI_SkillStat == 'bought' ? 'catui_bg_skill_level_upped' : 'catui_bg_skill_level'}" size="56,56" pivot="center" color="{color_fg}" />
+						<label depth="3" pos="36, -38" text="{level}" color="{color_fg}" font_size="22" justify="center" pivot="center" />
 					</rect>
 					<!-- 技能等级名称 -->
 					<label depth="3" pos="${width/2 + 5}, -${height/2}" width="${width - height - height/2 - 36}" height="${height - 10}" text="{text}" pivot="center" justify="left" font_size="24" max_line_count="4" spacing_y="5" color="{color_fg}" />

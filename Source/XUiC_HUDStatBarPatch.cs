@@ -1,4 +1,4 @@
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
 using System;
 using System.Collections;
@@ -54,23 +54,23 @@ public class XUiC_HUDStatBarPatch
 	private static int _cachedFactionMax;
 	private static bool _questCached;
 
-	// 限频刷新 - 每个实例每 10 帧最多触发一次 IsDirty，绑定值变化时按 ~10fps 刷新界面，避免每帧刷新
+	// 限频刷新 - 普通统计绑定每 10 帧标脏一次 IsDirty；车速仪表盘值连续变化，每帧标脏
 	private const int DirtyThrottleFrames = 10;
+	private const int VehicleDirtyThrottleFrames = 1;
 
-	// 按实例记录上次限频触发帧。
-	// 注意：HUD 上存在多个独立 HUDStatBar 实例（LevelNum/GameStage/SkillPoints/…），
-	// 若用全局共享帧号，每 10 帧只会标记到第一个实例，其余实例绑定值变化时不会刷新。
-	// ConditionalWeakTable 不持有实例强引用，实例销毁后状态自动回收。
+	// 按实例记录限频状态（HUD 有多个 HUDStatBar 实例，不能共用全局帧号）
 	private static readonly ConditionalWeakTable<XUiC_HUDStatBar, LastDirtyState> _dirtyStates = new ConditionalWeakTable<XUiC_HUDStatBar, LastDirtyState>();
 
 	private sealed class LastDirtyState
 	{
+		// 统计与车速两个计数槽分开，避免同实例其它 10 帧绑定污染车速的快速限频
 		public int lastDirtyFrame = -DirtyThrottleFrames;
+		public int lastVehicleDirtyFrame = -VehicleDirtyThrottleFrames;
 	}
 
-	// 限频标记 IsDirty：该实例距上次标记达到 10 帧才触发，避免频繁刷新
+	// 距上次标脏达到 intervalFrames 帧才标记 IsDirty
 	[PublicizedFrom(EAccessModifier.Private)]
-	private static void MarkDirtyThrottled(XUiC_HUDStatBar instance)
+	private static void MarkDirtyThrottled(XUiC_HUDStatBar instance, int intervalFrames)
 	{
 		if (instance == null)
 		{
@@ -78,16 +78,30 @@ public class XUiC_HUDStatBarPatch
 		}
 		int frame = Time.frameCount;
 		LastDirtyState state = _dirtyStates.GetOrCreateValue(instance);
-		if (frame - state.lastDirtyFrame >= DirtyThrottleFrames)
+		if (intervalFrames == VehicleDirtyThrottleFrames)
+		{
+			if (frame - state.lastVehicleDirtyFrame >= intervalFrames)
+			{
+				state.lastVehicleDirtyFrame = frame;
+				instance.IsDirty = true;
+			}
+		}
+		else if (frame - state.lastDirtyFrame >= intervalFrames)
 		{
 			state.lastDirtyFrame = frame;
 			instance.IsDirty = true;
 		}
 	}
 
-	// 限频轮询兜底：原版 stat 无变化时 hasChanged() 为 false，RefreshBindings 不会执行，
-	// 自定义绑定值变化便无法刷新；这里按实例每 10 帧标记一次 IsDirty，
-	// 保证每个 HUDStatBar 实例的 GetBindingValueInternal 都被定期调用、绑定值持续刷新
+	// 默认限频（~10fps），用于一般统计绑定
+	[PublicizedFrom(EAccessModifier.Private)]
+	private static void MarkDirtyThrottled(XUiC_HUDStatBar instance)
+	{
+		MarkDirtyThrottled(instance, DirtyThrottleFrames);
+	}
+
+	// 兜底：原版 stat 无变化时不会 RefreshBindings，这里定期标脏保证绑定被求值。
+	// 载具实例（车速仪表盘）每帧标脏维持丝滑刷新，其余实例 10 帧限频
 	[HarmonyPostfix]
 	[HarmonyPatch(typeof(XUiC_HUDStatBar), "Update")]
 	[PublicizedFrom(EAccessModifier.Private)]
@@ -95,6 +109,11 @@ public class XUiC_HUDStatBarPatch
 	{
 		if (__instance == null || __instance.IsDirty)
 		{
+			return;
+		}
+		if (__instance.statGroup == HUDStatGroups.Vehicle)
+		{
+			__instance.IsDirty = true;
 			return;
 		}
 		MarkDirtyThrottled(__instance);
@@ -187,6 +206,26 @@ public class XUiC_HUDStatBarPatch
 		return _cachedVehicle;
 	}
 
+	// 载具实际可达到的最大速度：优先用引擎收敛后的 velocityMax（已含 mod/BUFF 速度倍率），
+	// 为 0（未初始化/停驶）时回退到 涡轮上限×倍率 的物理公式
+	private static float GetEffectiveMaxSpeed(EntityVehicle vehicle)
+	{
+		if (vehicle != null)
+		{
+			float vm = vehicle.velocityMax;
+			if (vm > 0f)
+			{
+				return vm;
+			}
+			Vehicle v = vehicle.GetVehicle();
+			if (v != null)
+			{
+				return v.VelocityMaxTurboForward * v.EffectVelocityMaxPer;
+			}
+		}
+		return 0f;
+	}
+
 	private static void EnsureQuestCache(EntityPlayerLocal player)
 	{
 		if (!_questCached && player != null)
@@ -203,12 +242,11 @@ public class XUiC_HUDStatBarPatch
 	public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiC_HUDStatBar __instance)
 	{
 		EnsureCacheFrame();
-		// 统一限频：所有绑定（含未单独调用的只读绑定，如 CATUI_playerSkillPointsAvailable）每次执行都尝试限频刷新
 		MarkDirtyThrottled(__instance);
 
 		switch (_bindingName)
 		{
-			// 角色名称
+			// 角色姓名
 			case "CATUI_playerName":
 				_value = " ";
 				if (__instance.localPlayer != null)
@@ -218,7 +256,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 弹药最大值
+			// 弹药上限（编辑器工具取数值属性）
 			case "CATUI_AmmoMax":
 				_value = "";
 				if (__instance.localPlayer != null)
@@ -241,7 +279,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 存活时间
+			// 存活时间
 			case "CATUI_playerCurrentLife":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -252,7 +290,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 护甲等级 (直接用数值，避免 string→int 反解析)
+			// 护甲数值
 			case "CATUI_playerArmorRating":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -264,7 +302,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 护甲等级 - 区间 (复用缓存，直接用 float 比较)
+			// 护甲等级区间 (0-6)
 			case "CATUI_playerArmorLevel":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -285,7 +323,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 游戏阶段
+			// 游戏阶段
 			case "CATUI_playerGameStage":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -295,7 +333,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 搜刮阶段
+			// 搜刮阶段
 			case "CATUI_playerLootStage":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -305,7 +343,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 商人阶段
+			// 商人阶段
 			case "CATUI_playerTraderStage":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -316,7 +354,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 商人阶段 进度 当前值
+			// 商人阶段进度 - 当前值
 			case "CATUI_playerTraderStageProgressCurrent":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -328,7 +366,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 商人阶段 进度 最大值
+			// 商人阶段进度 - 最大值
 			case "CATUI_playerTraderStageProgressMax":
 				_value = "10";
 				if (__instance.localPlayer != null)
@@ -339,7 +377,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 旅行距离
+			// 旅行距离
 			case "CATUI_playerTraveled":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -349,7 +387,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 击杀丧尸数
+			// 击杀丧尸数
 			case "CATUI_playerZombieKills":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -359,7 +397,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 温度 - 体感
+			// 温度 - 体感
 			case "CATUI_coretemp":
 				_value = "";
 				if (__instance.localPlayer != null)
@@ -370,7 +408,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 温度 - 体感 颜色
+			// 温度 - 体感 颜色
 			case "CATUI_coretempcolor":
 				_value = "255,255,255";
 				if (__instance.localPlayer != null)
@@ -389,7 +427,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 温度 - 室外
+			// 温度 - 室外
 			case "CATUI_outsidetemp":
 				_value = "";
 				if (__instance.localPlayer != null)
@@ -400,7 +438,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 温度 - 室外 颜色
+			// 温度 - 室外 颜色
 			case "CATUI_outsidetempcolor":
 				_value = "255,255,255";
 				if (__instance.localPlayer != null)
@@ -419,7 +457,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 网络状态 - ping
+			// 网络 - ping
 			case "CATUI_playerPing":
 				_value = "-1";
 				if (__instance.localPlayer != null)
@@ -434,7 +472,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 网络状态 - 颜色
+			// 网络 - ping 颜色（绿/黄/红，>150/>500）
 			case "CATUI_playerPingColor":
 				_value = "0,0,0";
 				if (__instance.localPlayer != null)
@@ -463,7 +501,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 网络状态 - 是否展示
+			// 网络 - 是否展示 ping
 			case "CATUI_playerPingVisible":
 				_value = "false";
 				if (__instance.localPlayer != null)
@@ -478,7 +516,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 移动速度
+			// 移动速度（百分比）
 			case "CATUI_playerMoveSpeed":
 				_value = "100";
 				if (__instance.localPlayer != null)
@@ -490,7 +528,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 移动速度等级 (复用缓存)
+			// 移动速度等级 (0-6)
 			case "CATUI_playerMoveSpeedLevel":
 				_value = "4";
 				if (__instance.localPlayer != null)
@@ -511,7 +549,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 奔跑速度
+			// 奔跑速度
 			case "CATUI_playerRunSpeed":
 				_value = "110";
 				if (__instance.localPlayer != null)
@@ -523,7 +561,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 购物优惠
+			// 购物优惠
 			case "CATUI_playerBarteringBuying":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -534,7 +572,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 出售优惠
+			// 出售优惠
 			case "CATUI_playerBarteringSelling":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -545,7 +583,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 当前手持武器 - 图标
+			// 当前手持 - 图标
 			case "CATUI_playerActiveItemIcon":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -554,14 +592,15 @@ public class XUiC_HUDStatBarPatch
 					Inventory inventory = localPlayer.inventory;
 					ItemValue itemValue = inventory.GetItem(__instance.currentSlotIndex).itemValue;
 					ItemClass itemClass = itemValue.ItemClass;
-					if (itemClass != null) {
+					if (itemClass != null)
+					{
 						_value = itemClass.GetIconName();
 					}
 				}
 				__result = true;
 				return false;
 
-			// 当前手持武器 - 名称
+			// 当前手物 - 名称
 			case "CATUI_playerActiveItemName":
 				_value = "";
 				if (__instance.localPlayer != null)
@@ -578,7 +617,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 当前手持武器 - 品质
+			// 当前持有物 - 品质颜色
 			case "CATUI_playerActiveItemDurabilityColor":
 				_value = "255,255,255";
 				if (__instance.localPlayer != null)
@@ -596,7 +635,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 当前手持武器 - 耐久 剩余值
+			// 当前手持物 - 耐久 剩余值
 			case "CATUI_playerActiveItemUseTimesResidue":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -624,7 +663,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 当前手持武器 - 耐久 最大值
+			// 当前手持物 - 耐久 最大值
 			case "CATUI_playerActiveItemUseTimesMax":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -652,7 +691,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物 - 待使用技能点
+			// 可用技能点
 			case "CATUI_playerSkillPointsAvailable":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -662,7 +701,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 人物属性 - 目标穿透
+			// 目标穿透
 			case "CATUI_playerEntityPenetrationCount":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -696,20 +735,40 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 载具 - 当前速度（百分比）
+			// 载具 - 当前速度填充条（满格 = 基础+加速达到的涡轮上限）
 			case "CATUI_VehicleCurrentSpeedFill":
 				_value = "0";
-				Vehicle vf = GetCachedVehicle(__instance);
-				if (vf != null)
+				if (__instance.vehicle != null)
 				{
-					float MaxTurboSpeed = vf.VelocityMaxTurboForward;
-					bool hasEnginePart = vf.HasEnginePart();
-					float MaxSpeedPer = vf.EffectVelocityMaxPer;
-					float MaxSpeed = hasEnginePart ? MaxTurboSpeed * MaxSpeedPer : MaxTurboSpeed;
-					float currentSpeed = Mathf.Abs(vf.CurrentForwardVelocity + 0.001f);
-					float SpeedPercent = currentSpeed / MaxSpeed;
-					_value = SpeedPercent < 0.01f ? "0" : SpeedPercent.ToString("F3");
-					MarkDirtyThrottled(__instance);
+					Vehicle vf = __instance.vehicle.GetVehicle();
+					if (vf != null)
+					{
+						float maxSpeed = vf.VelocityMaxTurboForward * vf.EffectVelocityMaxPer;
+						float currentSpeed = Mathf.Abs(vf.CurrentForwardVelocity);
+						float SpeedPercent = maxSpeed > 0f ? currentSpeed / maxSpeed : 0f;
+						SpeedPercent = Mathf.Clamp01(SpeedPercent);
+						_value = SpeedPercent < 0.01f ? "0" : SpeedPercent.ToString("F3");
+						MarkDirtyThrottled(__instance, VehicleDirtyThrottleFrames);
+					}
+				}
+				__result = true;
+				return false;
+
+			// 载具 - 涡轮区间占比（基础档最高速度/涡轮档最高速度，0-1），用于仪表盘涡轮区间背景起点
+			case "CATUI_VehicleTurboRatio":
+				_value = "0";
+				if (__instance.vehicle != null)
+				{
+					Vehicle vr = __instance.vehicle.GetVehicle();
+					if (vr != null)
+					{
+						float turboMax = vr.VelocityMaxTurboForward * vr.EffectVelocityMaxPer;
+						float baseMax = vr.VelocityMaxForward * vr.EffectVelocityMaxPer;
+						float ratio = turboMax > 0f ? baseMax / turboMax : 0f;
+						ratio = Mathf.Clamp01(ratio);
+						_value = ratio.ToString("F3");
+						MarkDirtyThrottled(__instance, VehicleDirtyThrottleFrames);
+					}
 				}
 				__result = true;
 				return false;
@@ -722,37 +781,32 @@ public class XUiC_HUDStatBarPatch
 				{
 					float currentSpeed = Mathf.Abs(vk.CurrentForwardVelocity + 0.001f);
 					_value = currentSpeed < 0.01f ? "0" : (currentSpeed * 3.6f).ToString("F1");
-					MarkDirtyThrottled(__instance);
+					MarkDirtyThrottled(__instance, VehicleDirtyThrottleFrames);
 				}
 				__result = true;
 				return false;
 
-			// 载具 - 未加速 最大速度（米/秒）
+			// 载具 - 未加速 最大速度
 			case "CATUI_VehicleMaxSpeedNotTurbo":
 				_value = "0";
-				Vehicle vm = GetCachedVehicle(__instance);
-				if (vm != null)
+				if (__instance.vehicle != null)
 				{
-					_value = vm.VelocityMaxForward.ToString();
+					_value = GetEffectiveMaxSpeed(__instance.vehicle).ToString("0.00");
 				}
 				__result = true;
 				return false;
 
-			// 载具 - 最大速度（米/秒）
+			// 载具 - 最大速度
 			case "CATUI_VehicleMaxSpeed":
 				_value = "0";
-				Vehicle vmx = GetCachedVehicle(__instance);
-				if (vmx != null)
+				if (__instance.vehicle != null)
 				{
-					float MaxTurboSpeed = vmx.VelocityMaxTurboForward;
-					bool hasEnginePart = vmx.HasEnginePart();
-					float MaxSpeedPer = vmx.EffectVelocityMaxPer;
-					_value = (hasEnginePart ? MaxTurboSpeed * MaxSpeedPer : MaxTurboSpeed).ToString("0.00");
+					_value = GetEffectiveMaxSpeed(__instance.vehicle).ToString("0.00");
 				}
 				__result = true;
 				return false;
 
-			// 载具 - 刹车
+			// 载具 - 是否刹车
 			case "CATUI_VehicleIsBrake":
 				_value = "false";
 				Vehicle vb = GetCachedVehicle(__instance);
@@ -764,7 +818,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 载具 - 库存最大容量
+			// 载具 - 库存容量
 			case "CATUI_VehicleInventorySlotCount":
 				_value = "false";
 				if (__instance.vehicle != null && __instance.vehicle.GetVehicle().HasStorage())
@@ -774,7 +828,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 载具 - 库存已使用容量
+			// 载具 - 库存已用
 			case "CATUI_VehicleInventoryItemCount":
 				_value = "false";
 				if (__instance.vehicle != null && __instance.vehicle.GetVehicle().HasStorage())
@@ -796,7 +850,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 载具 - 是否加速
+			// 载具 - 是否加速中
 			case "CATUI_VehicleIsTurbo":
 				_value = "false";
 				Vehicle vt = GetCachedVehicle(__instance);
@@ -829,7 +883,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 载具 - 是否打开大灯
+			// 载具 - 是否开大灯
 			case "CATUI_VehicleIsLight":
 				_value = "false";
 				if (__instance.vehicle != null)
