@@ -4,7 +4,7 @@
 	<append xpath="/windows">
 		<!--  HUD 状态 -->
 		<window name="HUDLeftStatBars" anchor="LeftTop" depth="-20">
-			<rect id="Level" name="Level" pos="15, -20" width="500">
+			<rect id="Level" name="Level" pos="15, -10" width="500">
 				<rect name="LevelNum" pos="10,-30" width="175" height="50" controller="HUDStatBar">
 					<label pivot="left" text="LV." font_size="26" style="CATUI.text.shadow.black.1px" tooltip_key="xuiLevel" />
 					<label pos="32, 4" pivot="left" text="{cvar($LastPlayerLevel)}" font_size="36" style="CATUI.text.shadow.black.1px" tooltip_key="xuiLevel" />
@@ -16,7 +16,7 @@
 				</rect>
 			</rect>
 
-			<rect name="Stat" pos="18, -76" width="500">
+			<rect name="Stat" pos="18, -60" width="500">
 				<table rows="1" cols="20" padding="5,0" always_reposition="true" hide_inactive="true">
 					<!-- 游戏等级 -->
 					<CATUI_state_item width="50" height="50" name="GameStage" controller="HUDStatBar" tooltip_key="xuiGameStage" visible="{statvisible}" icon="server_history" text="{CATUI_playerGameStage}" />
@@ -26,36 +26,36 @@
 					<!-- <CATUI_state_item name="TraderStage" controller="HUDStatBar" tooltip_key="quest" visible="{statvisible}" icon="ui_game_symbol_quest" text="{# int(CATUI_playerTraderStage) + round(int(CATUI_playerTraderStageProgressCurrent) / int(CATUI_playerTraderStageProgressMax), 2) }" /> -->
 
 					<!-- 温度核心 -->
-					<rect name="CoreTemp" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="xuiBuffStatCoreTemp">
+					<!-- <rect name="CoreTemp" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="xuiBuffStatCoreTemp">
 						<sprite gradient_start="[darkestGrey]" gradient_end="[black]" sprite="catui_bg_state" style="CATUI.sprite.filled.prue" />
 						<rect pos="25, -20" pivot="center">
 							<sprite size="32,32" sprite="ui_game_symbol_temperature" globalopacity="false" color="{CATUI_coretempcolor}" pivot="center" />
 						</rect>
 						<label pos="0,-38" width="50" font_size="14" color="[white]" text="{CATUI_coretemp}" style="CATUI.text.outline.black.1px" justify="center" />
-					</rect>
+					</rect> -->
 
 					<!-- 移动能力 -->
 					<rect name="Mobility" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="statMobility">
 						<sprite gradient_start="[darkestGrey]" gradient_end="[black]" sprite="catui_bg_state" style="CATUI.sprite.filled.prue" />
 						<rect pos="25, -20" pivot="center">
-							<sprite size="32,32" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.0" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '0'}" />
-							<sprite size="32,32" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.1" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '1'}" />
-							<sprite size="32,32" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.2" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '2'}" />
-							<sprite size="32,32" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.3" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '3'}" />
-							<sprite size="32,32" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.4" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '4'}" />
-							<sprite size="32,32" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.5" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '5'}" />
-							<sprite size="32,32" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.6" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '6'}" />
+							<sprite size="28,28" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.0" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '0'}" />
+							<sprite size="28,28" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.1" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '1'}" />
+							<sprite size="28,28" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.2" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '2'}" />
+							<sprite size="28,28" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.3" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '3'}" />
+							<sprite size="28,28" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.4" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '4'}" />
+							<sprite size="28,28" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.5" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '5'}" />
+							<sprite size="28,28" sprite="catui_icon_speed" globalopacity="false" style="CATUI.level.color.6" pivot="center" visible="{#CATUI_playerMoveSpeedLevel == '6'}" />
 						</rect>
-						<label pos="0,-38" width="50" font_size="14" color="[white]" text="{CATUI_playerMoveSpeed}%" style="CATUI.text.outline.black.1px" justify="center" />
+						<label pos="0,-36" width="50" font_size="14" color="[white]" text="{CATUI_playerMoveSpeed}%" style="CATUI.text.outline.black.1px" justify="center" />
 					</rect>
 
 					<!-- 网络状况 -->
 					<rect name="Ping" width="50" height="50" controller="HUDStatBar" visible="{# statvisible and CATUI_playerPingVisible }" tooltip_key="xuiPing">
 						<sprite gradient_start="[darkestGrey]" gradient_end="[black]" sprite="catui_bg_state" style="CATUI.sprite.filled.prue" />
 						<rect pos="25, -20" pivot="center">
-							<sprite size="32,32" sprite="catui_icon_signal" globalopacity="false" color="{CATUI_playerPingColor}" pivot="center" />
+							<sprite size="28,28" sprite="catui_icon_signal" globalopacity="false" color="{CATUI_playerPingColor}" pivot="center" />
 						</rect>
-						<label pos="0,-38" width="50" font_size="14" color="[white]" text="{CATUI_playerPing}ms" style="CATUI.text.outline.black.1px" justify="center" />
+						<label pos="0,-36" width="50" font_size="14" color="[white]" text="{CATUI_playerPing}ms" style="CATUI.text.outline.black.1px" justify="center" />
 					</rect>
 
 					<!-- 剩余可用技能点 -->
@@ -70,8 +70,29 @@
 				</table>
 			</rect>
 
+			<!-- 温度状态条（0-32低温，32-50冷，50-85正常，85-100热，100-132高温） -->
+			<rect pos="26,-134" name="TempBar" width="132" height="16" controller="HUDStatBar" visible="{statvisible}" tooltip_key="xuiBuffStatCoreTemp">
+				<sprite pos="2,0" size="16,16" sprite="ui_game_symbol_temperature" globalopacity="false" color="[white]" pivot="center" />
+				<rect pos="80,0">
+					<sprite width="${parentinnerwidth}" height="${parentinnerheight - 6}" sprite="menu_empty" color="[darkestGrey]" pivot="center" type="sliced" />
+					<sprite name="seg1" width="32" height="${parentinnerheight - 6}" pos="-50,0" pivot="center" color="0,153,255,225" />
+					<sprite name="seg2" width="18" height="${parentinnerheight - 6}" pos="-25,0" pivot="center" color="0,255,255,225" />
+					<sprite name="seg3" width="35" height="${parentinnerheight - 6}" pos="1,0" pivot="center" color="255,255,255,225" />
+					<sprite name="seg4" width="17" height="${parentinnerheight - 6}" pos="26,0" pivot="center" color="255,128,0,225" />
+					<sprite name="seg5" width="32" height="${parentinnerheight - 6}" pos="50,0" pivot="center" color="255,0,0,225" />
+					<sprite width="${parentinnerwidth}" height="${parentinnerheight - 6}" sprite="menu_empty" color="[black]" pivot="center" type="sliced" fillcenter="false" />
+					<sprite depth="4" name="tempBarMark" width="5" height="${parentinnerheight}" sprite="catui_stat_tempBarMark" pivot="center" color="[white]" foregroundlayer="true" />
+					<!-- 体感温度 -->
+					<!-- <label pos="76,6" font_size="14" text="{CATUI_coretemp}" style="CATUI.text.outline.black.1px" /> -->
+				</rect>
+				<!-- 室外温度 -->
+				<!-- <rect pos="156,6" controller="CompassWindow">
+					<label font_size="14" text="{outsidetemp}" style="CATUI.text.outline.black.1px" />
+				</rect> -->
+			</rect>
+
 			<!-- Buff列表 -->
-			<rect name="BuffPopoutList" pos="105,-160" controller="BuffPopoutList">
+			<rect name="BuffPopoutList" pos="105,-170" controller="BuffPopoutList">
 				<rect width="168" height="31" name="item" visible="false" pivot="center" pos="0, 0" style="press" sound="[recipe_click]" on_hover="true">
 					<sprite depth="6" pos="-79, 16" name="Decoration" width="3" height="28" sprite="catui_buff_list_decoration"  color="[transparent]" type="sliced"  />
 					<sprite depth="3" name="Background" pos="-81, 17" sprite="catui_buff_list_bg" height="30" width="220" color="54,54,54" />
@@ -88,6 +109,7 @@
 			<rect name="HUDLeftStatus" pos="-20, 40" width="400" height="120">
 				<!-- 背景 -->
 				<!-- <sprite depth="1" color="[darkestGrey]" sprite="menu_tile_01" type="sliced" style="CATUI.sprite.filled.prue" /> -->
+
 				<!-- 数据 -->
 				<table depth="2" cols="5" padding="5,5" always_reposition="true" hide_inactive="true">
 					<!-- 背包金钱，会和其他模组冲突，暂时先注释 -->
@@ -102,9 +124,9 @@
 					<!-- <rect name="OutsideTemp" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="xuiFeelsLike">
 						<sprite gradient_start="[darkestGrey]" gradient_end="[black]" sprite="catui_bg_state" style="CATUI.sprite.filled.prue" />
 						<rect pos="25, -20" pivot="center">
-							<sprite size="32,32" sprite="ui_game_symbol_temperature" globalopacity="false" color="{CATUI_outsidetempcolor}" pivot="center" />
+							<sprite size="28,28" sprite="ui_game_symbol_temperature" globalopacity="false" color="{CATUI_outsidetempcolor}" pivot="center" />
 						</rect>
-						<label pos="0,-38" width="50" font_size="14" color="[white]" text="{CATUI_outsidetemp}" style="CATUI.text.outline.black.1px" justify="center" />
+						<label pos="0,-36" width="50" font_size="14" color="[white]" text="{CATUI_outsidetemp}" style="CATUI.text.outline.black.1px" justify="center" />
 					</rect> -->
 					<!-- 奔跑速度 -->
 					<CATUI_state_item width="50" height="50" name="RunSpeed" controller="HUDStatBar" tooltip_key="statRunSpeed" visible="{statvisible}" icon="ui_game_symbol_run" text="+{CATUI_playerRunSpeed}%" />
@@ -115,7 +137,7 @@
 		<!-- 屏幕中间 状态 -->
 		<window depth="-20" name="HUDCenterCenterStat" anchor="CenterCenter">
 			<!-- 潜行条 -->
-			<rect pos="-108,-90" width="214" height="18" controller="HUDStatBar" stat_type="Stealth" tooltip_key="statSneakSprint" visible="{cvar(_crouching:true;false;false)}">
+			<rect pos="-107,-90" width="214" height="18" controller="HUDStatBar" stat_type="Stealth" tooltip_key="statSneakSprint" visible="{cvar(_crouching:true;false;false)}">
 				<sprite type="sliced" sprite="catui_stat_stealth_bar_bg" size="214,19" color="0,0,0,210" />
 				<sprite pos="117,-6" type="filled" name="BarContent" sprite="catui_stat_stealth_bar_current" size="93,6" color="{stealthcolor}" fill="{statfill}" globalopacity="false" foregroundlayer="true" />
 				<sprite pos="4,-6" type="filled" name="BarContent" sprite="catui_stat_stealth_bar_current" size="93,6" color="{stealthcolor}" fill="{statfill}" globalopacity="false" foregroundlayer="true" flip="Horizontally" fillInvert="true"  />
@@ -370,9 +392,8 @@
 						<!-- 风暴名称 -->
 						<label width="250" depth="5" pos="140,-14" font_size="18" color="[white]" style="CATUI.text.shadow.black.1px" justify="center" pivot="center" text="{# localization('buff'+ CATUI_stormName + '_StormName')} ({CATUI_stormDurationTimeReal})" />
 					</rect>
-
 				</rect>
-			</rect> 
+			</rect>
 		</window>
 	</append>
 
@@ -632,38 +653,8 @@
 		</window>
 	</append> -->
 
-	<remove xpath="/windows/window[@name='windowShapeMaterial']"/>
+	<!-- 血条，体力条 -->
 	<append xpath="/windows">
-		<window name="windowShapeMaterial" controller="ShapeMaterialInfoWindow" width="350" height="205" panel="Center" normal_color="[iconColor]" cursor_area="true">
-			<rect pos="0,-25" visible="{hasmaterial}">
-				<rect name="header" height="43" depth="0" disableautobackground="true" >
-					<sprite depth="1" name="headerbackground" sprite="ui_game_panel_header"/>
-					<sprite depth="2" name="windowicon" style="icon32px" pos="4,-5" sprite="ui_game_symbol_paint_bucket"/>
-					<label style="header.name" text="{materialname}" /> <!-- text_key="xuiCreative"  -->
-				</rect>
-
-				<sprite depth="1" name="background" color="[darkGrey]" type="sliced" pos="2,-49" width="100" height="150" />
-				<sprite depth="1" name="background" color="[mediumGrey]" type="sliced" pos="100,-49" width="148" height="150" />
-				<sprite depth="1" name="background" color="[darkGrey]" type="sliced" pos="250,-49" width="100" height="150" />
-				<sprite depth="8" name="backgroundMain" pos="100,-47" width="150" height="155" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
-
-				<texture depth="9" name="backgroundTexture" material="Materials/Transparent Colored" pos="103, -50" size="144,144" globalopacity="true"/>
-				<sprite depth="8" name="backgroundMain" pos="0,-47" width="350" height="155" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" globalopacity="false" />
-
-				<rect depth="2" name="materialControls" height="48" pos="0,-200" visible="{#always(false)}"> <!-- is_creative and (has_downgrade or has_upgrade) -->
-					<sprite depth="1" name="background" color="[darkGrey]" type="sliced" />
-					<sprite depth="8" name="backgroundMain" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
-
-					<button depth="3" style="press, hover" name="btnDowngrade" tooltip_key="{#has_downgrade ? format(localization('xuiShapeMaterialDowngrade'), downgrade_material) : ''}" sprite="ui_game_symbol_block_damage" enabled="{has_downgrade}" disabledcolor="[lightGrey]" sound="[paging_click]" pos="145, -24" width="32" height="32" hoverscale="1.25" pivot="center"  collider_scale="1.5"/>
-					<button depth="3" style="press, hover" name="btnUpgrade" tooltip_key="{#has_upgrade ? format(localization('xuiShapeMaterialUpgrade'), upgrade_material) : ''}" sprite="ui_game_symbol_block_repair" enabled="{has_upgrade}" disabledcolor="[lightGrey]" sound="[paging_click]" pos="205, -24" width="32" height="32" hoverscale="1.25" pivot="center"  collider_scale="1.5"/>
-				</rect>
-			</rect>
-		</window>
-	</append>
-
-	<!-- 工具带 -->
-	<append xpath="/windows">
-		<!-- 血条，体力条 -->
 		<window name="HUDCenterBottomStat" anchor="CenterBottom" depth="-20" pos="0, 60">
 			<!-- 角色HUD -->
 			<rect name="hud" pos="-500, 80" width="1000" height="70" controller="HUDStatBar" visible="{statvisible}">
@@ -718,6 +709,8 @@
 			</rect>
 		</window>
 	</append>
+
+	<!-- 工具带 -->
 	<remove xpath="/windows/window[@name='windowToolbelt']"/>
 	<append xpath="/windows">
 		<window name="windowToolbelt" width="753" height="78" anchor="CenterBottom" pos="0, 60" controller="ToolbeltWindow" cursor_area="true">
@@ -751,9 +744,6 @@
 			<!-- 角标 - 物品品质 -->
 			<CATUI_quality_item depth="12" pos="124, -98" transform_scale="1" visible="{hasdurability}" color="{durabilitycolor}" durabilitytext="{durabilitytext}" tooltip_key="xuiQuality" />
 			<!-- 耐久 进度条 -->
-			<!-- <sprite depth="8" name="durabilityBackground" pos="1, -119" width="145" height="10" type="sliced" color="[darkGrey]" style="CATUI.sprite.filled.prue" globalopacity="false" visible="{hasdurability}" />
-			<sprite depth="8" name="durabilityBar" pos="1, -119" width="145" height="10" type="filled" color="255, 255, 255, 255" fill="{durabilityfill}" style="CATUI.sprite.filled.prue" globalopacity="false" foregroundlayer="true" visible="{hasdurability}" />
-			 -->
 			<sprite depth="4" name="durabilityBackground" height="10" width="145" color="185,0,0,255" type="sliced" pos="1, -119" visible="{# hasdurability and defined('CATUI_ItemUseTimesMax') and CATUI_ItemUseTimesMax != '1'}"/>
 			<filledsprite depth="5" name="removedurabilityBar" height="10" width="145" color="48,48,48,255" type="filled" pos="1, -119" fill="{removeddurabilityfill}" fillspritepad="true" globalopacitymod="0" visible="{# hasdurability and defined('CATUI_ItemUseTimesMax') and CATUI_ItemUseTimesMax != '1'}" />
 			<filledsprite depth="8" name="durabilityBar" height="10" width="145" color="[white]" type="filled" pos="1, -119" fill="{durabilityfill}" fillspritepad="true" visible="{# hasdurability and defined('CATUI_ItemUseTimesMax') and CATUI_ItemUseTimesMax != '1'}" />
@@ -838,7 +828,7 @@
 	<!-- 制作详情 新增物品状态TAB相关 -->
 	<remove xpath="//window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='searchControls']"/>
 	<append xpath="//window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']">
-		<rect depth="2" name="searchControls" width="449" height="43" pos="152,-3">
+		<rect depth="2" name="searchControls" width="${parentinnerwidth - 147 - 7}" height="43" pos="152,-3">
 			<sprite depth="1" color="[mediumGrey]" type="sliced" globalopacity="true" />
 			<table pos="0,-1" depth="2" rows="1" cols="10" padding="6,5" hide_inactive="true" always_reposition="true">
 				<button depth="4" name="ingredientsButton" style="icon30px, press" sprite="ui_game_symbol_resource" pivot="center" tooltip_key="ingredient" sound="[paging_click]" selected="true" />
@@ -848,62 +838,63 @@
 			</table>
 		</rect>
 	</append>
+	<!-- 制作详情 - 物品属性（新增tab） -->
 	<insertAfter xpath="//window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='unlockedBy']">
-		<rect depth="1" pos="154,-47" name="stat" width="448" height="270" visible="{showstats}">
-			<grid depth="2" pos="-1,0" rows="9" cols="1" width="448" height="33" cell_width="452" cell_height="33">
+		<rect depth="1" pos="154,-47" name="stat" width="${parentinnerwidth - 147 - 7}" height="270" visible="{showstats}">
+			<grid depth="2" pos="-1,0" rows="9" cols="1" width="${parentinnerwidth - 1}" height="33" cell_width="${parentinnerwidth + 3}" cell_height="33">
 				<rect>
-					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36" color="[black]" type="sliced" fillcenter="false" />
-					<sprite depth="1" color="[darkestGrey]" type="sliced" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle0}" justify="left" color="[white]" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat0}" justify="right" color="[selectedColor]" />
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="${parentinnerwidth + 1}" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" width="${parentinnerwidth - 1}" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstattitle0}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstat0}" justify="right" color="[selectedColor]" />
 				</rect>
 				<rect>
-					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36"  color="[black]" type="sliced" fillcenter="false" />
-					<sprite depth="1" color="[darkGrey]" type="sliced" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle1}" justify="left" color="[white]" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat1}" justify="right" color="[selectedColor]" />
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="${parentinnerwidth + 1}" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" width="${parentinnerwidth - 1}" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstattitle1}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstat1}" justify="right" color="[selectedColor]" />
 				</rect>
 				<rect>
-					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36" color="[black]" type="sliced" fillcenter="false" />
-					<sprite depth="1" color="[darkestGrey]" type="sliced" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle2}" justify="left" color="[white]" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat2}" justify="right" color="[selectedColor]" />
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="${parentinnerwidth + 1}" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" width="${parentinnerwidth - 1}" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstattitle2}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstat2}" justify="right" color="[selectedColor]" />
 				</rect>
 				<rect>
-					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36"  color="[black]" type="sliced" fillcenter="false" />
-					<sprite depth="1" color="[darkGrey]" type="sliced" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle3}" justify="left" color="[white]" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat3}" justify="right" color="[selectedColor]" />
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="${parentinnerwidth + 1}" height="36"  color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" width="${parentinnerwidth - 1}" color="[darkGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstattitle3}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstat3}" justify="right" color="[selectedColor]" />
 				</rect>
 				<rect>
-					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36" color="[black]" type="sliced" fillcenter="false" />
-					<sprite depth="1" color="[darkestGrey]" type="sliced" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle4}" justify="left" color="[white]" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat4}" justify="right" color="[selectedColor]" />
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="${parentinnerwidth + 1}" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" width="${parentinnerwidth - 1}" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstattitle4}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstat4}" justify="right" color="[selectedColor]" />
 				</rect>
 				<rect>
-					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36"  color="[black]" type="sliced" fillcenter="false" />
-					<sprite depth="1" color="[darkGrey]" type="sliced" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle5}" justify="left" color="[white]" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat5}" justify="right" color="[selectedColor]" />
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="${parentinnerwidth + 1}" height="36"  color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" width="${parentinnerwidth - 1}" color="[darkGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstattitle5}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstat5}" justify="right" color="[selectedColor]" />
 				</rect>
 				<rect>
-					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36" color="[black]" type="sliced" fillcenter="false" />
-					<sprite depth="1" color="[darkestGrey]" type="sliced" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle6}" justify="left" color="[white]" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat6}" justify="right" color="[selectedColor]" />
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="${parentinnerwidth + 1}" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" width="${parentinnerwidth - 1}" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstattitle6}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstat6}" justify="right" color="[selectedColor]" />
 				</rect>
 				<rect>
-					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36"  color="[black]" type="sliced" fillcenter="false" />
-					<sprite depth="1" color="[darkGrey]" type="sliced" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle7}" justify="left" color="[white]" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat7}" justify="right" color="[selectedColor]" />
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="${parentinnerwidth + 1}" height="36"  color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" width="${parentinnerwidth - 1}" color="[darkGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstattitle7}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstat7}" justify="right" color="[selectedColor]" />
 				</rect>
 				<rect>
-					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="454" height="36" color="[black]" type="sliced" fillcenter="false" />
-					<sprite depth="1" color="[darkestGrey]" type="sliced" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstattitle8}" justify="left" color="[white]" />
-					<label depth="3" pos="10,-7" width="430" font_size="26" text="{itemstat8}" justify="right" color="[selectedColor]" />
+					<sprite depth="8" pos="-3,0" sprite="menu_empty3px" width="${parentinnerwidth + 1}" height="36" color="[black]" type="sliced" fillcenter="false" />
+					<sprite depth="1" width="${parentinnerwidth - 1}" color="[darkestGrey]" type="sliced" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstattitle8}" justify="left" color="[white]" />
+					<label depth="3" pos="10,-7" width="${parentinnerwidth - 22}" font_size="26" text="{itemstat8}" justify="right" color="[selectedColor]" />
 				</rect>
 			</grid>
 		</rect>
@@ -912,7 +903,7 @@
 	<!-- 制作详情 - 制作素材 -->
 	<remove xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']/rect[@name='ingredients']"/>
 	<append xpath="/windows/window[@name='craftingInfoPanel']/rect[@name='contentCraftingInfo']">
-		<rect depth="1" pos="153,-48" name="CATUI_ingredients" width="447" height="264" visible="{showingredients}">
+		<rect depth="1" pos="153,-48" name="CATUI_ingredients" width="${parentinnerwidth - 152}" height="${parentinnerheight - 82}" visible="{showingredients}">
 			<grid pos="6,-6" rows="2" cols="4" cell_height="146" cell_width="111" controller="IngredientList">
 				<CATUI_ingredient_row name="1"/>
 				<CATUI_ingredient_row name="2"/>
@@ -985,15 +976,15 @@
 	<!-- 技能界面 左侧 列表(包含技能，技能书，制作技能) -->
 	<remove xpath="/windows/window[@name='windowSkillList']/rect[@name='content']" />
 	<insertAfter xpath="/windows/window[@name='windowSkillList']/rect[@name='header']">
-		<rect name="content" pos="-3,-43" height="669" depth="1">
-			<rect name="categoryHeader" pos="6,-3" width="644" height="43">
-				<sprite depth="2" name="backgroundMain" sprite="menu_empty3px" pos="-3,0" width="647" height="46" color="[black]" type="sliced" fillcenter="false" />
+		<rect name="content" pos="-3,-43" height="${parentinnerheight}" depth="1">
+			<rect name="categoryHeader" pos="6,-3" width="${parentinnerwidth - 5}" height="43">
+				<sprite depth="2" name="backgroundMain" sprite="menu_empty3px" pos="-3,0" width="${parentinnerwidth + 5}" height="${parentinnerheight + 2}" color="[black]" type="sliced" fillcenter="false" />
 				<sprite depth="1" name="background"  color="[mediumGrey]" type="sliced" />
-				<rect depth="1" pos="6,-3" width="640" height="37" on_scroll="true">
-					<scrollbar pos="-6,-${parentinnerheight}" height="2" depth="5">
+				<rect depth="1" pos="16,-3" width="${parentinnerwidth - 22}" height="${parentinnerheight - 2}" on_scroll="true">
+					<scrollbar pos="-6,-${parentinnerheight - 3}" height="2">
 						<sprite name="thumb" depth="1" pos="0,0" width="${parentinnerwidth}" height="2" sprite="menu_empty" type="sliced" color="[white]" fillcenter="true" on_press="true" on_scroll="true" gamepad_selectable="false" snap="false" />
 					</scrollbar>
-					<scrollview pos="0,0" movement="Horizontal" width="${parentinnerwidth-10}" clippingsoftness="15,0">
+					<scrollview pos="0,0" movement="Horizontal" width="${parentinnerwidth}" clippingsoftness="0,0">
 						<grid controller="CategoryList" name="categories" pos="20,-20" rows="1" cols="100" cell_width="43" cell_height="43" hide_inactive="true" repeat_content="true">
 							<category_icon />
 						</grid>
@@ -1005,7 +996,7 @@
 			</rect>
 
 			<rect name="categoryContent">
-				<sprite depth="1" name="backgroundMain" pos="3,-48" height="685" sprite="menu_empty3px" color="[black]" type="sliced" />
+				<sprite depth="1" name="backgroundMain" pos="3,-47" height="686" sprite="menu_empty3px" color="[black]" type="sliced" />
 				<grid depth="2" pos="11,-52" name="skills" rows="5" cols="6" cell_width="106" cell_height="128" controller="SkillList"  repeat_content="true">
 					<skill_entry name="0" width="100" height="128" />
 				</grid>
@@ -1014,253 +1005,228 @@
 	</insertAfter>
 
 	<!-- 技能界面 右侧 属性详情 windowSkillAttributeInfo -->
-	<remove xpath="/windows/window[@name='windowSkillAttributeInfo']"/>
-	<append xpath="/windows">
-		<window name="windowSkillAttributeInfo" width="647" height="730" panel="Right" controller="SkillAttributeInfoWindow" cursor_area="true" hidden_entries_with_paging="0" >
-			<rect name="header" height="43" depth="1" backgroundspritename="ui_game_panel_header">
-				<headerbg />
-				<sprite pos="4,-5" depth="2" name="windowIcon" style="icon32px" sprite="ui_game_symbol_skills"/>
-				<label style="header.name" text="{groupname}" />
+	<set xpath="/windows/window[@name='windowSkillAttributeInfo']/@hidden_entries_with_paging">0</set>
+	<remove xpath="/windows/window[@name='windowSkillAttributeInfo']/rect[@name='content']"/>
+	<insertAfter xpath="/windows/window[@name='windowSkillAttributeInfo']/rect[@name='header']">
+		<rect name="content" pos="0,-46" height="${parentinnerheight}" depth="1">
+			<sprite depth="4" pos="0,0" name="backgroundMain" sprite="menu_empty3px" height="100" color="[black]" type="sliced" fillcenter="false" />
+			<sprite depth="1" pos="2,-2" name="preview" width="95" height="96" color="[black]" type="sliced" />
+			<sprite depth="3" pos="50,-50" width="80" height="80" sprite="{groupicon}" pivot="center" foregroundlayer="true"/>
+			<!-- 技能描述 -->
+			<rect name="descriptionBox" depth="1" pos="97,-2" width="${parentinnerwidth - 100}" height="96" >
+				<sprite depth="1" name="background" color="[mediumGrey]" type="sliced"/>
+				<label depth="2" name="descriptionText" font_size="24" pos="6,-6" width="538" height="93" text="{groupdescription}" spacing_y="5"/>
 			</rect>
-			<rect name="content" pos="0,-46" height="669" depth="1">
-				<sprite depth="4" pos="0,0" name="backgroundMain" sprite="menu_empty3px" height="100" color="[black]" type="sliced" fillcenter="false" />
-				<sprite depth="1" pos="2,-2" name="preview" width="95" height="96" color="[black]" type="sliced" />
-				<sprite depth="3" pos="50,-50" width="80" height="80" sprite="{groupicon}" pivot="center" foregroundlayer="true"/>
-				<!-- 技能描述 -->
-				<rect name="descriptionBox" depth="1" pos="97,-2" width="548" height="96" >
-					<sprite depth="1" name="background" color="[mediumGrey]" type="sliced"/>
-					<label depth="2" name="descriptionText" font_size="24" pos="6,-6" width="538" height="93" text="{groupdescription}" spacing_y="5"/>
-				</rect>
-				<!-- 技能等级描述 -->
-				<rect name="detailsBox" depth="1" pos="0,-99" width="647" height="181" >
-					<sprite depth="1" name="background" color="[darkestGrey]" type="sliced"/>
-					<label depth="3" name="descriptionText" font_size="24" pos="12,-12" width="630" height="166" text="{detailsdescription}" spacing_y="5"/>
-				</rect>
+			<!-- 技能等级描述 -->
+			<rect name="detailsBox" depth="1" pos="0,-99" width="${parentinnerwidth}" height="181" >
+				<sprite depth="1" name="background" color="[darkestGrey]" type="sliced"/>
+				<label depth="3" name="descriptionText" font_size="24" pos="12,-12" width="630" height="166" text="{detailsdescription}" spacing_y="5"/>
+			</rect>
 
-				<rect name="tableBox" depth="1" pos="0,-279" width="647" height="450">
-					<sprite name="backgroundMain" height="451" sprite="menu_empty3px" color="[black]" type="sliced" />
-					<grid rows="5" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="80" hide_inactive="true" repeat_content="true">
-						<skill_perk_level controller="SkillAttributeLevel" width="${parentinnerwidth}" height="${parentinnerheight}" />
-					</grid>
-				</rect>
+			<rect name="tableBox" depth="1" pos="0,-279" width="${parentinnerwidth}" height="450">
+				<sprite name="backgroundMain" height="451" sprite="menu_empty3px" color="[black]" type="sliced" />
+				<grid rows="5" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="80" hide_inactive="true" repeat_content="true">
+					<skill_perk_level controller="SkillAttributeLevel" width="${parentinnerwidth}" height="${parentinnerheight}" />
+				</grid>
+			</rect>
 
-				<rect name="pagerBox" depth="3" width="647" height="36" pos="0,-691" visible="{showPaging}">
-					<rect pos="240,0" width="104" height="43" disableautobackground="true">
-						<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
-					</rect>
+			<rect name="pagerBox" depth="3" width="${parentinnerwidth}" height="36" pos="0,-691" visible="{showPaging}">
+				<rect pos="240,0" width="104" height="43" disableautobackground="true">
+					<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
 				</rect>
 			</rect>
-		</window>
-	</append>
+		</rect>
+	</insertAfter>
 
 	<!-- 技能界面 右侧 技能详情 windowSkillPerkInfo -->
-	<remove xpath="/windows/window[@name='windowSkillPerkInfo']"/>
-	<append xpath="/windows">
-		<window name="windowSkillPerkInfo" width="647" height="730" panel="Right" controller="SkillPerkInfoWindow" cursor_area="true" hidden_entries_with_paging="0" >
-			<rect name="header" height="43" depth="1" backgroundspritename="ui_game_panel_header">
-				<headerbg />
-				<sprite pos="4,-5" depth="2" name="windowIcon" style="icon32px" sprite="ui_game_symbol_skills"/>
-				<label width="600" style="header.name" text="{groupname}" />
+	<set xpath="/windows/window[@name='windowSkillPerkInfo']/@hidden_entries_with_paging">0</set>
+	<remove xpath="/windows/window[@name='windowSkillPerkInfo']/rect[@name='content']"/>
+	<insertAfter xpath="/windows/window[@name='windowSkillPerkInfo']/rect[@name='header']">
+		<rect name="content" pos="0,-46" height="647" depth="1">
+			<sprite depth="4" pos="0,0" name="backgroundMain" sprite="menu_empty3px" height="100" color="[black]" type="sliced" fillcenter="false" />
+
+			<sprite depth="1" pos="2,-2" name="preview" width="95" height="96" color="[black]" type="sliced" />
+			<sprite depth="3" pos="50,-50" width="80" height="80" sprite="{groupicon}" pivot="center" foregroundlayer="true"/>
+			<!-- 技能描述 -->
+			<rect name="descriptionBox" depth="1" pos="97,-2" width="548" height="96" >
+				<sprite depth="1" name="background" color="[mediumGrey]" type="sliced"/>
+				<label depth="2" name="descriptionText" font_size="24" pos="6,-6" width="538" height="93" text="{groupdescription}" spacing_y="5"/>
 			</rect>
-			<rect name="content" pos="0,-46" height="647" depth="1">
-				<sprite depth="4" pos="0,0" name="backgroundMain" sprite="menu_empty3px" height="100" color="[black]" type="sliced" fillcenter="false" />
+			<!-- 技能等级描述 -->
+			<rect name="detailsBox" depth="1" pos="0,-99" width="647" height="181" >
+				<sprite depth="1" name="background" color="[darkestGrey]" type="sliced"/>
+				<label depth="3" name="descriptionText" font_size="24" pos="12,-12" width="630" height="166" text="{detailsdescription}" spacing_y="5"/>
+			</rect>
 
-				<sprite depth="1" pos="2,-2" name="preview" width="95" height="96" color="[black]" type="sliced" />
-				<sprite depth="3" pos="50,-50" width="80" height="80" sprite="{groupicon}" pivot="center" foregroundlayer="true"/>
-				<!-- 技能描述 -->
-				<rect name="descriptionBox" depth="1" pos="97,-2" width="548" height="96" >
-					<sprite depth="1" name="background" color="[mediumGrey]" type="sliced"/>
-					<label depth="2" name="descriptionText" font_size="24" pos="6,-6" width="538" height="93" text="{groupdescription}" spacing_y="5"/>
-				</rect>
-				<!-- 技能等级描述 -->
-				<rect name="detailsBox" depth="1" pos="0,-99" width="647" height="181" >
-					<sprite depth="1" name="background" color="[darkestGrey]" type="sliced"/>
-					<label depth="3" name="descriptionText" font_size="24" pos="12,-12" width="630" height="166" text="{detailsdescription}" spacing_y="5"/>
-				</rect>
+			<rect name="tableBox" depth="1" pos="0,-279" width="647" height="450" gamepad_selectable="false" snap="false">
+				<sprite depth="1" name="backgroundMain" height="451" style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
+				<grid rows="5" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="80" hide_inactive="true" repeat_content="true">
+					<skill_perk_level controller="SkillPerkLevel" width="${parentinnerwidth}" height="${parentinnerheight}" />
+				</grid>
+			</rect>
 
-				<rect name="tableBox" depth="1" pos="0,-279" width="647" height="450" gamepad_selectable="false" snap="false">
-					<sprite depth="1" name="backgroundMain" height="451" style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
-					<grid rows="5" cols="1" pos="0,-9" width="644" cell_width="640" cell_height="80" hide_inactive="true" repeat_content="true">
-						<skill_perk_level controller="SkillPerkLevel" width="${parentinnerwidth}" height="${parentinnerheight}" />
-					</grid>
-				</rect>
-
-				<rect name="pagerBox" depth="3" width="647" height="43" pos="0,-691" visible="{showPaging}">
-					<rect pos="240,0" width="104" height="43" disableautobackground="true">
-						<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
-					</rect>
+			<rect name="pagerBox" depth="3" width="647" height="43" pos="0,-691" visible="{showPaging}">
+				<rect pos="240,0" width="104" height="43" disableautobackground="true">
+					<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
 				</rect>
 			</rect>
-		</window>
-	</append>
+		</rect>
+	</insertAfter>
 
 	<!-- 技能界面 右侧 技能书详情 windowSkillBookInfo -->
-	<remove xpath="/windows/window[@name='windowSkillBookInfo']"/>
-	<append xpath="/windows">
-		<window name="windowSkillBookInfo" width="647" height="730" panel="Right" controller="SkillBookInfoWindow" cursor_area="true" hidden_entries_with_paging="0" >
-			<rect name="header" height="43" depth="1" backgroundspritename="ui_game_panel_header">
-				<headerbg />
-				<sprite pos="4,-5" depth="2" name="windowIcon" style="icon32px" sprite="ui_game_symbol_book"/>
-				<label width="600" style="header.name" text="{groupname}" />
+	<set xpath="/windows/window[@name='windowSkillBookInfo']/@hidden_entries_with_paging">0</set>
+	<remove xpath="/windows/window[@name='windowSkillBookInfo']/rect[@name='content']"/>
+	<insertAfter xpath="/windows/window[@name='windowSkillBookInfo']/rect[@name='header']">
+		<rect name="content" pos="0,-46" height="647" depth="1">
+			<sprite depth="4" pos="0,0" name="backgroundMain" sprite="menu_empty3px" height="100" color="[black]" type="sliced" fillcenter="false" />
+
+			<sprite depth="1" pos="2,-2" name="preview" width="95" height="96" color="[black]" type="sliced" />
+			<sprite depth="3" pos="50,-50" atlas="ItemIconAtlas" size="90,90" sprite="{groupicon}" pivot="center" foregroundlayer="true"/>
+			<!-- 技能描述 -->
+			<rect name="descriptionBox" depth="1" pos="97,-2" width="548" height="96" >
+				<sprite depth="1" name="background" color="[mediumGrey]" type="sliced"/>
+				<label depth="2" name="descriptionText" font_size="24" pos="6,-6" width="538" height="93" text="{groupdescription}" spacing_y="5"/>
 			</rect>
-			<rect name="content" pos="0,-46" height="647" depth="1">
-				<sprite depth="4" pos="0,0" name="backgroundMain" sprite="menu_empty3px" height="100" color="[black]" type="sliced" fillcenter="false" />
+			<!-- 技能等级描述 -->
+			<rect name="detailsBox" depth="1" pos="0,-99" width="647" height="176" >
+				<sprite depth="1" name="background" color="[darkestGrey]" type="sliced"/>
+				<label depth="3" name="descriptionText" font_size="24" pos="12,-12" width="630" height="166" text="{detailsdescription}" spacing_y="5"/>
+			</rect>
 
-				<sprite depth="1" pos="2,-2" name="preview" width="95" height="96" color="[black]" type="sliced" />
-				<sprite depth="3" pos="50,-50" atlas="ItemIconAtlas" size="90,90" sprite="{groupicon}" pivot="center" foregroundlayer="true"/>
-				<!-- 技能描述 -->
-				<rect name="descriptionBox" depth="1" pos="97,-2" width="548" height="96" >
-					<sprite depth="1" name="background" color="[mediumGrey]" type="sliced"/>
-					<label depth="2" name="descriptionText" font_size="24" pos="6,-6" width="538" height="93" text="{groupdescription}" spacing_y="5"/>
-				</rect>
-				<!-- 技能等级描述 -->
-				<rect name="detailsBox" depth="1" pos="0,-99" width="647" height="176" >
-					<sprite depth="1" name="background" color="[darkestGrey]" type="sliced"/>
-					<label depth="3" name="descriptionText" font_size="24" pos="12,-12" width="630" height="166" text="{detailsdescription}" spacing_y="5"/>
-				</rect>
+			<rect name="tableBox" depth="1" pos="0,-274" width="647" height="450">
+				<sprite name="backgroundMain" height="456" sprite="menu_empty3px" color="[black]" type="sliced" />
+				<grid rows="8" cols="1" pos="0,-7" width="644" cell_width="640" cell_height="56" repeat_content="true" >
+					<skill_book_level controller="SkillBookLevel" width="640" height="56" />
+				</grid>
+			</rect>
 
-				<rect name="tableBox" depth="1" pos="0,-274" width="647" height="450">
-					<sprite name="backgroundMain" height="456" sprite="menu_empty3px" color="[black]" type="sliced" />
-					<grid rows="8" cols="1" pos="0,-7" width="644" cell_width="640" cell_height="56" repeat_content="true" >
-						<skill_book_level controller="SkillBookLevel" width="640" height="56" />
-					</grid>
-				</rect>
-
-				<rect name="pagerBox" depth="3" width="647" height="36" pos="0,-691" visible="{showPaging}">
-					<rect pos="240,0" width="104" height="43" disableautobackground="true">
-						<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
-					</rect>
+			<rect name="pagerBox" depth="3" width="647" height="36" pos="0,-691" visible="{showPaging}">
+				<rect pos="240,0" width="104" height="43" disableautobackground="true">
+					<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
 				</rect>
 			</rect>
-		</window>
-	</append>
+		</rect>
+	</insertAfter>
 
 	<!-- 技能界面 右侧 制作技能详情 windowSkillCraftingInfo -->
-	<remove xpath="/windows/window[@name='windowSkillCraftingInfo']"/>
-	<append xpath="/windows">
-		<window name="windowSkillCraftingInfo" width="647" height="730" panel="Right" controller="SkillCraftingInfoWindow" cursor_area="true" hidden_entries_with_paging="0" >
-			<rect name="header" height="43" depth="1" backgroundspritename="ui_game_panel_header">
-				<headerbg />
-				<sprite pos="4,-5" depth="2" name="windowIcon" style="icon32px" sprite="ui_game_symbol_skills"/>
-				<label style="header.name" text="{groupname}" />
-				<label pos="635, -9" depth="2" width="300" height="28" text="{currentlevel} {skillLevel} / {maxSkillLevel}" font_size="26" justify="right" pivot="topright"/>
+	<set xpath="/windows/window[@name='windowSkillCraftingInfo']/@hidden_entries_with_paging">0</set>
+	<remove xpath="/windows/window[@name='windowSkillCraftingInfo']/rect[@name='content']"/>
+	<insertAfter xpath="/windows/window[@name='windowSkillCraftingInfo']/rect[@name='header']">
+		<rect name="content" pos="0,-46" height="669" depth="1">
+			<sprite depth="4" pos="0,0" name="backgroundMain" sprite="menu_empty3px" height="100" color="[black]" type="sliced" fillcenter="false" />
+			<sprite depth="1" pos="2,-2" name="preview" width="95" height="96" color="[black]" type="sliced" />
+			<sprite depth="3" pos="50,-50" size="80,80" sprite="{groupicon}" pivot="center" foregroundlayer="true"/>
+			<!-- 技能描述 -->
+			<rect name="descriptionBox" depth="1" pos="97,-2" width="548" height="96" >
+				<sprite depth="1" name="background" color="[mediumGrey]" type="sliced"/>
+				<label depth="2" name="descriptionText" font_size="24" pos="6,-6" width="538" height="93" text="{groupdescription}" spacing_y="5"/>
 			</rect>
-			<rect name="content" pos="0,-46" height="669" depth="1">
-				<sprite depth="4" pos="0,0" name="backgroundMain" sprite="menu_empty3px" height="100" color="[black]" type="sliced" fillcenter="false" />
-				<sprite depth="1" pos="2,-2" name="preview" width="95" height="96" color="[black]" type="sliced" />
-				<sprite depth="3" pos="50,-50" size="80,80" sprite="{groupicon}" pivot="center" foregroundlayer="true"/>
-				<!-- 技能描述 -->
-				<rect name="descriptionBox" depth="1" pos="97,-2" width="548" height="96" >
-					<sprite depth="1" name="background" color="[mediumGrey]" type="sliced"/>
-					<label depth="2" name="descriptionText" font_size="24" pos="6,-6" width="538" height="93" text="{groupdescription}" spacing_y="5"/>
-				</rect>
-				<!-- 勿删 隐藏原解锁道具列表 -->
-				<rect name="detailsBox" depth="1" pos="0,-99" width="647" height="176" visible="{#'false'}">
-					<sprite depth="1" name="background" color="[darkestGrey]" type="sliced"/>
-					<grid rows="2" cols="7" pos="0,0" width="450" height="368" cell_width="92" cell_height="88" repeat_content="false" hide_inactive="true" arrangement="horizontal" >
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="93" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas1}" sprite="{unlock_icon1}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked1}" />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon1" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip1}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas2}" sprite="{unlock_icon2}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked2}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon2" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip2}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas3}" sprite="{unlock_icon3}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked3}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon3" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip3}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas4}" sprite="{unlock_icon4}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked4}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon4" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip4}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas5}" sprite="{unlock_icon5}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked5}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon5" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip5}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas6}" sprite="{unlock_icon6}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked6}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon6" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip6}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas7}" sprite="{unlock_icon7}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked7}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon7" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip7}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas8}" sprite="{unlock_icon8}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked8}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon8" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip8}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas9}" sprite="{unlock_icon9}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked9}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon9" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip9}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas10}" sprite="{unlock_icon10}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked10}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon10" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip10}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas11}" sprite="{unlock_icon11}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked11}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon11" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip11}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas12}" sprite="{unlock_icon12}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked12}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon12" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip12}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas13}" sprite="{unlock_icon13}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked13}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon13" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip13}" />
-						</rect>
-						<rect width="92" height="88">
-							<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
-							<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas14}" sprite="{unlock_icon14}" pivot="center" foregroundlayer="true" />
-							<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked14}"  />
-							<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon14" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip14}" />
-						</rect>
-						
-					</grid>
-				</rect>
-
-				<rect name="tableBox" depth="1" pos="0,-98" width="647" height="632" gamepad_selectable="false" snap="false">
-					<sprite depth="1" style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
-					<grid rows="6" cols="7" pos="12,-12" width="644" cell_width="90" cell_height="90" hide_inactive="true" repeat_content="true">
-						<skill_crafting_entry />
-					</grid>
-				</rect>
-
-				<rect name="pagerBox" depth="3" width="647" height="43" pos="0,-691" visible="{showPaging}">
-					<rect pos="240,0" width="104" height="43" disableautobackground="true">
-						<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
+			<!-- 勿删 隐藏原解锁道具列表 -->
+			<rect name="detailsBox" depth="1" pos="0,-99" width="647" height="176" visible="{#'false'}">
+				<sprite depth="1" name="background" color="[darkestGrey]" type="sliced"/>
+				<grid rows="2" cols="7" pos="0,0" width="450" height="368" cell_width="92" cell_height="88" repeat_content="false" hide_inactive="true" arrangement="horizontal" >
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="93" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas1}" sprite="{unlock_icon1}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked1}" />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon1" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip1}" />
 					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas2}" sprite="{unlock_icon2}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked2}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon2" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip2}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas3}" sprite="{unlock_icon3}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked3}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon3" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip3}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas4}" sprite="{unlock_icon4}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked4}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon4" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip4}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas5}" sprite="{unlock_icon5}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked5}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon5" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip5}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas6}" sprite="{unlock_icon6}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked6}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon6" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip6}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas7}" sprite="{unlock_icon7}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked7}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon7" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip7}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas8}" sprite="{unlock_icon8}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked8}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon8" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip8}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas9}" sprite="{unlock_icon9}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked9}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon9" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip9}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas10}" sprite="{unlock_icon10}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked10}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon10" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip10}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas11}" sprite="{unlock_icon11}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked11}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon11" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip11}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas12}" sprite="{unlock_icon12}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked12}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon12" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip12}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas13}" sprite="{unlock_icon13}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked13}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon13" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip13}" />
+					</rect>
+					<rect width="92" height="88">
+						<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="94" height="93" color="[black]" type="sliced" fillcenter="false" />
+						<sprite depth="6" pos="48,-48" width="64" height="64" atlas="{unlock_icon_atlas14}" sprite="{unlock_icon14}" pivot="center" foregroundlayer="true" />
+						<sprite depth="8" pos="64,-66" style="icon30px" sprite="ui_game_symbol_unlock" pivot="center" visible="{unlock_icon_locked14}"  />
+						<sprite color="0,0,0,1" depth="12" width="92" height="88" name="itemIcon14" collider_scale="1.0" on_hover="true" on_press="true" tooltip="{unlock_icon_tooltip14}" />
+					</rect>
+					
+				</grid>
+			</rect>
+
+			<rect name="tableBox" depth="1" pos="0,-98" width="647" height="632" gamepad_selectable="false" snap="false">
+				<sprite depth="1" style="CATUI.sprite.filled.prue" color="[black]" type="sliced" />
+				<grid rows="6" cols="7" pos="12,-12" width="644" cell_width="90" cell_height="90" hide_inactive="true" repeat_content="true">
+					<skill_crafting_entry />
+				</grid>
+			</rect>
+
+			<rect name="pagerBox" depth="3" width="647" height="43" pos="0,-691" visible="{showPaging}">
+				<rect pos="240,0" width="104" height="43" disableautobackground="true">
+					<CATUI_pager name="pager" pos="16,-2" contents_parent="content" />
 				</rect>
 			</rect>
-		</window>
-	</append>
+		</rect>
+	</insertAfter>
 
 	<!-- NPC对话字幕 -->
 	<setattribute xpath="//window[@name='subtitlesDisplay']" name="pos">-376,230</setattribute>
@@ -1272,6 +1238,4 @@
 	<!-- // 美化 字体高清 -->
 	<setattribute xpath="/windows/window[@name='chatoutput']//textlist[@name='txtOutput']" name="crispness">OnDesktop</setattribute>
 	<setattribute xpath="/windows/window[@name='chat']//textfield[@name='txtInput']" name="crispness">OnDesktop</setattribute>
-	<!-- // 美化 字体高清（排除物品详情属性列表当中的label，因为它包含[sp=ui_stat]） -->
-	<setattribute xpath="/windows/window[@name='itemInfoPanel']/rect[@name='contentInfo']/rect[@name='description']//label[@justify='right']" name="crispness">Never</setattribute>
 </CATUI>

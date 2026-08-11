@@ -1,6 +1,10 @@
 <CATUI>
 	<!-- global style -->
     <append xpath="//global[1]">
+		<!-- 状态颜色 -->
+		<style_entry name="CATUI_stat_health" value="255, 82, 82" />
+		<style_entry name="CATUI_stat_stamina" value="67, 207, 124" />
+
 		<!-- 常用颜色 -->
 		<style_entry name="CATUI_red" value="255, 82, 82" />
 		<style_entry name="CATUI_green" value="67, 207, 124" />

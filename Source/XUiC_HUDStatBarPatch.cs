@@ -58,6 +58,14 @@ public class XUiC_HUDStatBarPatch
 	private const int DirtyThrottleFrames = 10;
 	private const int VehicleDirtyThrottleFrames = 1;
 
+	// 温度状态条 - 竖线固定按 0~132 活动区滑动（低温左侧），居中偏移 66，不随父宽度变化
+	private const float TempBarLeft = 0f;
+	private const float TempBarRight = 132f;
+	private const float TempBarCenter = 66f;
+	private static XUiV_Sprite _tempBarMark;
+	// 竖线归属的 statbar 实例（只有它每帧移动竖线并提前返回，其余实例必须照常走限频标脏刷新绑定）
+	private static XUiC_HUDStatBar _tempBarMarkOwner;
+
 	// 按实例记录限频状态（HUD 有多个 HUDStatBar 实例，不能共用全局帧号）
 	private static readonly ConditionalWeakTable<XUiC_HUDStatBar, LastDirtyState> _dirtyStates = new ConditionalWeakTable<XUiC_HUDStatBar, LastDirtyState>();
 
@@ -107,7 +115,42 @@ public class XUiC_HUDStatBarPatch
 	[PublicizedFrom(EAccessModifier.Private)]
 	private static void UpdatePostfix(XUiC_HUDStatBar __instance)
 	{
-		if (__instance == null || __instance.IsDirty)
+		if (__instance == null)
+		{
+			return;
+		}
+		// 温度状态条竖线：逐帧把 tempBarMark 移到 _coretemp 对应的 x 位置（0~132 clamp，居中偏移 66）
+		// 缓存失效判定：换角色/窗口重建后旧 uiTransform 已被销毁（Unity 对象 == null），需重新查找
+		if (_tempBarMark == null || _tempBarMark.UiTransform == null)
+		{
+			_tempBarMark = null;
+			_tempBarMarkOwner = null;
+			XUiController markController = __instance.GetChildById("tempBarMark");
+			if (markController != null)
+			{
+				_tempBarMark = markController.ViewComponent as XUiV_Sprite;
+				_tempBarMarkOwner = __instance;
+			}
+		}
+		// 只对真正拥有竖线的实例移动并提前返回；其他 statbar 实例照常走下面的限频标脏刷新绑定
+		if (ReferenceEquals(_tempBarMarkOwner, __instance) && _tempBarMark != null && __instance.localPlayer != null)
+		{
+			try
+			{
+				float coretemp = __instance.localPlayer.Buffs.GetCustomVar("_coretemp");
+				int x = (int)Mathf.Clamp(coretemp, TempBarLeft, TempBarRight) - (int)TempBarCenter;
+				_tempBarMark.position = new Vector2i(x, 0);
+				_tempBarMark.positionDirty = true;
+				_tempBarMark.TryUpdatePosition();
+			}
+			catch (Exception)
+			{
+				_tempBarMark = null;
+				_tempBarMarkOwner = null;
+			}
+			return;
+		}
+		if (__instance.IsDirty)
 		{
 			return;
 		}

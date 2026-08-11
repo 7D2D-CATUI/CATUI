@@ -65,4 +65,21 @@ public class XUiC_ItemInfoWindowPatch
 			return false;
 		}
 	}
+
+	// 增强属性前的 [sp=ui_stat] 是 NGUI iconfont（星星，渲染成正常字号两倍），替换成普通文本 ★，字号与数值一致
+	[HarmonyPostfix]
+	[HarmonyPatch(typeof(XUiM_ItemStack), "GetStatItemValueTextWithModColoring")]
+	public static void GetStatItemValueTextWithModColoringPostfix(ref string __result)
+	{
+		try
+		{
+			if (__result != null && __result.StartsWith("[sp=ui_stat]"))
+			{
+				__result = "★ " + __result.Substring("[sp=ui_stat]".Length);
+			}
+		}
+		catch
+		{
+		}
+	}
 }

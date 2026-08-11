@@ -31,30 +31,16 @@ public class XUiC_CompassWindowPatch
 
 		switch (bindingName)
 		{
-			// 人物属性 - 是否被敌人锁定（进入战斗状态）：任一敌方生物把玩家当作攻击目标即 true，不限范围
+			// 人物属性 - 是否被敌人锁定（进入战斗状态）
+			// 读玩家 Stealth 的 alertEnemy（与 stealthcolor/潜行条同源，客户端本地有效），
+			// 服务器联机时敌对 AI 目标在服务端，World.Entities 的 GetAttackTarget() 客户端取不到
 			case "CATUI_playerAlert":
 				value = "false";
-				if (__instance.localPlayer != null)
+				if (__instance.localPlayer != null && __instance.localPlayer.Stealth.alertEnemy)
 				{
-					EntityPlayerLocal player = __instance.localPlayer;
-					var worldB = GameManager.Instance.World;
-					if (worldB != null && worldB.Entities != null && player.IsAlive())
-					{
-						foreach (Entity entity in worldB.Entities.list)
-						{
-							if (entity is EntityAlive alive && alive != player && alive.IsAlive())
-							{
-								EntityClass eClass = EntityClass.list.ContainsKey(alive.entityClass) ? EntityClass.list[alive.entityClass] : null;
-								if (eClass != null && eClass.bIsEnemyEntity && alive.GetAttackTarget() == player)
-								{
-									value = "true";
-									break;
-								}
-							}
-						}
-					}
-					__instance.IsDirty = true;
+					value = "true";
 				}
+				__instance.IsDirty = true;
 				__result = true;
 				return false;
 

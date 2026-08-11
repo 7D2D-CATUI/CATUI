@@ -8,7 +8,7 @@
 			<rect pos="${inner_pos_x}, ${inner_pos_y}" width="${width}" height="${height}" controller="${controller}" stat_type="${stat_type}" tooltip_key="${tooltip_key}" visible="{statvisible}">
 				<sprite type="filled" width="${inner_width}" color="54,54,54" fill="{#Round(statmodifiedmax, 2)}" sprite="catui_stat_health_bar_bg" globalopacity="false" fillInvert="false" />
 				<sprite type="filled" width="${inner_width}" fill="{#1 - Round(statmodifiedmax, 2)}" sprite="catui_stat_health_bar_disabled" foregroundlayer="true" fillInvert="true" />
-				<sprite type="filled" width="${inner_width}" fill="{statfill}" sprite="catui_stat_health_bar_enabled" foregroundlayer="true" fillInvert="false" />
+				<sprite type="filled" width="${inner_width}" fill="{statfill}" sprite="catui_stat_health_bar_enabled" color="[CATUI_stat_health]" foregroundlayer="true" fillInvert="false" />
 				<sprite name="Icon" pos="-20,-14" sprite="ui_game_symbol_add" color="[white]" size="20,20" globalopacity="false" foregroundlayer="true" justify="center" pivot="center" />
 				<!-- 生命值小于0.3时显示警告图标 -->
 				<sprite name="Icon" pos="-20,-14" sprite="ui_game_symbol_add" color="[white]" size="20,20" globalopacity="false" foregroundlayer="true" justify="center" pivot="center" visible="{# Round(statfill, 1) &lt; 0.3 }">
@@ -22,7 +22,7 @@
 			<rect pos="${inner_pos_x}, ${inner_pos_y}" width="${width}" height="${height}" controller="${controller}" stat_type="${stat_type}" tooltip_key="${tooltip_key}" visible="{statvisible}">
 				<sprite type="filled" width="${inner_width}" color="54,54,54" fill="{#Round(statmodifiedmax, 2)}" sprite="catui_stat_stamina_bar_bg" globalopacity="false" fillInvert="true" />
 				<sprite type="filled" width="${inner_width}" fill="{#1 - Round(statmodifiedmax, 2)}" sprite="catui_stat_stamina_bar_disabled" foregroundlayer="true" fillInvert="false" />
-				<sprite type="filled" width="${inner_width}" fill="{statfill}" sprite="catui_stat_stamina_bar_enabled" foregroundlayer="true" fillInvert="true" />
+				<sprite type="filled" width="${inner_width}" fill="{statfill}" sprite="catui_stat_stamina_bar_enabled" color="[CATUI_stat_stamina]" foregroundlayer="true" fillInvert="true" />
 				<sprite name="Icon" pos="283,-14" sprite="ui_game_symbol_electric_power" color="[white]" size="20,20" globalopacity="false" foregroundlayer="true" justify="center" pivot="center" />
 				<label pos="-16,-3" width="${inner_width}" font_size="22" color="[white]" text="{statcurrentwithmax}" style="CATUI.text.shadow.black.1px" justify="right" />
 			</rect>
@@ -404,29 +404,31 @@
 	<append xpath="/templates">
 		<trader_item>
 			<rect width="${parentinnerwidth-4}" height="${parentinnerheight-4}" style="press, hover, scroll" controller="TraderItemEntry" disabled_font_color="[disabledLabelColor]" enabled_font_color="[labelColor]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" visible="{# itemprice != '' }" tooltip_key="{CATUI_ItemName}">
-				<sprite depth="8" name="border" width="${parentinnerwidth-2}" height="${parentinnerheight-2}" color="[darkGrey]" type="sliced" fillcenter="false"/>
+				<sprite depth="8" name="border" width="${parentinnerwidth-2}" height="${parentinnerheight-2}" sprite="menu_empty2px" color="[darkGrey]" type="sliced" fillcenter="false"/>
 				<sprite depth="1" name="background" pos="0,0" width="${parentinnerwidth-2}" height="${parentinnerheight-2}" color="[darkGrey]" type="sliced" globalopacitymod="0.9" />
 				<!-- <sprite depth="2" pos="0,0" width="${parentinnerwidth-2}" height="${parentinnerheight-2}" color="{durabilitycolor}"  type="sliced" sprite="Row Outline" globalopacity="true" visible="{hasdurability}" globalopacitymod="0.6" /> -->
 
 				<!-- 物品图标 -->
 				<rect depth="3" pos="0, 0" height="24">
 					<sprite pos="62,-60" width="128" height="128" sprite="catui_bg_skill_icon" color="[black_half_alpha]" type="sliced" pivot="center" />
+					<!-- 书籍 未读 -->
+					<sprite depth="1" pos="62,-56" name="backgroundBookLearn" width="72" height="72" sprite="catui_bg_book_learn" color="[white]" type="sliced" pivot="center" visible="{# itemtypeicon == 'book'}" />
 					<sprite depth="2" name="Icon" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" size="72,72" pos="62,-56" pivot="center" foregroundlayer="true"/>
 					<sprite depth="8" name="itemtypeicon" pos="4,-4" atlas="UIAtlas" size="20,20" sprite="ui_game_symbol_{itemtypeicon}" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
 					<sprite depth="8" name="boostedIcon" pos="4,-4" width="20" height="20" sprite="server_favorite" foregroundlayer="true" visible="{hasBoostedIcon}" color="[statBoostedColor]"/>
-					<CATUI_quality_item depth="3" pos="106, -16" transform_scale="0.8" visible="{hasdurability}" color="{durabilitycolor}" durabilitytext="{durabilityvalue}" tooltip_key="xuiQuality" />
+					<CATUI_quality_item depth="3" pos="106, -17" transform_scale="0.8" visible="{hasdurability}" color="{durabilitycolor}" durabilitytext="{durabilityvalue}" tooltip_key="xuiQuality" />
 				</rect>
 
 				<!-- 物品名称 -->
-				<rect depth="3" pos="0,-104" height="26">
+				<rect depth="3" pos="0,-103" height="26">
 					<label name="Name" pos="64,-15" width="${parentinnerwidth-8}" height="${parentinnerheight}" text="{CATUI_ItemName}" font_size="16" color="{statecolor}" pivot="center" justify="left" style="CATUI.text.shadow.black.1px" />
 				</rect>
 
 				<!-- 物品价格 -->
-				<rect depth="3" pos="0,-130" height="26">
-					<sprite type="sliced" color="[darkestGrey]" height="${parentinnerheight}" />
-					<label pos="46,-13" depth="4" name="price" height="${parentinnerheight}" text="$ {itemprice}" font_size="18" width="80" color="[gold]" pivot="center" justify="left" />
-					<label pos="60,-13" depth="4" name="price" height="${parentinnerheight}" text="x{CATUI_ItemCount}" font_size="20" width="120" color="[white]" style="CATUI.text.outline.black.1px" pivot="center" justify="right" visible="{# CATUI_ItemCount != '1' }" />
+				<rect depth="3" pos="0,-130" height="28">
+					<sprite type="sliced" color="[darkestGrey]" width="${parentinnerwidth-4}" height="${parentinnerheight-4}" />
+					<label pos="46,-12" depth="4" name="price" height="${parentinnerheight}" text="$ {itemprice}" font_size="18" width="80" color="[gold]" pivot="center" justify="left" />
+					<label pos="42,42" depth="4" name="price" height="${parentinnerheight}" text="x{CATUI_ItemCount}" font_size="20" width="120" color="[white]" style="CATUI.text.outline.black.1px" pivot="center" justify="right" visible="{# CATUI_ItemCount != '1' }" />
 				</rect>
 			</rect>
 		</trader_item>
@@ -468,14 +470,20 @@
 				<!-- 一级&三级技能 -->
 				<rect name="perk" width="${parentinnerwidth}" height="${parentinnerheight}" visible="{# groupname != '' and CATUI_GroupEntryColor == '255,255,255,255'}">
 					<!-- 三级技能角标：父级技能标识 -->
-					<rect depth="9" pos="0,0" width="${parentinnerwidth}" height="${parentinnerheight}" visible="{# CATUI_ParentEntryName != '' }">
+					<rect depth="9" pos="0,0" width="${parentinnerwidth}" height="${parentinnerheight}" visible="{# CATUI_GroupEntryType != 'attribute' }">
 						<sprite pos="0,0" width="${parentinnerwidth}" height="2" color="{CATUI_ParentEntryColor}" sprite="catui_bg_skill_perk" type="sliced" />
 					</rect>
 
-					<!-- 边框 -->
-					<sprite depth="8" name="border" color="255,255,255,36" sprite="menu_empty2px" type="sliced" fillcenter="false" />
-					<!-- 选中状态，hover状态 -->
-					<sprite depth="1" color="{rowstatecolor}" sprite="{rowstatesprite}" type="sliced" />
+					<!-- 一级 选中状态，hover状态 -->
+					<sprite depth="1" pos="3,-3" width="${parentinnerwidth-6}" height="${parentinnerheight-6}" color="{rowstatecolor}" sprite="{rowstatesprite}" type="sliced" visible="{# CATUI_GroupEntryType == 'attribute' }" />
+					<!-- 一级 边框 -->
+					<sprite depth="3" name="border" sprite="catui_bg_skill_attribute" type="sliced" visible="{# CATUI_GroupEntryType == 'attribute' }" />
+
+					<!-- 三级 选中状态，hover状态 -->
+					<sprite depth="1" color="{rowstatecolor}" sprite="{rowstatesprite}" type="sliced" visible="{# CATUI_GroupEntryType != 'attribute' }" />
+					<!-- 三级 边框 -->
+					<sprite depth="3" name="border" color="255,255,255,36" sprite="menu_empty2px" type="sliced" fillcenter="false" visible="{# CATUI_GroupEntryType != 'attribute' }" />
+
 					<!-- 技能不可升级 Disabled -->
 					<sprite depth="2" color="255,255,255,140" sprite="catui_background_disabled_recipe" type="sliced" visible="{CATUI_SkillEntryDisabled}" />
 					<!-- 锁定技能 -->
@@ -506,9 +514,9 @@
 					</rect>
 
 					<!-- 技能名称 -->
-					<rect depth="3" pos="${Floor(parentinnerwidth/2)},-110" height="24">
-						<sprite color="[darkestGrey]" type="sliced" pivot="center" justify="center" />
-						<label pos="0,-1" width="${parentinnerwidth}" height="24" pivot="center" text="{groupname}" font_size="14" color="{statuscolor}" justify="center" />
+					<rect depth="4" pos="${Floor(parentinnerwidth/2)},-110" height="24">
+						<sprite color="[darkestGrey]" type="sliced" pivot="center" justify="center" visible="{# CATUI_GroupEntryType != 'attribute' }" />
+						<label pos="0,{# CATUI_GroupEntryType == 'attribute' ? 1 : -1 }" width="${parentinnerwidth}" height="24" pivot="center" text="{groupname}" font_size="14" color="{statuscolor}" justify="center" />
 					</rect>
 				</rect>
 			</rect>
