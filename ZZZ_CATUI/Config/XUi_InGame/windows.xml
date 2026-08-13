@@ -92,7 +92,7 @@
 			</rect>
 
 			<!-- Buff列表 -->
-			<rect name="BuffPopoutList" pos="105,-170" controller="BuffPopoutList">
+			<!-- <rect name="BuffPopoutList" pos="105,-170" controller="BuffPopoutList">
 				<rect width="168" height="31" name="item" visible="false" pivot="center" pos="0, 0" style="press" sound="[recipe_click]" on_hover="true">
 					<sprite depth="6" pos="-79, 16" name="Decoration" width="3" height="28" sprite="catui_buff_list_decoration"  color="[transparent]" type="sliced"  />
 					<sprite depth="3" name="Background" pos="-81, 17" sprite="catui_buff_list_bg" height="30" width="220" color="54,54,54" />
@@ -101,7 +101,29 @@
 					<label depth="6" name="TextName" pos="-46,0" width="160" font_size="20" color="[white]" justify="left" height="35" pivot="left" style="CATUI.text.shadow.black.1px" />
 					<label depth="6" name="TextContent" pos="114,0" font_size="20" color="222, 206, 163, 255" justify="left" height="35" pivot="left" style="CATUI.text.shadow.black.1px" />
 				</rect>
+			</rect> -->
+			<rect pos="17,-150">
+				<rect width="300" height="350" on_scroll="true" >
+					<scrollbar width="2">
+						<sprite name="thumb" depth="1" pos="0,0" width="${parentinnerwidth}" sprite="menu_empty" type="sliced" color="[white]" fillcenter="true" on_press="true" on_scroll="true" gamepad_selectable="false" snap="false" />
+					</scrollbar>
+					<scrollview pos="0,0" height="${parentinnerheight}" clippingsoftness="0,0" on_press="true">
+						<rect name="BuffPopoutList" pos="86,-18" height="${parentinnerheight - 50}" controller="BuffPopoutList">
+							<rect width="168" height="31" name="item" visible="false" pivot="center" pos="0, 0" style="press" sound="[recipe_click]" on_hover="true">
+								<sprite depth="6" pos="-79, 16" name="Decoration" width="3" height="28" sprite="catui_buff_list_decoration"  color="[transparent]" type="sliced"  />
+								<sprite depth="3" name="Background" pos="-81, 17" sprite="catui_buff_list_bg" height="30" width="220" color="54,54,54" />
+								<filledsprite depth="4" pos="-80,1" name="BarContent" color="0,0,0,0" size="190,30" pivot="Left" type="filled" />
+								<sprite depth="4" name="Icon" size="22,22" pos="-62,1" pivot="center" color="[transparent]" />
+								<label depth="6" name="TextName" pos="-46,0" width="160" font_size="20" color="[white]" justify="left" height="35" pivot="left" style="CATUI.text.shadow.black.1px" />
+								<label depth="6" name="TextContent" pos="114,0" font_size="20" color="222, 206, 163, 255" justify="left" height="35" pivot="left" style="CATUI.text.shadow.black.1px" />
+							</rect>
+						</rect>
+					</scrollview>
+				</rect>
 			</rect>
+
+
+
 		</window>
 
 		<!-- 左下角状态栏 -->
@@ -980,11 +1002,11 @@
 			<rect name="categoryHeader" pos="6,-3" width="${parentinnerwidth - 5}" height="43">
 				<sprite depth="2" name="backgroundMain" sprite="menu_empty3px" pos="-3,0" width="${parentinnerwidth + 5}" height="${parentinnerheight + 2}" color="[black]" type="sliced" fillcenter="false" />
 				<sprite depth="1" name="background"  color="[mediumGrey]" type="sliced" />
-				<rect depth="1" pos="16,-3" width="${parentinnerwidth - 22}" height="${parentinnerheight - 2}" on_scroll="true">
+				<rect depth="1" pos="6,-3" width="${parentinnerwidth - 2}" height="${parentinnerheight - 2}" on_scroll="true">
 					<scrollbar pos="-6,-${parentinnerheight - 3}" height="2">
 						<sprite name="thumb" depth="1" pos="0,0" width="${parentinnerwidth}" height="2" sprite="menu_empty" type="sliced" color="[white]" fillcenter="true" on_press="true" on_scroll="true" gamepad_selectable="false" snap="false" />
 					</scrollbar>
-					<scrollview pos="0,0" movement="Horizontal" width="${parentinnerwidth}" clippingsoftness="0,0">
+					<scrollview pos="0,0" movement="Horizontal" width="${parentinnerwidth - 10}" clippingsoftness="10,0">
 						<grid controller="CategoryList" name="categories" pos="20,-20" rows="1" cols="100" cell_width="43" cell_height="43" hide_inactive="true" repeat_content="true">
 							<category_icon />
 						</grid>
