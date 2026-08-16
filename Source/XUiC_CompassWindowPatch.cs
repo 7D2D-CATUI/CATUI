@@ -109,15 +109,17 @@ public class XUiC_CompassWindowPatch
 					string spectrum = biomeWeather.biomeDefinition.weatherSpectrum.ToString();
 					if (isBloodMoon)
 					{
-						value = "BloodMoon"; // 血月最高优先级
+						value = "BloodMoon"; // 血月
 					}
 					else if (spectrum == "Snowy" || spectrum == "Stormy" || spectrum == "Rainy")
 					{
-						value = spectrum; // 雨/雪/风暴优先于雾
+						value = spectrum; // 雨/雪/风暴
 					}
-					else if (SkyManager.GetFogDensity() > 15f)
+					// 雾浓度阈值：GetFogDensity() 实际区间约 0~2（基础雾 0~1 + 天气雾 0~1.3），
+					// 0.8 以上即视为浓雾
+					else if (SkyManager.GetFogDensity() > 0.2f)
 					{
-						// 仅当无具体天气(图谱为 Biome/None)且雾浓时才显示 Foggy（雾优先级最低）
+						// 仅当无具体天气(图谱为 Biome/None)且雾浓时才显示Foggy
 						value = "Foggy";
 					}
 					else

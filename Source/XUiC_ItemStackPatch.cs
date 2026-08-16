@@ -11,6 +11,7 @@ public class XUiC_ItemStackPatch
     private static readonly HashSet<XUiC_ItemStack> _patchedInstances = new HashSet<XUiC_ItemStack>();
     private const string MODIFICATION_HIGHLIGHTED = "[04FE85]▇[-] ";
     private const string MODIFICATION_DEFAULT = "▇ ";
+    private static FieldInfo _lockSpriteField;
 
     private class BindingCache
     {
@@ -188,6 +189,73 @@ public class XUiC_ItemStackPatch
                 {
                     _value = cache.modifications;
                 }
+                __result = true;
+                return false;
+            }
+            // 是否显示耐久度：hasdurability && MaxUseTimes>1 && 非模组 && 非篝火/熔炉
+            case "CATUI_itemShowDurability":
+            {
+                _value = "false";
+
+                ItemStack stack = __instance?.itemStack;
+                if (stack == null || stack.IsEmpty() || stack.itemValue == null)
+                {
+                    __result = true;
+                    return false;
+                }
+
+                if (!__instance.ShowDurability)
+                {
+                    __result = true;
+                    return false;
+                }
+
+                if (stack.itemValue.MaxUseTimes <= 1)
+                {
+                    __result = true;
+                    return false;
+                }
+
+                if (_lockSpriteField == null)
+                {
+                    _lockSpriteField = typeof(XUiC_ItemStack).GetField("lockSprite", BindingFlags.NonPublic | BindingFlags.Instance);
+                }
+                string lockSprite = (string)_lockSpriteField?.GetValue(__instance) ?? "";
+                if (lockSprite == "ui_game_symbol_assemble")
+                {
+                    __result = true;
+                    return false;
+                }
+
+                ItemClass itemClass = stack.itemValue.ItemClassOrMissing;
+                if (itemClass == null)
+                {
+                    __result = true;
+                    return false;
+                }
+
+                string itemTypeIcon;
+                if (itemClass.IsBlock() && stack.itemValue.TextureFullArray.IsDefault)
+                {
+                    itemTypeIcon = Block.list[stack.itemValue.type].ItemTypeIcon;
+                }
+                else if (itemClass.AltItemTypeIcon != null && itemClass.Unlocks != ""
+                    && XUiM_ItemStack.CheckKnown(__instance.xui.playerUI.entityPlayer, itemClass, stack.itemValue))
+                {
+                    itemTypeIcon = itemClass.AltItemTypeIcon;
+                }
+                else
+                {
+                    itemTypeIcon = itemClass.ItemTypeIcon;
+                }
+
+                if (itemTypeIcon == "campfire" || itemTypeIcon == "forge")
+                {
+                    __result = true;
+                    return false;
+                }
+
+                _value = "true";
                 __result = true;
                 return false;
             }

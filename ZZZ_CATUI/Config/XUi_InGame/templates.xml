@@ -74,7 +74,7 @@
 					<!-- 素材icon -->
 					<sprite depth="4" pos="51,-50" name="icon" size="56,56" atlas="ItemIconAtlas" sprite="{itemicon}" color="{itemicontint}" pivot="center" foregroundlayer="true" />
 					<!-- 素材数量，havecount和needcount有可能取到空值，先判断是否为空，然后再比大小 -->
-					<label depth="5" name="needCount" pos="51,-118" width="110" height="30" font_size="22" color="[labelColor]" justify="center" pivot="center" text="{# ((havecount != '' and Floor(havecount) &gt;= (needcount != '' ? Floor(needcount) : 0)) ? '[43CF7C]' : '[FF5252]') + havecount + '[-]' }/{needcount}" style="CATUI.text.shadow.black.1px" />
+					<label depth="5" name="needCount" pos="51,-118" width="110" height="30" font_size="22" color="[labelColor]" justify="center" pivot="center" text="{# ((havecount != '' and CATUI_numprefix(havecount) &gt;= CATUI_numprefix(needcount)) ? '[43CF7C]' : '[FF5252]') }{havecount}[-]/{needcount}" style="CATUI.text.shadow.black.1px" />
 					<!-- 素材名称 -->
 					<label depth="6" name="itemname" pos="51,-90" width="110" height="30" font_size="14" color="[labelColor]" justify="center" pivot="center" text="{itemname}" style="CATUI.text.shadow.black.1px" />
 					<!-- 素材配方 -->
@@ -151,7 +151,7 @@
 				<texture depth="3" pos="2,-2" name="backgroundTexture" material="Materials/Transparent Colored" size="${-4+cell_size},${-4+cell_size}" globalopacity="true" />
 
 				<!-- 书籍 未读 -->
-				<sprite depth="3" pos="2,-2" name="backgroundBookLearn" width="${-4+cell_size}" height="${-4+cell_size}" sprite="catui_bg_book_learn" color="[white]" type="sliced" visible="{# itemtypeicon == 'book'}" />
+				<sprite depth="3" pos="2,-2" name="backgroundBookLearn" width="${-4+cell_size}" height="${-4+cell_size}" sprite="catui_bg_book_learn" type="sliced" visible="{# itemtypeicon == 'book'}" />
 
 				<!-- 收藏 -->
 				<sprite depth="8" name="favoriteIcon" width="24" height="24" sprite="server_favorite" pos="2,-2" foregroundlayer="true" visible="{isfavorite}" />
@@ -186,10 +186,10 @@
 				<sprite depth="6" name="durabilityPermanentBackground" width="${-6+cell_size}" height="5" sprite="menu_empty2px" color="185,0,0,255" type="sliced" pos="3,${7-cell_size}" foregroundlayer="true" visible="{haspermadurability}" />
 
 				<!-- 耐久条：损失耐久度 -->
-				<sprite depth="7" name="removedDurability" width="${-6+cell_size}" height="5" sprite="menu_empty2px" color="[darkGrey]" fill="{removeddurabilityfill}" type="filled" fillspritepad="true" pos="3,${7-cell_size}" foregroundlayer="true" visible="{# hasdurability and locktypeicon != 'ui_game_symbol_assemble'}" />
+				<sprite depth="7" name="removedDurability" width="${-6+cell_size}" height="5" sprite="menu_empty2px" color="[darkGrey]" fill="{removeddurabilityfill}" type="filled" fillspritepad="true" pos="3,${7-cell_size}" foregroundlayer="true" visible="{# CATUI_itemShowDurability}" />
 
 				<!-- 耐久条：当前耐久度 -->
-				<filledsprite depth="8" name="durability" width="${-6+cell_size}" height="5" sprite="menu_empty2px" color="[white]" fill="{durabilityfill}" type="filled" pos="3,${7-cell_size}" foregroundlayer="true" visible="{# hasdurability and locktypeicon != 'ui_game_symbol_assemble'}" />
+				<filledsprite depth="8" name="durability" width="${-6+cell_size}" height="5" sprite="menu_empty2px" color="[white]" fill="{durabilityfill}" type="filled" pos="3,${7-cell_size}" foregroundlayer="true" visible="{# CATUI_itemShowDurability}" />
 
 				<!-- 物品数量 -->
 				<label depth="7" name="stackValue" pos="-5,${22-cell_size}" width="${cell_size}" height="24" text="{itemcount}" font_size="20" style="CATUI.text.outline.black.1px" justify="Right" visible="{# !hasdurability }" />
@@ -296,14 +296,24 @@
 	</append>
 
 	<!-- 物品制作队列 -->
-	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='backgroundMain']" name="sprite">menu_empty2px</setattribute>
-	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='backgroundMain']" name="pos">-1,1</setattribute>
-	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='backgroundMain']" name="width">74</setattribute>
-	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='backgroundMain']" name="height">74</setattribute>
-	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='backgroundMain']" name="color">96,96,96,150</setattribute>
-	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='background']" name="color">25,25,25,255</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='backgroundMain']" name="sprite">catui_bg_queue_item_border</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='backgroundMain']" name="pos">0,0</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='backgroundMain']" name="width">${parentinnerwidth}</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='backgroundMain']" name="height">${parentinnerwidth}</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='backgroundMain']" name="color">[lightestGrey]</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='background']" name="sprite">catui_bg_queue_item</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='background']" name="color">[borderColor]</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='lockIcon']" name="color">[transparent]</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='itemIcon']" name="width">58</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/sprite[@name='itemIcon']" name="height">58</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/label[@name='count']" name="style">CATUI.text.outline.black.1px</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/label[@name='count']" name="font_size">18</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/label[@name='count']" name="pos">-1,-54</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/label[@name='timer']" name="font_size">18</setattribute>
+	<setattribute xpath="/templates/recipe_stack/rect/label[@name='timer']" name="pos">36,-50</setattribute>
 	<insertAfter xpath="/templates/recipe_stack/rect/sprite[@name='background']">
-		<sprite depth="1" name="backgroundIcon" pos="36,-35" size="35,35" sprite="catui_icon_queue" color="96,96,96" pivot="center" />
+		<sprite depth="1" type="sliced" name="CATUI_backgroundIcon" pos="36,-35" size="35,35" sprite="ui_game_symbol_hammer" color="96,96,96" pivot="center" />
+		<sprite depth="1" type="filled" name="CATUI_timerFill" color="[CATUI_green]" fill="0" filldirection="radial360" fillinvert="true" sprite="catui_bg_queue_item" foregroundlayer="true" />
 	</insertAfter>
 
 	<!-- 分类TAB ICON -->

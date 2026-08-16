@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Text;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [HarmonyPatch]
@@ -53,6 +54,13 @@ public class XUiC_HUDStatBarPatch
 	private static int _cachedFactionPoints;
 	private static int _cachedFactionMax;
 	private static bool _questCached;
+
+	// 空投组件缓存（按 World 引用失效，换世界后重取）
+	private static World _cachedAirdropWorld;
+	private static AIDirectorAirDropComponent _cachedAirdropComponent;
+	// 空投私有字段缓存（真实程序集中为 private，需反射读取）
+	private static FieldInfo _airDropNextField;
+	private static FieldInfo _airDropLastCheckField;
 
 	// 限频刷新 - 普通统计绑定每 10 帧标脏一次 IsDirty；车速仪表盘值连续变化，每帧标脏
 	private const int DirtyThrottleFrames = 10;
@@ -280,6 +288,41 @@ public class XUiC_HUDStatBarPatch
 		}
 	}
 
+	// 空投倒计时数据源：仅服务器权威侧有效（单机/房主）；纯客户端本地计算与服务器不同流，不权威，返回 null
+	private static AIDirectorAirDropComponent GetAirdropComponent()
+	{
+		if (ConnectionManager.Instance == null || !ConnectionManager.Instance.IsServer)
+		{
+			return null;
+		}
+		World world = GameManager.Instance?.World;
+		if (world == null)
+		{
+			return null;
+		}
+		if (_cachedAirdropComponent == null || !ReferenceEquals(_cachedAirdropWorld, world))
+		{
+			_cachedAirdropWorld = world;
+			_cachedAirdropComponent = world.aiDirector?.GetComponent<AIDirectorAirDropComponent>();
+		}
+		return _cachedAirdropComponent;
+	}
+
+	// 反射读取空投组件私有字段（FieldInfo 静态缓存，Instance|Public|NonPublic 双保险）
+	private static ulong GetAirdropField(AIDirectorAirDropComponent comp, ref FieldInfo field, string fieldName)
+	{
+		if (comp == null)
+		{
+			return 0;
+		}
+		if (field == null)
+		{
+			field = typeof(AIDirectorAirDropComponent).GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+		}
+		object raw = field?.GetValue(comp);
+		return raw is ulong value ? value : 0;
+	}
+
 	[HarmonyPrefix]
 	[HarmonyPatch(typeof(XUiC_HUDStatBar), "GetBindingValueInternal")]
 	public static bool GetBindingValueInternalPrefix(string _bindingName, ref string _value, ref bool __result, XUiC_HUDStatBar __instance)
@@ -299,24 +342,12 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 弹药上限（编辑器工具取数值属性）
+			// 弹药上限
 			case "CATUI_AmmoMax":
 				_value = "";
 				if (__instance.localPlayer != null)
 				{
-					ItemActionAttack attackAction = __instance.attackAction;
-					int currentAmmoCount = __instance.currentAmmoCount;
-					int currentSlotIndex = __instance.currentSlotIndex;
-					EntityPlayerLocal LocalPlayer = __instance.localPlayer;
-					if (attackAction != null && attackAction.IsEditingTool())
-					{
-						ItemActionData itemActionDataInSlot = LocalPlayer.inventory.GetItemActionDataInSlot(currentSlotIndex, 1);
-						_value = attackAction.GetStat(itemActionDataInSlot);
-					}
-					else
-					{
-						_value = currentAmmoCount.ToString();
-					}
+					_value = __instance.currentAmmoCount.ToString();
 					MarkDirtyThrottled(__instance);
 				}
 				__result = true;
@@ -393,6 +424,68 @@ public class XUiC_HUDStatBarPatch
 				{
 					EnsureQuestCache(__instance.localPlayer);
 					_value = _cachedFactionTier.ToString();
+				}
+				__result = true;
+				return false;
+
+			// 是否服务器权威侧（单机/房主 true；连他人服务器的纯客户端 false），可用于空投等服务器权威数据的展示控制
+			case "CATUI_isServer":
+				_value = (ConnectionManager.Instance != null && ConnectionManager.Instance.IsServer).ToString().ToLower();
+				__result = true;
+				return false;
+
+			// 空投 - 倒计时（xx时，仅小时避免 HUD 频繁跳动）
+			case "CATUI_airDropTimeLeft":
+				_value = "";
+				{
+					AIDirectorAirDropComponent airDrop = GetAirdropComponent();
+					if (airDrop != null && AIDirectorAirDropComponent.MaxDayCount > 0)
+					{
+						ulong next = GetAirdropField(airDrop, ref _airDropNextField, "nextAirDropTime");
+						World world = GameManager.Instance?.World;
+						if (next > 0 && world != null)
+						{
+							ulong now = world.worldTime;
+							ulong remaining = next > now ? next - now : 0;
+							// 1000 tick = 1 小时（不含余量，避免跳动）；不足 1 小时显示 "<1"
+							ulong hours = remaining / 1000;
+							_value = hours > 0 ? $"{hours}{Localization.Get("timeAbbreviationHours")}" : $"<1{Localization.Get("timeAbbreviationHours")}";
+							MarkDirtyThrottled(__instance);
+						}
+					}
+				}
+				__result = true;
+				return false;
+
+			// 空投 - 剩余进度（0-1 递增，填满式）
+			case "CATUI_airDropProgress":
+				_value = "0";
+				{
+					AIDirectorAirDropComponent airDrop = GetAirdropComponent();
+					if (airDrop != null && AIDirectorAirDropComponent.MaxDayCount > 0)
+					{
+						ulong next = GetAirdropField(airDrop, ref _airDropNextField, "nextAirDropTime");
+						ulong last = GetAirdropField(airDrop, ref _airDropLastCheckField, "lastAirdropCheckTime");
+						World world = GameManager.Instance?.World;
+						if (next > 0 && world != null)
+						{
+							ulong now = world.worldTime;
+							ulong remaining = next > now ? next - now : 0;
+							// 总周期：会话内用真实 next-last；读档后 lastAirdropCheckTime 未恢复为 0，回退配置天数
+							ulong total;
+							if (last != 0 && next > last)
+							{
+								total = next - last;
+							}
+							else
+							{
+								total = (ulong)Math.Max(1, AIDirectorAirDropComponent.MaxDayCount) * 24000uL;
+							}
+							float progress = total > 0 ? 1f - Mathf.Clamp01((float)remaining / (float)total) : 0f;
+							_value = progress.ToString("F3");
+							MarkDirtyThrottled(__instance);
+						}
+					}
 				}
 				__result = true;
 				return false;
@@ -559,7 +652,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 移动速度（百分比）
+			// 移动能力（百分比）
 			case "CATUI_playerMoveSpeed":
 				_value = "100";
 				if (__instance.localPlayer != null)
@@ -571,7 +664,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 移动速度等级 (0-6)
+			// 移动能力等级 (0-6)
 			case "CATUI_playerMoveSpeedLevel":
 				_value = "4";
 				if (__instance.localPlayer != null)
@@ -592,7 +685,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 奔跑速度
+			// 奔跑能力（百分比）
 			case "CATUI_playerRunSpeed":
 				_value = "110";
 				if (__instance.localPlayer != null)
@@ -604,7 +697,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 购物优惠
+			// 商人优惠 - 买（百分比）
 			case "CATUI_playerBarteringBuying":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -615,7 +708,7 @@ public class XUiC_HUDStatBarPatch
 				__result = true;
 				return false;
 
-			// 出售优惠
+			// 商人优惠 - 卖（百分比）
 			case "CATUI_playerBarteringSelling":
 				_value = "1";
 				if (__instance.localPlayer != null)
@@ -649,12 +742,22 @@ public class XUiC_HUDStatBarPatch
 				if (__instance.localPlayer != null)
 				{
 					EntityPlayer localPlayer = __instance.localPlayer;
-					Inventory inventory = localPlayer.inventory;
-					ItemValue itemValue = inventory.GetItem(__instance.currentSlotIndex).itemValue;
-					ItemClass itemClass = itemValue.ItemClass;
-					if (itemClass != null)
+					ItemActionAttack attackAction = __instance.attackAction;
+					// 编辑工具（画笔/方块涂改等）展示当前编辑目标，而非物品名
+					if (attackAction != null && attackAction.IsEditingTool())
 					{
-						_value = itemClass.GetLocalizedItemName();
+						ItemActionData itemActionDataInSlot = localPlayer.inventory.GetItemActionDataInSlot(__instance.currentSlotIndex, 1);
+						_value = attackAction.GetStat(itemActionDataInSlot);
+					}
+					else
+					{
+						Inventory inventory = localPlayer.inventory;
+						ItemValue itemValue = inventory.GetItem(__instance.currentSlotIndex).itemValue;
+						ItemClass itemClass = itemValue.ItemClass;
+						if (itemClass != null)
+						{
+							_value = itemClass.GetLocalizedItemName();
+						}
 					}
 				}
 				__result = true;

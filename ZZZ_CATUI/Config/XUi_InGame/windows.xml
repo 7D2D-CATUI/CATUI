@@ -25,7 +25,7 @@
 					<!-- 商人等级 -->
 					<!-- <CATUI_state_item name="TraderStage" controller="HUDStatBar" tooltip_key="quest" visible="{statvisible}" icon="ui_game_symbol_quest" text="{# int(CATUI_playerTraderStage) + round(int(CATUI_playerTraderStageProgressCurrent) / int(CATUI_playerTraderStageProgressMax), 2) }" /> -->
 
-					<!-- 温度核心 -->
+					<!-- 温度身体 -->
 					<!-- <rect name="CoreTemp" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="xuiBuffStatCoreTemp">
 						<sprite gradient_start="[darkestGrey]" gradient_end="[black]" sprite="catui_bg_state" style="CATUI.sprite.filled.prue" />
 						<rect pos="25, -20" pivot="center">
@@ -66,7 +66,7 @@
 							<sprite type="sliced" sprite="ui_game_header_fill" pos="0,0" color="[CATUI_red]" justify="center" pivot="center" />
 							<label pos="0,-1" font_size="20" color="[white]" text="{CATUI_playerSkillPointsAvailable}" style="CATUI.text.shadow.black.1px" justify="center" pivot="center"  />
 						</rect>
-					</rect>
+					</rect> 
 				</table>
 			</rect>
 
@@ -133,15 +133,19 @@
 				<!-- <sprite depth="1" color="[darkestGrey]" sprite="menu_tile_01" type="sliced" style="CATUI.sprite.filled.prue" /> -->
 
 				<!-- 数据 -->
-				<table depth="2" cols="5" padding="5,5" always_reposition="true" hide_inactive="true">
+				<table depth="2" cols="8" padding="5,5" always_reposition="true" hide_inactive="true">
 					<!-- 背包金钱，会和其他模组冲突，暂时先注释 -->
 					<!-- <CATUI_state_item name="Currencyamount" controller="BackpackWindow" tooltip_key="casinoCoin" visible="true" icon="ui_game_symbol_coin" text="{currencyamount}" /> -->
 					<!-- 击杀丧尸 -->
 					<CATUI_state_item width="50" height="50" name="ZombieKills" controller="HUDStatBar" tooltip_key="xuiZombieKills" visible="{statvisible}" icon="ui_game_symbol_skull_crusher" text="{CATUI_playerZombieKills}" />
 					<!-- 存活时间 -->
-					<CATUI_state_item width="50" height="50" name="CurrentLife" controller="HUDStatBar" tooltip_key="xuiCurrentLife" visible="{statvisible}" icon="ui_game_symbol_speed" text="{CATUI_playerCurrentLife}" />
-					<!-- 购物优惠 -->
-					<CATUI_state_item width="50" height="50" name="BarteringBuying" controller="HUDStatBar" tooltip_key="statBarteringSellBuy" visible="{statvisible}" icon="ui_game_symbol_barter" text="+{CATUI_playerBarteringBuying}%" />
+					<!-- <CATUI_state_item width="50" height="50" name="CurrentLife" controller="HUDStatBar" tooltip_key="xuiCurrentLife" visible="{statvisible}" icon="ui_game_symbol_speed" text="{CATUI_playerCurrentLife}" /> -->
+					<!-- 空投倒计时 -->
+					<CATUI_state_item width="50" height="50" name="AirDropTimeLeft" controller="HUDStatBar" tooltip_key="goAirDropFrequency" visible="{% statvisible and CATUI_isServer and CATUI_airDropTimeLeft != ''}" icon="ui_game_symbol_airdrop" text="{CATUI_airDropTimeLeft}" />
+					<!-- 商人优惠 - 买 -->
+					<CATUI_state_item width="50" height="50" name="BarteringBuying" controller="HUDStatBar" tooltip_key="statBarteringBuy" visible="{statvisible}" icon="catui_icon_trade_buying" text="-{CATUI_playerBarteringBuying}%" />
+					<!-- 商人优惠 - 卖 -->
+					<CATUI_state_item width="50" height="50" name="BarteringSelling" controller="HUDStatBar" tooltip_key="statBarteringSell" visible="{statvisible}" icon="catui_icon_trade_selling" text="+{CATUI_playerBarteringSelling}%" />
 					<!-- 温度室外 -->
 					<!-- <rect name="OutsideTemp" width="50" height="50" controller="HUDStatBar" visible="{statvisible}" tooltip_key="xuiFeelsLike">
 						<sprite gradient_start="[darkestGrey]" gradient_end="[black]" sprite="catui_bg_state" style="CATUI.sprite.filled.prue" />
@@ -1252,9 +1256,10 @@
 
 	<!-- NPC对话字幕 -->
 	<setattribute xpath="//window[@name='subtitlesDisplay']" name="pos">-376,230</setattribute>
-	<setattribute xpath="//window[@name='subtitlesDisplay']/rect[@name='bgPanel']/label[@name='lblSpeaker']" name="pos">6,-30</setattribute>
-	<setattribute xpath="//window[@name='subtitlesDisplay']/rect[@name='bgPanel']/label[@name='lblSpeaker']" name="font_size">24</setattribute>
-	<setattribute xpath="//window[@name='subtitlesDisplay']/rect[@name='bgPanel']/label[@name='lblSubtitle']" name="pos">143,-30</setattribute>
+	<setattribute xpath="//window[@name='subtitlesDisplay']/rect[@name='bgPanel']/label[@name='lblSpeaker']" name="pos">6,20</setattribute>
+	<setattribute xpath="//window[@name='subtitlesDisplay']/rect[@name='bgPanel']/label[@name='lblSpeaker']" name="width">400</setattribute>
+	<setattribute xpath="//window[@name='subtitlesDisplay']/rect[@name='bgPanel']/label[@name='lblSpeaker']" name="style">CATUI.text.shadow.black.1px</setattribute>
+	<setattribute xpath="//window[@name='subtitlesDisplay']/rect[@name='bgPanel']/label[@name='lblSubtitle']" name="pos">10,-30</setattribute>
 	<setattribute xpath="//window[@name='subtitlesDisplay']/rect[@name='bgPanel']/label[@name='lblSubtitle']" name="font_size">24</setattribute>
 
 	<!-- // 美化 字体高清 -->
