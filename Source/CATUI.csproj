@@ -18,9 +18,6 @@
     <None Remove="Assembly-CSharp-Decompiled\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="ShowSleepersCount3.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>0_TFP_Harmony\0Harmony.dll</HintPath>
     </Reference>

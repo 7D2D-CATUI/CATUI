@@ -17,6 +17,15 @@ public class XUiC_BuffPopoutListPatch
     // 更新间隔（秒），约10 FPS
     private const float UpdateInterval = 0.1f;
 
+    // 缓存的滚动视图组件，避免重复GetComponent
+    private static UIScrollView cachedScrollView;
+
+    // 上次滚动条刷新时间
+    private static float lastScrollbarUpdateTime = 0f;
+
+    // 滚动条刷新间隔（秒），内容增删后滑块高度自动纠正
+    private const float ScrollbarUpdateInterval = 1f;
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(XUiC_BuffPopoutList), "OnOpen")]
     public static void OnOpenPostfix(XUiC_BuffPopoutList __instance)
@@ -24,6 +33,8 @@ public class XUiC_BuffPopoutListPatch
         // 清理缓存
         cachedLabels.Clear();
         cachedTexts.Clear();
+        cachedScrollView = null;
+        lastScrollbarUpdateTime = 0f;
         
         if (__instance.items != null && __instance.items.Count > 0)
         {
@@ -64,8 +75,16 @@ public class XUiC_BuffPopoutListPatch
     [HarmonyPatch(typeof(XUiC_BuffPopoutList), "Update")]
     public static void UpdatePostfix(XUiC_BuffPopoutList __instance)
     {
-        // 限制更新频率，避免每帧计算
         float currentTime = Time.time;
+
+        // 按1秒间隔刷新滚动条，纠正内容增删后滑块高度不重算的问题
+        if (currentTime - lastScrollbarUpdateTime >= ScrollbarUpdateInterval)
+        {
+            lastScrollbarUpdateTime = currentTime;
+            RefreshScrollbars(__instance);
+        }
+
+        // 限制更新频率，避免每帧计算
         if (currentTime - lastUpdateTime < UpdateInterval)
         {
             return;
@@ -93,6 +112,29 @@ public class XUiC_BuffPopoutListPatch
         }
     }
     
+    /// <summary>
+    /// 刷新滚动条，使滑块高度与当前内容边界一致。
+    /// NGUI 的 UIScrollView.bounds 有 mCalculatedBounds 缓存，
+    /// 内容减少后不会自动失效，需要显式调用 UpdateScrollbars() 重算。
+    /// </summary>
+    private static void RefreshScrollbars(XUiC_BuffPopoutList __instance)
+    {
+        if (__instance == null || __instance.Parent == null || __instance.Parent.ViewComponent == null)
+        {
+            return;
+        }
+
+        if (cachedScrollView == null)
+        {
+            cachedScrollView = __instance.Parent.ViewComponent.UiTransform.GetComponent<UIScrollView>();
+        }
+
+        if (cachedScrollView != null)
+        {
+            cachedScrollView.UpdateScrollbars();
+        }
+    }
+
     /// <summary>
     /// 清理已移除的通知缓存
     /// </summary>

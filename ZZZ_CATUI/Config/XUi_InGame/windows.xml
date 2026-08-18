@@ -92,18 +92,8 @@
 			</rect>
 
 			<!-- Buff列表 -->
-			<!-- <rect name="BuffPopoutList" pos="105,-170" controller="BuffPopoutList">
-				<rect width="168" height="31" name="item" visible="false" pivot="center" pos="0, 0" style="press" sound="[recipe_click]" on_hover="true">
-					<sprite depth="6" pos="-79, 16" name="Decoration" width="3" height="28" sprite="catui_buff_list_decoration"  color="[transparent]" type="sliced"  />
-					<sprite depth="3" name="Background" pos="-81, 17" sprite="catui_buff_list_bg" height="30" width="220" color="54,54,54" />
-					<filledsprite depth="4" pos="-80,1" name="BarContent" color="0,0,0,0" size="190,30" pivot="Left" type="filled" />
-					<sprite depth="4" name="Icon" size="22,22" pos="-62,1" pivot="center" color="[transparent]" />
-					<label depth="6" name="TextName" pos="-46,0" width="160" font_size="20" color="[white]" justify="left" height="35" pivot="left" style="CATUI.text.shadow.black.1px" />
-					<label depth="6" name="TextContent" pos="114,0" font_size="20" color="222, 206, 163, 255" justify="left" height="35" pivot="left" style="CATUI.text.shadow.black.1px" />
-				</rect>
-			</rect> -->
 			<rect pos="17,-150">
-				<rect width="300" height="350" on_scroll="true" >
+				<rect width="300" height="350" on_scroll="true">
 					<scrollbar width="2">
 						<sprite name="thumb" depth="1" pos="0,0" width="${parentinnerwidth}" sprite="menu_empty" type="sliced" color="[white]" fillcenter="true" on_press="true" on_scroll="true" gamepad_selectable="false" snap="false" />
 					</scrollbar>
@@ -121,9 +111,6 @@
 					</scrollview>
 				</rect>
 			</rect>
-
-
-
 		</window>
 
 		<!-- 左下角状态栏 -->
@@ -533,7 +520,28 @@
 	<setattribute xpath="//window[@name='toolTipPopups']/label" name="font_size">26</setattribute>
 
 	<!-- 右下角当前物品状态 -->
-	<setattribute xpath="//window[@name='HUDRightStatBars']/rect[@controller='CollectedItemList']" name="pos">-90,200</setattribute>
+	<setattribute xpath="//window[@name='HUDRightStatBars']/rect[@controller='CollectedItemList']" name="pos">-80,180</setattribute>
+    <set xpath="//window[@name='HUDRightStatBars']/rect[@controller='CollectedItemList']">
+		<rect width="168" height="50" name="item" pos="70, 0" >
+			<!-- 背景 -->
+			<sprite depth="1" pos="-96,0"  name="Background" sprite="ui_game_popup" height="49" width="242" pivot="center" />
+			<!-- 图标背景 -->
+			<sprite depth="2" name="IconBackground" size="48,48" pos="48,0" color="25,25,25,255" type="sliced" globalopacity="true" pivot="center" />
+			<!-- 图标品质 -->
+			<sprite depth="2" name="ItemDurabilityColor" size="44,44" pos="48,0" type="sliced" sprite="Row Outline" globalopacity="true" pivot="center" />
+			<!-- 图标边框 -->
+			<sprite depth="3" name="IconBorder" sprite="menu_empty2px" size="48,48" pos="48,0" color="0,0,0,255" type="sliced" globalopacity="true" fillcenter="false" pivot="center" />
+			<!-- 图标 -->
+			<sprite depth="4" name="Icon" atlas="ItemIconAtlas" size="34,34" pos="48,-1" pivot="center" foregroundlayer="true"/>
+			<!-- 名称 -->
+			<label depth="6" pos="-50,0" name="ItemName" font_size="18" color="[white]" justify="right" height="32" pivot="right" />
+			<!-- 数量 -->
+			<label depth="6" pos="16,0" width="66" name="TextContent" font_size="22" color="[white]" justify="right" height="32" pivot="right" />
+			<!-- 叉（修理素材不够等） -->
+			<sprite depth="6" pos="-16,16" width="36" height="36" name="Negative" sprite="ui_game_symbol_x" color="[red]" />
+		</rect>
+	</set>
+
 	<remove xpath="/windows/window[@name='HUDRightStatBars']/rect/rect[@stat_type='VehicleFuel']" />
 	<remove xpath="/windows/window[@name='HUDRightStatBars']/rect/rect[@stat_type='VehicleHealth']" />
 	<remove xpath="/windows/window[@name='HUDRightStatBars']/grid/rect[@stat_type='ActiveItem']" />
@@ -587,8 +595,8 @@
 				<sprite sprite="catui_bg_speed_meter_bg" size="220,220" color="0,0,0,220" type="sliced" pivot="center" />
 				<!-- 仪表盘 - 背景 -->
 				<sprite sprite="catui_bg_speed_meter" size="200,200" color="[lightestGrey]" type="sliced" pivot="center" />
-				<!-- 仪表盘 - 涡轮区间；-->
-				<sprite sprite="catui_bg_speed_current" size="200,200" type="filled" fill="{# (1-CATUI_VehicleTurboRatio) * 0.8 }" filldirection="Radial360" color="168,48,30" fillinvert="true" globalopacity="false" foregroundlayer="true" pivot="center" rotation="-144" flip="Horizontally" fillInvert="false" />
+				<!-- 仪表盘 - 涡轮区间 （+0.2=补全底部的20%空缺，从右下角开始）-->
+				<sprite sprite="catui_bg_speed_current" size="200,200" type="filled" fill="{# (1-CATUI_VehicleTurboRatio) * 0.8 + 0.19 }" filldirection="Radial360" color="168,48,30" fillinvert="true" globalopacity="false" foregroundlayer="true" pivot="center" rotation="144" fillInvert="false" />
 				<!-- 仪表盘 - 速度 72=底部缺失的扇形角度，刻度=(360-72)/16=18；填充80%：0.8=(360-72)/360；-->
 				<sprite sprite="catui_bg_speed_current" size="200,200" type="filled" fill="{# CATUI_VehicleCurrentSpeedFill * 0.8 }" filldirection="Radial360" color="[white]" fillinvert="true" globalopacity="false" foregroundlayer="true" pivot="center" rotation="144" />
 				<!-- 仪表盘 - 刹车 -->
